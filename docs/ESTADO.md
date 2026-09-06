@@ -3,26 +3,20 @@
 Documento de continuidad entre sesiones. **Leer antes de empezar a trabajar.**
 Se actualiza en el mismo commit que el trabajo, para que nunca mienta.
 
-Última actualización: 2026-08-31 · rama `main`
+Última actualización: 2026-09-06 · rama `main`
 
 **Lleva sólo lo que sigue vivo.** Dónde está el trabajo, qué está abierto, qué
 se sabe roto, qué decisiones no hay que contradecir sin saberlo, y qué trampas
 ya costaron tiempo. Nada más.
 
 > **La regla que lo mantiene corto, y hay un control que la hace cumplir.**
-> Este archivo se lee entero al empezar cada sesión, así que **cada línea de más
-> se paga en todas las sesiones que vengan**. El 28/8 tenía 3766 líneas —la
-> mayoría, la crónica de lo que ya se había cerrado— y se partió.
->
-> - **Lo que se cierra se muda a [`HISTORIA.md`](HISTORIA.md) en el mismo
->   commit que lo cierra.** No se tacha acá, no se deja «para que se vea que se
->   hizo»: se muda. `HISTORIA.md` no se lee al arrancar.
-> - **Lo que se hizo no va acá; va lo que hay que saber para seguir.** La
->   crónica de una jornada de trabajo es historia desde el momento en que
->   termina, aunque sea de hoy.
-> - **`npm run verificar-estado`** mide el presupuesto de líneas, caza los
->   tachados que quedaron sin mudar y los enlaces internos rotos. Corre en el
->   `pre-commit` y en CI.
+> Se lee entero al empezar cada sesión, así que **cada línea de más se paga en
+> todas las que vengan**. **Lo que se cierra se muda a
+> [`HISTORIA.md`](HISTORIA.md) en el mismo commit que lo cierra** —no se tacha,
+> no se deja «para que se vea que se hizo»—, y **lo que va acá no es lo que se
+> hizo sino lo que hay que saber para seguir**. Lo mide
+> `npm run verificar-estado`, en el `pre-commit` y en CI. La regla entera, en
+> [`AGENTS.md`](../AGENTS.md).
 
 > **Honorio no vive acá.** Se mudó el 4/8 a
 > [`javiercuneo/honorio`](https://github.com/javiercuneo/honorio) con su propio
@@ -36,7 +30,7 @@ ya costaron tiempo. Nada más.
 ## Dónde estamos
 
 **El sitio está publicado en `javiercuneo.com.ar`, dominio propio, desde el
-5/8.** Once calculadoras sobre el mismo sistema visual, nueve documentos de
+5/8.** Diez calculadoras vivas sobre el mismo sistema visual, los documentos de
 dominio verificados contra el motor, **Escribiente** —el conversor y
 anonimizador de PDF— y `uma-uhom.html`, con el valor vigente de las dos unidades
 con las que se regulan honorarios y la serie entera de cada una.
@@ -46,46 +40,37 @@ con las que se regulan honorarios y la serie entera de cada una.
 aritmética adentro; se expone por HTTP local y por MCP en `conectores/`; las
 cuatro que no son de plazos se refundaron de cero, cada una con su banco puesto
 antes de tocarla; y **las diez pantallas siguen el mismo patrón, sin excepción**.
-El detalle de esos días está en [`HISTORIA.md`](HISTORIA.md).
 
 **La puerta es el tablero**, no el listado: `calculadoras/tablero.html` reúne las
-diez vivas y `index.html` lleva ahí primero, con el plano de lo que hay adentro.
-Las páginas sueltas siguen publicadas y sus direcciones no cambian, pero
-**`index.html` ya no las enlaza una por una**: sólo se enlaza lo que NO está en
-el tablero. Detalle en [El tablero de herramientas](#el-tablero-de-herramientas).
-
-**No queda nada urgente ni bloqueante, y no hay bugs abiertos.** Lo que sigue
-está en [Por dónde seguir](#por-dónde-seguir); lo abierto, en
-[Pendientes](#pendientes).
+diez y `index.html` lleva ahí primero. Las páginas sueltas siguen publicadas y
+sus direcciones no cambian, pero **`index.html` ya no las enlaza una por una**:
+sólo se enlaza lo que NO está en el tablero. Detalle en
+[El tablero de herramientas](#el-tablero-de-herramientas).
 
 ---
 
 ## Bugs abiertos
 
 **Ninguno.** Los últimos, con su caso de prueba, en
-[`HISTORIA.md`](HISTORIA.md).
-
-**El último cerrado importa por la forma:** el 2/9 el calendario de
-`vencimientos` dibujaba agosto encima de septiembre **con el motor intacto**, por
-un nombre de clase repetido. Lo cerró medir las columnas, no mirar la captura.
+[`HISTORIA.md`](HISTORIA.md). La forma del último —un dibujo roto con el motor
+intacto, cerrado midiendo y no mirando— quedó abajo, en las trampas vivas.
 
 ---
 
 ## Por dónde seguir
 
-> **Fuera del camino crítico del plan de los cinco repos, y eso es un resultado.** El
-> orden conjunto está en `C:\IA\Pipeline drafter\HERMANOS.md`: los cinco pasos son de
-> `pipeline-drafter`, `knowledge` e `indice`. Acá no hay nada que desbloquee a nadie, y
-> el único pedido que había —el calendario judicial consultable— se cerró el 2/9 con
-> `conectores/`.
+> **Fuera del camino crítico del plan de los cinco repos, y eso es un resultado.**
+> El orden conjunto está en `C:\IA\Pipeline drafter\HERMANOS.md`: los pasos son de
+> `pipeline-drafter`, `knowledge` e `indice`. Acá no hay nada que desbloquee a
+> nadie, y el único pedido que había —el calendario judicial consultable— está
+> cerrado y consumido desde el 2/9.
 
 **Lo que queda abierto, y es una sola cosa:**
 
-- **Faltan las capturas del tablero en la landing.** Hoy hay un plano dibujado
-  en SVG, que es la estructura y no la pantalla. Una captura se hace cuando el
-  tablero deje de moverse: las de Honorio ya envejecieron dos veces. **Y hay
-  que pedir el panel del navegador abierto para hacerlas**: con el panel oculto
-  las capturas no componen.
+- **Faltan las capturas del tablero en la landing.** Hoy hay un plano en SVG,
+  que es la estructura y no la pantalla. Se hacen cuando el tablero deje de
+  moverse —las de Honorio ya envejecieron dos veces— y **hay que pedir el panel
+  del navegador abierto**: con el panel oculto no componen.
 
 **El método es el de siempre:** leer este archivo, correr el control que cubre
 lo que se va a tocar *antes* de tocarlo, y que cualquier número que se mueva sea
@@ -95,7 +80,7 @@ porque se decidió moverlo.
 
 ## Pendientes
 
-**Ninguno urgente y ninguno bloqueante.**
+Ninguno urgente y ninguno bloqueante.
 
 ### Lo que hay que acordarse de hacer a mano
 
@@ -119,9 +104,8 @@ porque se decidió moverlo.
 - **Las tres series se cargan a mano** —`data/serie-uma.json`,
   `data/serie-uhom.json` y `data/tasa-monto-fijo.json`—: los actos de la CSJN y
   las tablas del Ministerio son PDFs sin API. **`npm run verificar-series` no
-  puede detectar que falte el último**: detecta que lo cargado esté mal. Lo que
-  sí avisa es la propia página, que muestra desde cuándo no se revisan las series
-  y pone un aviso a la vista si pasaron más de 45 días.
+  puede detectar que falte el último**: detecta que lo cargado esté mal. El que
+  avisa es la propia página, si pasaron más de 45 días sin revisarlas.
   **La del monto fijo del art. 6 es la más lenta y por eso la más fácil de
   olvidar**: se movió en 2018 y en 2022, y hoy tiene un solo valor cargado
   —$4.700, Acordada 15/2022—. **El de la Acordada 41/2018 no está a propósito**:
@@ -131,32 +115,26 @@ porque se decidió moverlo.
 ### Lo que está abierto en el cálculo
 
 - **`prorrateo` no computa el art. 730 in fine, y no lo va a computar.**
-  Decisión de Javier del 31/8: **la herramienta no puede resolver qué entra en
-  la base.** El último párrafo excluye del cómputo del 25 % los honorarios de
-  los profesionales de la parte condenada en costas, pero si además entra el
+  Decisión de Javier: **la herramienta no puede resolver qué entra en la base.**
+  El último párrafo excluye del cómputo del 25 % los honorarios de los
+  profesionales de la parte condenada en costas, pero si además entra el
   mediador es criterio de cada juzgado ---«todo concepto» de costas contra
-  honorarios de la mediación *prejudicial*, o sea anteriores a la instancia---.
-  Donde la ley no resuelve sola, esta casa muestra los criterios y decide el que
-  firma. **Lo que falta entonces no es una función: es un aviso al lado del
-  campo** que diga que los honorarios de la condenada en costas no van, y que
-  con el mediador hay dos criterios. Lo que sí es función nueva ---mostrar
-  cuándo el recorte excede el 33 %, que es el umbral con el que se argumenta
-  confiscatoriedad--- está en `IDEAS.md`.
+  honorarios de la mediación *prejudicial*---. Donde la ley no resuelve sola,
+  esta casa muestra los criterios y decide el que firma. **Lo que falta no es
+  una función: es un aviso al lado del campo** con las dos cosas. Lo que sí es
+  función nueva ---avisar cuándo el recorte excede el 33 %--- está en
+  `IDEAS.md`.
 - **La ampliación por distancia se ofrece con cualquier cédula, y sólo
-  corresponde con algunas.** El art. 158 condiciona a que la diligencia deba
-  practicarse «fuera del lugar del asiento del juzgado», y el art. 40 manda
-  constituir domicilio dentro del perímetro de la ciudad asiento del juzgado: la
-  cédula al domicilio **constituido** —que es la mayoría— se diligencia adentro
-  del radio. Sólo corresponde con cédula al domicilio **real** fuera del radio
-  —traslado de demanda, absolución de posiciones, sentencia— o para una
-  diligencia que efectivamente se practique afuera. **Javier decidió el 25/8
-  dejarlo así por ahora** —«tiene sentido en la cédula y por eso lo toleré»—.
-  El razonamiento completo, y por qué la ampliación salió de la notificación
-  automática, está en [`HISTORIA.md`](HISTORIA.md).
-- **`lib/legal/minimos-data.ts` nunca se verificó contra la ley.** Las cifras de
-  los mínimos que citan el `06` y el `07` están verificadas contra ese archivo, y
-  el archivo dice ser copia fiel del asistente clásico. Que sea fiel a la copia
-  no prueba que sea fiel a la norma. Son unas cuarenta cifras.
+  corresponde con algunas.** El art. 158 pide que la diligencia se practique
+  «fuera del lugar del asiento del juzgado», y el art. 40 manda constituir
+  domicilio adentro de ese radio: la cédula al domicilio **constituido** —que es
+  la mayoría— se diligencia adentro. Sólo corresponde con cédula al domicilio
+  **real** fuera del radio. **Javier decidió dejarlo así por ahora** —«tiene
+  sentido en la cédula y por eso lo toleré»—; el razonamiento, en
+  [`HISTORIA.md`](HISTORIA.md).
+- **Los mínimos son de Honorio y el pendiente vive allá.** `minimos-data.ts` es
+  suyo; de este lado sólo pasa que el `06` y el `07` citan sus cifras. **Si allá
+  se mueve una, se mueven las dos citas.**
 - **La cobertura arranca en 2021, y está declarada en el archivo y no en el
   código.** Las ferias de 2004 a 2020 están cargadas, pero los feriados
   nacionales y los asuetos de esos años **no**, así que un cálculo sobre ellos
@@ -169,14 +147,6 @@ porque se decidió moverlo.
 
 ### Lo que está abierto en las pantallas
 
-- **Lo que se oculta adentro del tablero se marca con `solo-suelta`, y es UNA
-  regla.** La ponen las calculadoras sobre lo que sólo tiene sentido con la
-  página abierta por su cuenta: el pie de autoría y la línea de cobertura del
-  calendario, que el tablero dice una vez arriba. **Una herramienta nueva tiene
-  que llevar esa clase en su pie** o el tablero va a mostrar la misma firma diez
-  veces. **Lo que NO la lleva, a propósito:** el aviso que sale al calcular
-  cuando el plazo toca un año sin Acordada, porque ése frena un número y tiene
-  que estar donde se pide el número.
 - **El permalink y el imprimible existen en `tasa` y en `prorrateo`.** Faltan en
   las demás y no está decidido si van. **La decisión que hay que repetir si se
   extienden:** el caso va en el **fragmento** (`#…`), que no viaja al servidor.
@@ -192,22 +162,19 @@ porque se decidió moverlo.
   qué inciso corresponde lo que se está cargando **es parte de la respuesta y va
   a la vista** ---lo que se esconde es la explicación larga, nunca el mapeo---.
   Cada uno está escrito con su porqué en el `<style>` de `tasa.html`.
-  **El barrido de texto está hecho en las diez** ---las cinco de plazos el 26 y
-  el 27/8, `tasa` el 31/8 y las tres que faltaban el 1/9---. **Una distinción
-  que vale para el próximo:** el *usted* —«Ingrese», «Verifique»— **no es tuteo
-  y no es un error**; es otro registro. Lo que hay que sacar es el imperativo de
-  *tú*, y lo que además conviene sacar es el usted **suelto entre voseo**, que
-  fue lo único que quedaba el 1/9: un `Ingrese un UHOM válido.` en una pantalla
-  que dos renglones más arriba dice `Cargá el monto del asunto`.
+  **El barrido de texto está hecho en las diez.** La distinción que vale para el
+  próximo: el *usted* —«Ingrese», «Verifique»— **no es tuteo y no es un error**,
+  es otro registro. Lo que hay que sacar es el imperativo de *tú*, y además el
+  usted **suelto entre voseo** —un `Ingrese un UHOM válido.` en una pantalla que
+  dos renglones más arriba dice `Cargá el monto del asunto`—.
 - **El buscador de plazos salió con el chip «en desarrollo», y es lo único de
-  este repositorio publicado sin curar.** Es decisión de Javier del 31/8 —«lo voy
-  verificando en producción… es texto de ley, a lo sumo podrá faltar un plazo»—.
-  **Ese es exactamente el riesgo que tiene y el que no:** los 198 plazos salen de
-  un barrido mecánico sobre el texto, así que un número mal es improbable y una
-  ausencia no lo es. Lo que el barrido **no** distingue es qué plazo corre contra
-  la parte y cuál contra el juez —art. 34— o contra el perito, y por eso cada
-  resultado muestra **la oración literal del artículo**: leída, no se confunde.
-  Cuando Javier termine de verificarlo, sale el chip.
+  este repositorio publicado sin curar.** Decisión de Javier —«lo voy verificando
+  en producción… es texto de ley, a lo sumo podrá faltar un plazo»—. **Ese es el
+  riesgo que tiene y el que no:** los 198 plazos salen de un barrido mecánico,
+  así que un número mal es improbable y una ausencia no lo es. Lo que el barrido
+  **no** distingue es qué plazo corre contra la parte y cuál contra el juez
+  —art. 34— o el perito, y por eso cada resultado muestra **la oración literal
+  del artículo**. Cuando Javier termine de verificarlo, sale el chip.
 - **Los atajos y el buscador leen un solo archivo, y eso es la decisión.**
   `data/plazos-cpccn.json` tiene la cantidad, la unidad, el artículo y la oración
   literal; `vencimientos.html` **no tiene ningún número de plazo escrito
@@ -231,19 +198,20 @@ porque se decidió moverlo.
   en el ordinario van con la contestación de la demanda (art. 346), o sea dentro
   de los 15 del art. 338. La precisión entra en la línea que aparece al elegir
   el atajo, que es donde hay lugar. **Decir de menos no miente; redondear sí.**
-- **`uma-uhom` ya no habla de demoras, por decisión de Javier del 31/8**
-  —«suena como que le critico a la Corte lo que tardó»—. Salieron la columna, su
-  nota, la prosa y las tres cifras grandes. **La fecha del acto se quedó**: es
-  un dato y no una demora, y dice si un valor ya existía el día de la
+- **`uma-uhom` no habla de demoras, y no hay que volver a agregarlas** —«suena
+  como que le critico a la Corte lo que tardó»—. **La fecha del acto se quedó**:
+  es un dato y no una demora, y dice si un valor ya existía el día de la
   regulación. El crudo sigue en `data/serie-uma.json`, con `sin_demora` y todo.
-- **La imagen de enlace de la UMA no está en Archivo.** `npm run og-uma` la arma
-  desde las series, pero escribe el PNG a mano y dibuja las letras con un
-  tipografiado de trazos: rendir Archivo pediría un motor de fuentes en Node o
-  un paso por el navegador. **Se regenera cuando se carga un valor nuevo en las
-  series**, y lleva la vigencia al lado del número para que una imagen vieja
-  compartida en un chat siga diciendo algo cierto.
-- **`www.javiercuneo.com.ar` no resuelve**, si se lo quiere: va un CNAME `www` →
-  `javiercuneo.github.io` en Cloudflare, gris.
+- **La imagen de enlace de la UMA no está en Archivo.** `npm run og-uma` escribe
+  el PNG a mano y dibuja las letras con trazos; rendir Archivo pediría un motor
+  de fuentes en Node. **Se regenera cuando se carga un valor nuevo**, y lleva la
+  vigencia al lado del número para que una imagen vieja compartida en un chat
+  siga diciendo algo cierto.
+- **`www.javiercuneo.com.ar` anda por HTTP y no por HTTPS, y el DNS no tiene
+  nada que ver.** El CNAME `www` → `javiercuneo.github.io` está puesto en
+  Cloudflare, gris, y por HTTP redirige 301 al dominio pelado. Falta **el
+  certificado**: el de GitHub cubre `javiercuneo.com.ar` y nada más. Se arregla
+  volviendo a guardar el dominio en Settings → Pages, no tocando el DNS.
 
 ### Del lado de Honorio: mudado, no hay nada que hacer acá
 
@@ -272,24 +240,22 @@ está en [`HISTORIA.md`](HISTORIA.md). Lo vivo:
   excepción que no hay que arreglar: `pages.yml` publica en su URL el aviso de
   `redirects/honorarios-retirada/`, así que ese archivo no llega al sitio.
 
-**Y el peso del aviso es una decisión, del 1/9.** En `distancia` era un bloque
-grande arriba de todo, y decía de más en dos sentidos: gritarlo ahí insinúa que
-en el resto del sitio sí sale algo —que es al revés—, y el dato es **una
-localidad**, que no identifica a nadie y no viaja con nada que la ate a una
-persona ni a un expediente. Ahora es un `<details>` cerrado, **entero y sin
-recortar nada**: la promesa no se afloja, cambia el volumen.
+**Y el peso del aviso es una decisión.** En `distancia` va en un `<details>`
+cerrado, **entero y sin recortar nada**: gritarlo arriba de todo insinuaba que
+en el resto del sitio sí sale algo, que es al revés. La promesa no se afloja;
+cambia el volumen. El razonamiento, en [`HISTORIA.md`](HISTORIA.md).
 
 ---
 
 ## Los controles, y qué cubre cada uno
 
-Son ocho y no se superponen. **Ninguno se da por bueno sin haberlo visto fallar
+Son doce y no se superponen. **Ninguno se da por bueno sin haberlo visto fallar
 a propósito**: un control que nunca falló no es un control.
 
 | Control | Qué cubre |
 |---|---|
 | `npm run verificar-calculos` | El motor: 673 comprobaciones |
-| `npm run verificar-plazos` | El cómputo de las cinco de plazos: 132 |
+| `npm run verificar-plazos` | El cómputo de las cinco de plazos: 121 |
 | `npm run verificar-series` | Las series de UMA, UHOM y monto fijo |
 | `npm run verificar-contraste` | Los tokens de color, AA sobre las tres superficies y en los dos temas |
 | `npm run verificar-conectores` | Los dos transportes de `conectores/`: 46 |
@@ -306,71 +272,54 @@ Y **tres** que corren en el navegador, con el sitio servido y no con `file://`:
 - **`scripts/pruebas-calculadoras.html`** cubre **las pantallas** de plazos: 75
   filas —21 verificados a mano, 6 invariantes, 3 fijados, los 24 cruzados contra
   el motor, y los 21 verificados otra vez adentro del tablero—, **las 75
-  escritas y las 75 pasando**. Maneja las cinco
-  por iframe y compara lo que muestran. **Los iframes llevan rompe-caché**: sin
-  él las pruebas corren contra la versión anterior de la calculadora, que es la
-  peor forma de falla porque parece un bug del cambio que se acaba de hacer.
+  pasando**. Maneja las cinco por iframe y compara lo que muestran. **Los
+  iframes llevan rompe-caché**: sin él las pruebas corren contra la versión
+  anterior, que parece un bug del cambio que se acaba de hacer.
 - **`scripts/pruebas-tablero.html`** cubre **la navegación** del tablero: **37
   comprobaciones, las 37 pasando**, en ocho grupos —las pestañas, que las dos
   regiones sean independientes, el enlace directo por `#pestania`, las teclas,
   las flechas, el montaje perezoso y el estado vivo, lo que el CSS inyectado le
   hace al marco, y lo que va como enlace—. **Existe porque una pestaña que no
-  abre no mueve ningún número**, así que el banco de al lado no la ve, y el
-  tablero es la puerta desde el 31/8: si la navegación se rompe, las diez
-  herramientas calculan perfecto y no llega nadie. Encontró un bug publicado la
-  primera vez que se corrió. **Cada prueba abre su propio tablero**: varias
-  dependen del estado de arranque —que la región de abajo empiece vacía, que el
-  hash inicial mande— y ésas no se pueden correr sobre uno que ya se tocó.
+  abre no mueve ningún número**, así que el banco de al lado no la ve: si la
+  navegación se rompe, las diez calculan perfecto y no llega nadie. **Cada
+  prueba abre su propio tablero**, porque varias dependen del estado de arranque
+  y ésas no se pueden correr sobre uno que ya se tocó.
 - **`scripts/pruebas-no-plazos.html`** cubre las cuatro que no son de plazos:
   **60 fijados** sobre `prorrateo`, `tasa`, `honorarios-mediacion` y
-  `ejecucion-estado`. Se construyó el 26/8 porque era la condición para poder
-  refundarlas: una reescritura sin red no se puede distinguir de un error.
-  **Los casos de `tasa` se remapearon dos veces sin que un solo número se
-  moviera** —el 27/8 al separar los dos ejes y el 31/8 al invertir la
-  pregunta—, y eso es exactamente para lo que están. Los diez del 31/8 cubren
-  **cómo se lee un importe pegado**, las tres reducciones del art. 3 que no
-  tenían ninguno —mensura, recurso directo y quiebra contra concurso—, y las
-  **dos cosas que no se ven en ningún importe**: la casilla del testamento de
-  extraña jurisdicción, que cambia la cita y nada más, y los dos momentos de la
-  suma fija.
+  `ejecucion-estado`. Existe porque era la condición para poder refundarlas: una
+  reescritura sin red no se puede distinguir de un error. **Los casos de `tasa`
+  se remapearon dos veces sin que un solo número se moviera**, y eso es
+  exactamente para lo que están.
 
 **Las tres se arrastran con el panel del navegador oculto** —de seis segundos a
-varios minutos— porque los iframes no dibujan. No es que estén rotas.
+varios minutos— porque los iframes no dibujan: no es que estén rotas.
 
 ---
 
 ## El tablero de herramientas
 
 `calculadoras/tablero.html`, **y desde el 31/8 es la puerta**: `index.html` lo
-pone arriba del listado, en bloque propio, y el listado de tarjetas sueltas
-quedó abajo como referencia. Decisión de Javier ---«ahí debe vivir todo, y no
-herramientas sueltas en links sueltos»---.
+pone arriba del listado, que quedó abajo como referencia. Decisión de Javier
+---«ahí debe vivir todo, y no herramientas sueltas en links sueltos»---.
 
-**Diez herramientas embebidas en dos regiones, más dos enlaces.** Arriba las
-seis de plazos ---`vencimientos`, `distancia`, `caducidad`, `entre-fechas`,
-`regresiva` y `mora`--- en una barra de pestañas, con teclas 1-6 y flechas.
-Abajo, después de un corte y con título propio, **«Honorarios y otros»**:
-prorrateo, tasa, honorarios de mediación y `ejecucion-estado`. Cada una es un
-iframe de la calculadora publicada, **sin una línea modificada de ninguna**.
-Carga perezosa, estado vivo al volver, enlace directo por `#pestania`.
+**Diez herramientas embebidas en dos regiones, más dos enlaces**: arriba las
+seis de plazos, con teclas 1-6 y flechas; abajo, «Honorarios y otros». Cada una
+es un iframe de la calculadora publicada, **sin una línea modificada de
+ninguna**.
 
-**Arriba de todo, la portada:** la fecha de hoy con si cuenta o no, el valor
-vigente de la UMA y del UHOM, la cobertura del calendario y las cuatro salidas
----Honorio, la landing, la guía y el correo---. Los tres datos no dependen de
-qué pestaña estés mirando, así que se dicen **una vez** acá y no una vez por
-calculadora: la fecha vivía adentro de `vencimientos` y los dos valores, en
-`uma-uhom.html`. El tablero carga el calendario sólo para eso; el cómputo de
-cada calculadora sigue pasando adentro de su propio marco.
+**Arriba de todo, la portada**, con la fecha de hoy, la UMA, el UHOM y la
+cobertura del calendario. **Los tres datos se dicen una vez acá y no una vez por
+calculadora** —la fecha vivía adentro de `vencimientos`—: el tablero carga el
+calendario sólo para eso, y el cómputo de cada calculadora sigue pasando adentro
+de su propio marco.
 
-**Las teclas 1-6 se rompieron dos veces, de dos formas distintas, y las dos
-estuvieron publicadas.** La primera: un evento de teclado no cruza de un iframe
-al documento de arriba, así que el foco vivía adentro del marco y el oyente
-estaba afuera —se engancha el mismo oyente adentro de cada marco al montarlo—.
-La segunda, hasta el 1/9: `HERRAMIENTAS` guardaba **copias** de los items y
-`construir()` escribe el `atajo` sobre el item, así que la búsqueda no lo
-encontraba nunca. **Las dos veces la pestaña siguió dibujando su número.** Por
-eso `pruebas-tablero.html` no comprueba que «alguna tecla haga algo», sino que
-**cada tecla abra la que dice su propio badge**: es la promesa que se rompió.
+**Las teclas 1-6 se rompieron dos veces, por causas distintas, y las dos
+estuvieron publicadas** —el detalle, en [`HISTORIA.md`](HISTORIA.md)—. Lo que
+queda de eso son dos cosas: **un evento de teclado no cruza de un iframe al
+documento de arriba**, así que el mismo oyente se engancha adentro de cada marco
+al montarlo; y **las dos veces la pestaña siguió dibujando su número**, por lo
+que `pruebas-tablero.html` no comprueba que «alguna tecla haga algo» sino que
+**cada tecla abra la que dice su propio badge**.
 
 **Las cuatro decisiones que lo sostienen**, para no revisarlas sin saber por qué
 están:
@@ -394,34 +343,34 @@ están:
 tablero**, por el mismo CSS inyectado que anula el `min-height: 100vh`. El
 selector es **`.solo-suelta`, y es una sola regla**: la ponen las calculadoras
 sobre su pie de autoría y sobre su línea de cobertura del calendario, que el
-tablero dice una vez en la portada. Una lista de selectores en el tablero
-crecía con cada pantalla; una clase que ponen las pantallas, no.
+tablero dice una vez en la portada —una lista de selectores en el tablero crecía
+con cada pantalla; una clase que ponen las pantallas, no—. **Una herramienta
+nueva tiene que llevarla en su pie** o el tablero muestra la misma firma diez
+veces. **Lo que NO la lleva, a propósito:** el aviso que sale cuando el plazo
+toca un año sin Acordada, porque ése frena un número y tiene que estar donde se
+pide el número.
 
 **Lo que lo hace verificable:** `pruebas-calculadoras.html` corre los 21 casos
-verificados **dos veces**, contra las páginas sueltas y contra las embebidas, y
-exige que den lo mismo. Toda la apuesta del tablero es que embeber no cambie un
-número, y eso se comprueba en vez de suponerse.
+verificados **dos veces**, sueltos y embebidos, y exige que den lo mismo. Toda
+la apuesta del tablero es que embeber no cambie un número.
 
 **La trampa que costó encontrar:** la mitad de las calculadoras tiene
 `body { min-height: 100vh }`, y adentro de un iframe **`100vh` es el alto del
-iframe**. El contenido siempre llena el marco, medirlo devuelve el alto que ya
-tenía, y el alto queda clavado donde arrancó. Se anula por CSS inyectado, y el
-alto se mide sobre el rect del `<body>` y no con `scrollHeight`, que nunca baja
-del alto del propio marco.
+iframe**: el contenido siempre llena el marco y el alto queda clavado donde
+arrancó. Se anula por CSS inyectado, y el alto se mide sobre el rect del
+`<body>` y no con `scrollHeight`, que nunca baja del alto del marco.
 
 ## La distancia: tres fuentes, en orden de fidelidad
 
-**`distancia.html` se rehizo de cero el 1/9 y lo que cambió es el orden.** La
-versión anterior preguntaba primero por la línea recta y ofrecía la ruta como
-un botón al costado; la tabla de la Corte no existía. Ese era el orden en que se
-había construido —Haversine, después la ruta— y no el orden en que la norma
-manda. Ahora hay **un solo botón** y la pantalla elige, de más fiel a menos:
+**`distancia.html` pregunta una sola vez y elige, de más fiel a menos.** El
+orden es la decisión, y cómo se llegó a él está en [`HISTORIA.md`](HISTORIA.md).
 
 1. **La tabla de la Acordada 5/2010**, `data/acordada-5-2010-distancias.json`.
    Si un extremo es la Capital Federal y el otro es uno de los 45 asientos
    federales, **no hay nada que calcular**: el número lo publicó la Corte. Es la
    única de las tres que no es una estimación, y **no consulta a nadie**.
-2. **La ruta terrestre**, por OSRM.
+2. **La ruta terrestre**, por OSRM, avisando que **puede quedar corta**: es sólo
+   una de las dos medidas que la Acordada manda comparar.
 3. **La línea recta**, y se declara **piso y no respuesta**: nadie viaja en
    recta, así que la distancia real nunca es menor. Por eso cuando manda ella el
    veredicto dice «la ampliación es de **al menos** N días».
@@ -429,33 +378,25 @@ manda. Ahora hay **un solo botón** y la pantalla elige, de más fiel a menos:
 **LA REGLA DE LA CORTE NO ES «POR RUTA»: ES LA MÁS LARGA DE LAS DOS.** Acordada
 50/86, recitada en el considerando I de la 5/2010: «la distancia que se tendrá
 en cuenta será **la más larga** que resulte de la comparación entre las medidas
-por vía férrea y por ruta terrestre». **Formosa es el caso que lo muestra**:
-1.112 km por ruta y 2.501 por tren, y la Corte da **13 días** donde calcular por
-ruta da 6. Es la razón por la que la tabla se carga como dato en vez de
-recalcularse, y por la que cuando manda la ruta la pantalla avisa que **puede
-quedar corto**: es sólo una de las dos medidas que la Acordada manda comparar.
+por vía férrea y por ruta terrestre». **Formosa lo muestra**: 1.112 km por ruta
+y 2.501 por tren, y la Corte da **13 días** donde calcular por ruta da 6. Es la
+razón por la que la tabla se carga como dato en vez de recalcularse.
 
 **La tabla mide desde la Capital Federal y nada más.** Tucumán–Salta no está y
 no se puede deducir restando dos filas; ese caso cae a la ruta. Está dicho en el
 archivo y comprobado en el banco.
 
-**Los dos controles nuevos no se superponen.** `verificar-acordada` prueba que
-el archivo diga lo que dice la imagen del anexo —los días publicados salen de
+**Los dos controles no se superponen.** `verificar-acordada` prueba que el
+archivo diga lo que dice la imagen del anexo —los días publicados salen de
 aplicar la regla a la más larga, y el plazo de queja es eso más 5: 90
 comprobaciones—. `verificar-distancia` prueba el motor y, sobre todo, **la
 búsqueda**: que las 45 filas se encuentren por su nombre y por cómo la escribe
 la gente, y que no se encuentren de más. «San Juan Bautista» no puede devolver
 San Juan, y San Juan y San Luis no dan los mismos días.
 
-**Qué contesta cuando no hay ruta**, que es lo que antes decía «Error al
-consultar OSRM». Un `400` con `code: "NoRoute"` **no es una falla del servicio**:
-es la respuesta correcta a cómo se va en auto a Puerto Argentino o a Jerusalén.
-Se distingue de una falla real y se cae a la recta diciendo el motivo.
-
-**Malvinas no necesitó ningún caso especial.** GEOREF —el geocodificador del
-Estado— devuelve «Puerto Argentino» como Tierra del Fuego, Antártida e Islas del
-Atlántico Sur, así que ya es local para la fuente que se consulta. El segmentado
-dice «En el país · incluye las islas del Atlántico Sur».
+**Un `400` con `code: "NoRoute"` no es una falla del servicio**: es la respuesta
+correcta a cómo se va en auto a Puerto Argentino o a Jerusalén. Se distingue de
+una falla real y se cae a la recta diciendo el motivo.
 
 ### El mapa
 
@@ -466,28 +407,23 @@ la nota dice que el veredicto **no sale de ninguna línea de ese dibujo**.
 
 - **El contorno es un dato, no código.** `data/contorno-argentina.json`, de la
   capa `ign:provincia` del IGN, con la fuente y la fecha adentro. Lo arma
-  `npm run contorno`: baja los 111 MB crudos, simplifica con Douglas-Peucker a
-  0,02° y escribe 125 KB. **No se recorta nada** —están las 24 jurisdicciones
-  como las publica el IGN, sector antártico incluido—: qué se dibuja lo decide
-  el encuadre de la pantalla, y así la decisión de sacar territorio no existe.
+  `npm run contorno`. **No se recorta nada** —están las 24 jurisdicciones como
+  las publica el IGN, sector antártico incluido—: qué se dibuja lo decide el
+  encuadre, y así la decisión de sacar territorio no existe.
 - **El encuadre lo mandan los puntos y no el país.** Dos localidades bonaerenses
-  sobre el mapa entero son dos puntos pegados, y encuadrar en el país obligaría
-  además a resolver qué se hace con un territorio que llega al polo.
+  sobre el mapa entero son dos puntos pegados.
 - **La pestaña internacional no lleva mapa, y lo dice.** El contorno que hay es
   el de la Argentina; un planisferio es otro trabajo.
 - **La tierra no usa un token de superficie.** Las tres superficies del sistema
-  son casi el mismo color a propósito —`--card` sobre `--sunk` da 1,1 en claro y
-  1,2 en oscuro—, así que la primera versión salió un rectángulo negro con los
-  puntos flotando. Va `--fg` a opacidad baja: sale del sistema, se da vuelta
-  sola con el tema, y el trazo a 0,5 da 3,37 y 4,78 contra `--sunk`, o sea que
-  pasa el 3:1 de un objeto gráfico en los dos temas.
+  son casi el mismo color a propósito, así que la primera versión salió un
+  rectángulo negro con los puntos flotando. Va `--fg` a opacidad baja: sale del
+  sistema y se da vuelta sola con el tema.
 - **A OSRM se le pide `overview=full` y se adelgaza acá.** Su `simplified`
-  devuelve unos 25 puntos para 700 km y con eso la ruta sale casi recta: el mapa
+  devuelve unos 25 puntos para 700 km y la ruta sale casi recta: el mapa
   terminaba diciendo lo contrario de lo que existe para decir. **El parámetro no
-  toca el número** —se comprobó con las tres formas sobre tres pares y dan la
-  misma distancia hasta el último decimal— y el trazado se poda a 400 puntos,
-  porque 2.900 pares por consulta llenan el `localStorage`, que ahora se poda a
-  las últimas 25.
+  toca el número**, comprobado sobre tres pares. El trazado se poda a 400 puntos
+  y el caché de OSRM, a las últimas 25 consultas: llenar el `localStorage`
+  rompería el cálculo y no el dibujo.
 
 ## El cómputo de plazos, extraído y consultable
 
@@ -512,26 +448,21 @@ UTC— y `mora.html` usa `new Date(y, m, d)` con `setHours(0,0,0,0)` —medianoc
 local—. **No se unificaron**, y están las dos en el archivo con el comentario de
 por qué: unificarlas es elegante y mueve un número de algún lado.
 
-**`npm run verificar-plazos`**, 34 comprobaciones, corre en Node. Lleva como
+**`npm run verificar-plazos`**, 121 comprobaciones, corre en Node. Lleva como
 regresión el caso con el que el hermano pidió esto —notificación 18/6/2026, diez
 hábiles del art. 257 CPCCN, firme, diez corridos del art. 54 de la ley 27.423,
-**mora el 12/7/2026**, que es la fecha exacta de una resolución real— más los
-invariantes: el vencimiento nunca cae en inhábil, el sábado a las 23 hs. suma un
-día y no dos, la ampliación del art. 158 se cuenta en hábiles y no en corridos,
-y la notificación automática siempre cae en martes o viernes hábil.
+**mora el 12/7/2026**— más los invariantes: el vencimiento nunca cae en inhábil,
+el sábado a las 23 hs. suma un día y no dos, la ampliación del art. 158 se
+cuenta en hábiles y no en corridos, y la notificación automática siempre cae en
+martes o viernes hábil.
 
 ### `conectores/`
 
-Tres consumos sobre un núcleo único, y **ninguno calcula nada**:
-
-- **`conectores/nucleo.mjs`** — carga los dos motores de navegador en Node con
-  el mismo apaño que ya usaba `verificar-calculos.mjs` (leer disco en vez de
-  red) y traduce entre `Date` y JSON. Se importa directo.
-- **`conectores/http.mjs`** (`npm run conector-http`) — JSON sobre HTTP, GET con
-  query o POST con cuerpo. **Escucha sólo en `127.0.0.1`.**
-- **`conectores/mcp.mjs`** (`npm run conector-mcp`) — MCP por stdio, JSON-RPC
-  sin dependencias. Seis herramientas: `dia_habil`, `siguiente_habil`,
-  `dias_habiles_entre`, `vencimiento`, `mora`, `cobertura`.
+Tres consumos sobre un núcleo único, y **ninguno calcula nada**: `nucleo.mjs`
+carga los dos motores de navegador en Node y traduce entre `Date` y JSON;
+`http.mjs` (`npm run conector-http`) lo sirve por JSON sobre HTTP y **escucha
+sólo en `127.0.0.1`**; `mcp.mjs` (`npm run conector-mcp`) lo sirve por MCP en
+stdio, con seis herramientas y sin dependencias.
 
 Que sean dos transportes finos sobre un núcleo es el punto entero: **una segunda
 implementación de una cuenta con consecuencia jurídica es el modo de falla que
@@ -547,14 +478,15 @@ donde lo va a leer.
 arrastran hora y huso. Un plazo judicial no tiene hora.
 
 **Los cubre `npm run verificar-conectores`**, 46 comprobaciones, en CI. **No
-cubre aritmética**, que ya cubre `verificar-plazos`: cubre lo que se rompe de un
-transporte y no de una cuenta, y **sobre todo que un dato faltante no devuelva
-una fecha**, que es la única regla del conector que no se puede reparar después.
+cubre aritmética** —eso ya es `verificar-plazos`— sino lo que se rompe de un
+transporte, y **sobre todo que un dato faltante no devuelva una fecha**, que es
+la única regla del conector que no se puede reparar después.
 
-**Lo que falta: avisarle al hermano.** El pedido está anotado en el `ESTADO.md`
-de `pipeline-drafter` y en `HERMANOS.md` como abierto; cuando esto se use desde
-allá, se cierra ahí y no acá. **Hasta que alguien los consuma, «andan» quiere
-decir que pasan una corrida a mano, no que estén rodados.**
+**Ya se consumen, y eso cambia el peso de un cambio acá.** `pipeline-drafter`
+los usa desde el 2/9 —su `pipeline/plazos.py` levanta `conectores/mcp.mjs` por
+stdio— y el pedido quedó cerrado en `HERMANOS.md`. **Tocar la forma de una
+respuesta ya rompe a alguien**, así que el contrato —`AAAA-MM-DD`, y `ok: false`
+con el motivo cuando falta un dato— dejó de ser una decisión interna.
 
 ---
 
@@ -565,11 +497,10 @@ Vive en `escribiente/` y se publica en `/escribiente/`; la URL vieja
 anonimiza los datos personales; también une, separa y rota. Por qué PDF-studio
 se tiró en vez de parcharse está en [`HISTORIA.md`](HISTORIA.md).
 
-**Lleva un aviso de «en pruebas» en dos lugares, y el aviso es lo que hace
-honesta la publicación**: la etiqueta en la tarjeta de la landing, y un bloque
-en `--warn` arriba de `escribiente/index.html` para el que llega por enlace
-directo. Se publicó sin rodaje a propósito ---en la oficina no se puede levantar
-un servidor local---. **Sacar el aviso es decisión de Javier.**
+**Lleva un aviso de «en pruebas» en dos lugares —la tarjeta de la landing y un
+bloque en `--warn` arriba de `escribiente/index.html`— y el aviso es lo que hace
+honesta la publicación**: salió sin rodaje a propósito, porque en la oficina no
+se puede levantar un servidor local. **Sacar el aviso es decisión de Javier.**
 
 **Lo que hay que saber para tocarla:**
 
@@ -578,11 +509,11 @@ un servidor local---. **Sacar el aviso es decisión de Javier.**
   comprobaciones, en CI. Los seis bugs de la versión anterior y las seis fugas
   del 21/8 están ahí como regresión. `js/app.js` es sólo la pantalla.
 - **Las librerías van versionadas en `escribiente/vendor/`** —pdf.js 3.11.174 y
-  pdf-lib 1.17.1, 1,9 MB—. **No se vuelven a un CDN**: la promesa de privacidad
-  se sostiene con la CSP, y una CSP que habilita un CDN ya no promete nada.
-- **No carga la tipografía Archivo.** Es la única página del sitio que no la
-  pide a Google, y es a propósito. Si alguien «arregla» esa inconsistencia,
-  rompe la CSP y la promesa con ella.
+  pdf-lib 1.17.1— **y no vuelven a un CDN**, y **no carga la tipografía
+  Archivo**: es la única página del sitio que no la pide a Google. Las dos cosas
+  sostienen la CSP, y el porqué está en
+  [Una promesa de privacidad](#una-promesa-de-privacidad-se-demuestra-no-se-declara).
+  Si alguien «arregla» la inconsistencia, rompe la promesa.
 - **Para levantarla local hay que servir desde la raíz del repositorio**, porque
   `comun.css` y `tema.js` están en `../`. La configuración `sitio-estatico` de
   `.claude/launch.json` ya lo hace.
@@ -591,11 +522,10 @@ un servidor local---. **Sacar el aviso es decisión de Javier.**
 largo el 21/8, que además destapó seis fugas ya arregladas; la crónica de ese
 día está en [`HISTORIA.md`](HISTORIA.md).
 
-- **Un nombre que el OCR ensució no lo agarra nada.** `SR :ERNESTO QU1ROGA`
-  queda como `SR [PERSONA] QU1ROGA`: la `Ó` salió como
-  `6`, y ningún patrón de nombre puede aceptar dígitos adentro de una palabra
-  sin empezar a comerse números. Un humano lo lee igual. **No tiene arreglo por
-  patrón**, y es una razón más para leer el `.md` antes de mandarlo.
+- **Un nombre que el OCR ensució no lo agarra nada**, porque ningún patrón de
+  nombre puede aceptar dígitos adentro de una palabra sin empezar a comerse
+  números. Un humano lo lee igual. **No tiene arreglo por patrón**, y es una
+  razón más para leer el `.md` antes de mandarlo.
 - **El domicilio del propio juzgado también se reemplaza.** `TUCUMAN 1300, 5TO
   PISO` sale como `[DOMICILIO]`. No es un dato personal y se pierde información
   útil, pero la regla que lo agarra es la misma que agarra el domicilio de una
@@ -607,11 +537,10 @@ día está en [`HISTORIA.md`](HISTORIA.md).
   de», «valor de», «monto de». Un monto escrito de otra manera todavía puede
   salir como `[DNI]`. **Se eligió que el falso positivo sea visible** —queda en
   el texto y en la constancia— antes que dejar pasar un documento.
-- **Varias páginas salieron en blanco.** Son escaneos sin OCR intercalados,
-  y el aviso funcionó exactamente como tenía que funcionar: las lista una por
-  una y dice que lo que decían no está en el archivo. Pero conviene tenerlo
-  presente al leer una constancia: **la anonimización sólo vio el 40% del
-  expediente**, y de lo que no vio no puede decir nada.
+- **Una página que es un escaneo sin OCR sale en blanco.** El aviso las lista
+  una por una y dice que lo que decían no está en el archivo, pero conviene
+  tenerlo presente al leer una constancia: **de lo que no vio, la anonimización
+  no puede decir nada.**
 - **La detección de nombres propios no cubre razones sociales.** «Seguros del
   Sur S.A.» no dispara ningún patrón de los tres, así que no se ofrece como
   candidato y hay que anonimizarlo mirando el texto.
@@ -626,14 +555,10 @@ proceso**, **173 recorridos** y **29.929 cruces**. Viven en `index.html`, en
 en la tabla de recorridos de [`01_PROCESOS.md`](domain/01_PROCESOS.md), que es
 de donde salen las dos últimas. **Si vuelve a moverse alguna, se mueven todas.**
 
-**Desde el 25/8 hay un control: `npm run verificar-honorio`.** Lee las cinco del
-motor —la versión de su `package.json`, las validaciones contando los archivos,
-y los recorridos y los cruces de la enumeración que imprime
-`retroceso.validation.ts`— y las compara contra lo que dice cada página. No
-arregla nada: dice qué archivo quedó viejo y en qué número. Los recorridos no
-los cuenta él, y es a propósito: contarlos aparte sería una segunda
-implementación de la poda del wizard, que es exactamente la clase de problema
-que el script existe para evitar.
+**`npm run verificar-honorio` las compara contra el motor** y dice qué archivo
+quedó viejo y en qué número; no arregla nada. Los recorridos no los cuenta él, y
+es a propósito: contarlos aparte sería una segunda implementación de la poda del
+wizard, que es la clase de problema que el script existe para evitar.
 
 **Necesita el clon de `honorio/`, así que no corre en CI** —allá no existe—: la
 limitación es que nada obliga a correrlo. Cuando sale una versión, se corre acá.
@@ -665,11 +590,17 @@ el look más reconocible de diseño generado por IA.
 **El tema lo elige el usuario, desde el 5/8**, con un botón que inyecta
 `assets/tema.js` —compartido, porque son páginas sin build y una copia por
 página del mismo comportamiento se desincroniza—. Lo llevan **todas las páginas
-que el sitio publica salvo las tres de redirección y el asistente clásico**. Los
-diez documentos de dominio se sumaron el 26/8: hasta ese día eran los únicos que
-seguían al sistema y nada más, y quien había elegido claro los veía en oscuro
-igual. Sin elección guardada se sigue al sistema; con elección, manda la
-elección y persiste en `localStorage`.
+que el sitio publica salvo las tres de redirección y el asistente clásico**, los
+diez documentos de dominio incluidos.
+
+**Sin elección guardada el tema es oscuro, y el sistema ya no decide**, desde el
+6/9. Antes mandaba `prefers-color-scheme`, o sea el sistema operativo del que
+mira: que decida él no es más neutral, es otra decisión y encima no es la suya.
+La elección persiste en `localStorage`. **El `@media (prefers-color-scheme: dark)`
+de `comun.css` no sobra por eso** —acá siempre queda un `data-tema` puesto—:
+es lo único que decide cuando `tema.js` no corre, y sin él alguien con el JS
+bloqueado y el sistema en oscuro vería la página clara. **No alcanza a
+Honorio**, que tiene su propio interruptor y su propia clave.
 
 **Cómo está hecho, para no romperlo:** los tokens oscuros están **dos veces**, en
 `@media (prefers-color-scheme: dark) { :root:not([data-tema="claro"]) }` y en
@@ -695,10 +626,9 @@ ninguna tabla ajena. Cada UMA salió del punto resolutivo de su acordada o
 resolución y cada UHOM, de las tablas oficiales del Ministerio de Justicia. Las
 dos viven en `data/`, versionadas, con la norma al lado de cada valor.
 
-**Copiarlas habría sido más rápido y habría estado mal.** Las dos compilaciones
-públicas que existen atribuyen a la Acordada 4/2022 el valor de $8.183 desde
-abril de 2022, y la acordada dice **$7.439 a partir del 1 de enero de 2022**.
-El detalle, en [`HISTORIA.md`](HISTORIA.md).
+**Copiarlas habría sido más rápido y habría estado mal:** las dos compilaciones
+públicas que existen se equivocan en el valor de la Acordada 4/2022. El caso, en
+[`HISTORIA.md`](HISTORIA.md).
 
 **Vigencia y fecha del acto son dos campos y no uno.** La resolución dice desde
 cuándo rige el valor y casi siempre lleva fecha posterior a esa: de los 63
@@ -727,13 +657,13 @@ número de la tabla que aparece también multiplicado por dos y por treinta. Hiz
 falta porque el formato cambió seis veces en diez años —y el separador de miles
 pasó de punto a coma en la 39—: ninguna etiqueta es confiable, la aritmética sí.
 
-**Un valor con vigencia futura es válido, y hasta el 1/9/2026 no lo era.** El
-Ministerio publica el UHOM por trimestres: la serie trae octubre, noviembre y
-diciembre desde septiembre y nadie tiene que acordarse del día 1. La prohibición
-existía porque `uma-uhom.html` tomaba el **último del archivo** como vigente
-—las otras tres ya tomaban el último que ya rige—; arreglada esa, quedó sin
-motivo. **Garantizar que no haya futuros no era lo que hacía falta: hacía falta
-que siempre haya alguno vigente.** Las futuras van apagadas y con «aún no rige».
+**Un valor con vigencia futura es válido, y no hay que volver a prohibirlo.**
+El Ministerio publica el UHOM por trimestres, así que la serie trae el trimestre
+entero y nadie tiene que acordarse del día 1. **Lo que hay que garantizar no es
+que no haya futuros: es que siempre haya alguno vigente**, y las cuatro páginas
+toman el último que ya rige y no el último del archivo. Las futuras van apagadas
+y con «aún no rige». Por qué la regla estuvo al revés, en
+[`HISTORIA.md`](HISTORIA.md).
 
 **`npm run verificar-series` corre en el build**, antes de armar el sitio. Un
 archivo cargado a mano se rompe de cuatro formas y las cuatro dan un número
@@ -743,12 +673,10 @@ que baja, una fecha de acto anterior a la vigencia, y ningún valor vigente.
 ### Ningún día inhábil se decide en código
 
 La regla general —**lo que se fija por acto va en datos con la cita del acto**—
-está en [`AGENTS.md`](../AGENTS.md). El 24/8 se terminó de aplicar: enero era el
-último que quedaba escrito a mano, `getMonth() === 0` en
-`calculadoras/js/calendario-judicial.js`. Ahora sale de la clave
-`feria_de_enero` de `data/feria-judicial.json`, con el art. 2 del Reglamento
-para la Justicia Nacional citado y el texto del artículo adentro. El comentario
-del archivo decía que lo fijaba el art. 257 CPCCN, que no dice nada de esto.
+está en [`AGENTS.md`](../AGENTS.md), y desde el 24/8 no queda ningún día escrito
+en código: enero era el último, y ahora sale de la clave `feria_de_enero` de
+`data/feria-judicial.json`, con el art. 2 del Reglamento para la Justicia
+Nacional citado y el texto del artículo adentro.
 
 **El default del motor no es «no hay feria».** Si el archivo no se puede leer,
 enero sigue siendo feria. Con la feria de invierno la ausencia se puede informar
@@ -757,16 +685,13 @@ adelanta un vencimiento un mes entero, y eso no se ve: sale un número plausible
 Leer el dato sólo puede confirmar el default o mover el mes, nunca apagarlo. El
 control que prueba que el dato se leyó es que el motivo cite la norma.
 
-**El jueves santo faltaba desde 2021.** El mismo art. 2 hace inhábiles los días
-«que por disposición del Congreso o del Poder Ejecutivo no sean laborables», y el
-jueves santo es no laborable, no feriado. Por eso **no viene en la API**, que
-sólo trae feriados: viene el viernes santo y el jueves no. Estaba cargado a mano
-sólo 2025; de 2021 a 2024 el motor lo contaba como hábil —un día hábil de más,
-otra vez hacia adelante—. Ahora están los seis en `data/dias-inhabiles.json` y
+**El jueves santo no viene en la API de feriados, y por eso se olvida.** Es no
+laborable y no feriado, así que la API trae el viernes santo y el jueves no,
+aunque el mismo art. 2 lo haga inhábil. Faltó de 2021 a 2024 —un día hábil de
+más, otra vez hacia adelante—; están los seis en `data/dias-inhabiles.json` y
 **el olvido ya no depende de que alguien se acuerde**: `verificar-calculos.mjs`
 toma cada viernes santo de `feriados.json` y exige que el día anterior sea
-inhábil. 2026 no figura porque el jueves santo cayó 2 de abril y ya es feriado
-nacional por Malvinas.
+inhábil.
 
 La frase «la Semana Santa» del mismo artículo **no** está implementada como una
 semana entera, y eso es deliberado: el lunes, el martes y el miércoles santo se
@@ -776,9 +701,8 @@ de la letra y se inventen tres días inhábiles.
 ### Este repositorio es público, y eso decide cómo se escribe
 
 Las reglas están en [`AGENTS.md`](../AGENTS.md), en «Datos: qué no entra a este
-repositorio», y `scripts/verificar-datos.sh` las verifica en cada commit.
-
-Si falta una referencia que parece que debería estar, falta a propósito. No completarla.
+repositorio», y `scripts/verificar-datos.sh` las verifica en cada commit. Si
+falta una referencia que parece que debería estar, falta a propósito.
 
 ### Una promesa de privacidad se demuestra, no se declara
 
@@ -802,16 +726,13 @@ Lo mismo vale para la tipografía, que por eso no se carga.
 
 ### La anonimización decide sola lo que tiene forma, y pregunta lo que no
 
-Es el diseño de `escribiente/js/motor/anonimizar.js`, heredado de otra
-herramienta propia que no está en este repositorio, y no es una comodidad de
-interfaz.
-
-Lo que tiene forma inequívoca —DNI, CUIT, CBU, teléfono, expediente, matrícula,
-correo— se reemplaza solo, porque no hay falso positivo posible. **Los nombres
-propios se muestran para que el usuario decida uno por uno**, porque ninguna
-regla distingue sola `Pérez, Juan Carlos` —la parte— de `Llambías, Jorge
-Joaquín` —doctrina— ni de `Buenos Aires, Astrea`, que es una editorial.
-Reemplazar por adivinanza corrompe el texto; no reemplazar filtra.
+Es el diseño de `escribiente/js/motor/anonimizar.js`, y no es una comodidad de
+interfaz. Lo que tiene forma inequívoca —DNI, CUIT, CBU, teléfono, expediente,
+matrícula, correo— se reemplaza solo, porque no hay falso positivo posible.
+**Los nombres propios se muestran para que el usuario decida uno por uno**,
+porque ninguna regla distingue sola `Pérez, Juan Carlos` —la parte— de
+`Llambías, Jorge Joaquín` —doctrina— ni de `Buenos Aires, Astrea`, que es una
+editorial. Reemplazar por adivinanza corrompe el texto; no reemplazar filtra.
 
 De ahí también la constancia al pie de cada `.md`: qué se reemplazó, cuántas
 veces, y **qué quedó sin ocultar**. Un anonimizador que no se puede auditar es
@@ -821,9 +742,9 @@ peor que ninguno, porque produce confianza sin fundarla.
 
 Es el criterio con que `calculadoras/honorarios.html` se dio de baja en vez de
 corregirse —el porqué, en [`HISTORIA.md`](HISTORIA.md)—. Que una tarjeta de la
-landing diga «retirada» no la saca de internet, y el que llega por un enlace no
-ve la tarjeta. Si hay que retirar algo: el archivo se queda, la URL sigue viva
-con un redirect en `pages.yml`, y la landing dice el motivo.
+landing diga «retirada» no la saca de internet. Si hay que retirar algo: el
+archivo se queda, la URL sigue viva con un redirect en `pages.yml`, y la landing
+dice el motivo.
 
 ### Ninguno de los dos planes de Honorio es trabajo de este repositorio
 
@@ -831,12 +752,11 @@ con un redirect en `pages.yml`, y la landing dice el motivo.
 catálogo de decisiones, y describe el motor **clásico**: donde dice
 `calculations.js` o `core.js` se habla de `asistente-honorarios-clasico/`.
 
-[`PLAN_COBERTURA_LEY.md`](planes-cerrados/PLAN_COBERTURA_LEY.md) **está hecho entero desde el
-7/8**, y lo dice en su encabezado. Hasta el 31/8 este archivo pedía «los seis
-puntos que quedan», que era al revés: seis están hechos y cuatro quedaron
-anotados sin fecha. Los cuatro son trabajo de Honorio y **desde el 31/8 viven en
-el `ESTADO.md` de aquel repositorio**, que es donde se van a cerrar. El
-documento se queda acá porque acá está la materia prima; el pendiente, no.
+[`PLAN_COBERTURA_LEY.md`](planes-cerrados/PLAN_COBERTURA_LEY.md) **está hecho
+entero**, y lo dice en su encabezado. Los cuatro puntos que quedaron anotados
+sin fecha son trabajo de Honorio y **viven en el `ESTADO.md` de aquel
+repositorio**, que es donde se van a cerrar. El documento se queda acá porque
+acá está la materia prima; el pendiente, no.
 
 ---
 
@@ -851,20 +771,15 @@ documento se queda acá porque acá está la materia prima; el pendiente, no.
 - **Abrir el panel del navegador al empezar la sesión**, como primer paso y no
   como diagnóstico. Con el panel oculto `document.hidden` es `true`,
   `requestAnimationFrame` no dispara, `clientWidth` mide 0 y las capturas fallan
-  con *«the Browser pane is not displayed»*; en Honorio el paso del wizard
-  **directamente no se monta**. No es una limitación del entorno: **la solución
-  es abrir el panel.** Si no se puede, el JavaScript sí funciona, y estilos
-  computados y mediciones son más confiables que mirar una captura.
-  **Y con el panel oculto los valores computados mienten de tres formas**, todas
-  pagadas ya: las transiciones CSS no avanzan y `getComputedStyle` devuelve el
-  color del tema anterior por tiempo indefinido; `getComputedStyle` reporta
-  `transitionProperty: all` sobre elementos que no declaran ninguna, y devuelve
-  colores intermedios que no están escritos en ningún lado; y el
-  `ResizeObserver` no dispara, así que un iframe queda con el alto de antes.
-  Los casos, en [`HISTORIA.md`](HISTORIA.md). **Dos reglas cortas:** con el
-  panel oculto, **un color computado no es evidencia y el token sí** —el número
-  se calcula afuera, del token contra la superficie compuesta—, y para descartar
-  un desfase de medición, **medir en la misma corrida algo que no se tocó**.
+  con *«the Browser pane is not displayed»*. No es una limitación del entorno:
+  **la solución es abrir el panel.** Si no se puede, el JavaScript sí funciona.
+  **Y con el panel oculto los valores computados mienten de tres formas** —el
+  color del tema anterior por tiempo indefinido, un `transitionProperty: all`
+  que nadie declaró, y un `ResizeObserver` que no dispara—: los casos, en
+  [`HISTORIA.md`](HISTORIA.md). **Dos reglas cortas:** con el panel oculto **un
+  color computado no es evidencia y el token sí** —el número se calcula afuera,
+  del token contra la superficie compuesta—, y para descartar un desfase de
+  medición, **medir en la misma corrida algo que no se tocó**.
 - **Un artículo de la ley no termina donde termina su primer párrafo, y
   `verificar-docs` no lo nota.** El 10/8 se afirmó dos veces que «el art. 19 de
   la 27.423 instituye la UMA y no tiene incisos», y tiene dos tablas de mínimos
@@ -897,18 +812,14 @@ documento se queda acá porque acá está la materia prima; el pendiente, no.
   **Y una tercera, del 2/9: un nombre de clase repetido.** Las clases de
   `css/dibujo-plazo.css` comparten espacio de nombres con el `<style>` local,
   que gana, y con `aspect-ratio: 1` un relleno de más se vuelve ancho de más.
-- **`scripts/verificar-datos.sh` es el verificador de los cuatro repositorios,
-  no sólo de éste.** Desde el 25/8 `core.hooksPath` global apunta a un hook
-  compartido que lo corre en cualquier repositorio de la máquina —incluidos los
-  que todavía no existen— y después encadena al `.githooks/pre-commit` propio
-  del repositorio, si lo tiene. **Un patrón que se afloja acá se afloja para los
-  cuatro**, y eso ahora se ve en un diff, que antes no.
-  Hasta ese día había dos copias y ya se habían desincronizado: la de afuera
-  tenía un arreglo que ésta no. El patrón de teléfono fijo de CABA, delimitado
+- **`scripts/verificar-datos.sh` es el verificador de todos los repositorios de
+  la máquina, no sólo de éste.** `core.hooksPath` global apunta a un hook
+  compartido que lo corre en cualquiera —incluidos los que todavía no existen—.
+  **Un patrón que se afloja acá se afloja para todos**, y eso ahora se ve en un
+  diff. La forma en que muerde: el patrón de teléfono fijo de CABA, delimitado
   por bordes de palabra a los dos lados, **matchea adentro de un UUID**, y los
-  enlaces del CIJ son todos UUID: `knowledge` podía citar un fallo y este
-  repositorio no. El detalle de la instalación está en
-  [`AGENTS.md`](../AGENTS.md).
+  enlaces del CIJ son todos UUID —`knowledge` podía citar un fallo y este
+  repositorio no—. La instalación, en [`AGENTS.md`](../AGENTS.md).
 - **Un `.sh` con CRLF no corre**, y `.gitattributes` no lo cubría: con
   `* text=auto` y sin regla propia, un clon nuevo en Windows se llevaba
   `verificar-datos.sh` con CRLF y **el hook de datos personales dejaba de
@@ -953,16 +864,13 @@ documento se queda acá porque acá está la materia prima; el pendiente, no.
   inerte —git lo parsea como bytes y ve un nulo entre cada carácter— y se
   manifiesta como diffs enormes por finales de línea, no como un error.
 - **`node-version` de `pages.yml` no es la versión de Node de las acciones.**
-  Cuando Actions anuncia que «estas acciones apuntan a Node 20 y se fuerzan a
-  Node 24», habla del `runs.using` que cada action declara en su propio
-  `action.yml`, y eso sólo se mueve subiendo la versión del action. El
-  `node-version` del `setup-node` es otra cosa: el Node con el que corren
-  `npm ci` y los scripts. Subir uno no apaga el aviso del otro. El 17/8 se
-  subieron las dos: `node-version: 24`, `checkout@v7`, `setup-node@v7`,
-  `upload-pages-artifact@v5` y `deploy-pages@v5`. Y una que confunde: el
-  `upload-artifact@v4` que nombraba el aviso no está en el workflow —lo trae
-  adentro `upload-pages-artifact`, que es composite—, así que se busca en vano
-  hasta que uno abre el `action.yml` de la otra.
+  Cuando Actions avisa que «estas acciones apuntan a Node 20», habla del
+  `runs.using` que cada action declara en su `action.yml`, y eso sólo se mueve
+  subiendo la versión del action; el `node-version` del `setup-node` es el Node
+  con el que corren `npm ci` y los scripts. **Subir uno no apaga el aviso del
+  otro.** Y una que confunde: el `upload-artifact` que nombra el aviso no está
+  en el workflow —lo trae adentro `upload-pages-artifact`, que es composite—,
+  así que se busca en vano hasta abrir el `action.yml` de la otra.
 - **`upload-pages-artifact` deja fuera del artefacto los archivos que empiezan
   con punto**, desde v4 y salvo `include-hidden-files: true`. Hoy no hay
   ninguno en lo que se publica, pero el día que entre uno **no falla nada**:
@@ -987,12 +895,5 @@ documento se queda acá porque acá está la materia prima; el pendiente, no.
   comentado —sin él «en un **dia**rio» sale como un plazo de un día—.
 - **Al leer un diff grande de un HTML, mirar primero si es de contenido.**
   `git diff --ignore-cr-at-eol` lo despeja en un segundo.
-- **La consola de Next acumula errores viejos y no los limpia al recargar.**
-  Pasó el 7/8: un guardado intermedio con el JSX roto dejó cinco errores de
-  sintaxis en el buffer, y siguieron apareciendo después de arreglarlo, con
-  números de línea de código que ya no existía. **Lo que lo resuelve es una
-  compilación fresca:** `rm -rf .next && npm run build`. Si `tsc --noEmit` está
-  limpio y el build de cero pasa, la consola miente.
-
 Las que ya no aplican —el `.gitattributes` en UTF-16, el caché de Pages,
 `npm run lint`— están en [`HISTORIA.md`](HISTORIA.md).

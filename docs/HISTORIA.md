@@ -19,6 +19,74 @@ de 2026.
 
 ---
 
+## El tema por defecto es oscuro, y el sistema deja de decidir — cerrado el 6/9
+
+Sin preferencia guardada mandaba `prefers-color-scheme`, o sea el sistema
+operativo del que mira. Ahora el que no eligió ve oscuro y el que quiere claro lo
+tiene a un botón. **Que decida el sistema no es más neutral: es otra decisión, y
+encima no es la del que mira.**
+
+Tres cambios en `assets/tema.js` y ninguno toca un valor de color, así que
+`verificar-contraste` siguió valiendo y no hubo que recalibrar nada:
+`aplicar(guardado() || 'oscuro')` —corre en el `<head>` sin `defer`, así que
+sigue sin haber destello—; `actual()` dejó de preguntarle a `matchMedia`, porque
+con el defecto fijo el sistema no decide y preguntarle daba el rótulo equivocado
+—el botón habría dicho «Oscuro» en una página ya oscura—; y se fue el listener de
+`prefers-color-scheme`, que no tenía ningún estado en el que mandara.
+
+**El `@media (prefers-color-scheme: dark)` de `comun.css` se quedó.** Parece
+muerto porque acá siempre queda un `data-tema` puesto, pero es lo único que
+decide cuando ese archivo no corre: sin él, alguien con el JS bloqueado y el
+sistema en oscuro vería la página clara. No alcanza a Honorio, que tiene su
+propio interruptor y su propia clave.
+
+---
+
+## Lo que bajó de `ESTADO.md` en la limpieza del 6/9
+
+`ESTADO.md` llegó a 999 de 1000 líneas. Casi todo lo que se podó estaba ya acá
+—la reescritura de `distancia`, el mapa, las dos roturas de las teclas del
+tablero, el aviso de red—: quedaba duplicado. Lo que **no** estaba escrito en
+ningún lado es esto.
+
+**El jueves santo, cuando se cargó.** Estaba a mano sólo 2025; de 2021 a 2024 el
+motor lo contaba como hábil. Se cargaron los seis en `data/dias-inhabiles.json`.
+**2026 no figura y no es un olvido**: ese año cayó 2 de abril y ya es feriado
+nacional por Malvinas. La regla viva —que `verificar-calculos` exija que el día
+anterior a cada viernes santo sea inhábil— se quedó en `ESTADO.md`.
+
+**La feria de enero, cuando salió del código.** Era el último día inhábil escrito
+a mano, `getMonth() === 0` en `calculadoras/js/calendario-judicial.js`, y el
+comentario del archivo decía que lo fijaba el art. 257 CPCCN, que no dice nada de
+esto. Pasó a la clave `feria_de_enero` de `data/feria-judicial.json`, con el art.
+2 del Reglamento para la Justicia Nacional citado y el texto adentro.
+
+**Un valor con vigencia futura era inválido, y no tenía por qué serlo.** La
+prohibición existía porque `uma-uhom.html` tomaba el **último del archivo** como
+vigente, mientras las otras tres páginas ya tomaban el último que ya rige.
+Arreglada esa, la prohibición quedó sin motivo, y el Ministerio publica el UHOM
+por trimestres: **lo que hacía falta garantizar no era que no hubiera futuros,
+sino que siempre hubiera alguno vigente.**
+
+**Y el pedido del conector estaba cerrado hacía cuatro días sin que este lado lo
+supiera.** `ESTADO.md` decía «lo que falta: avisarle al hermano» y «hasta que
+alguien los consuma, *andan* quiere decir que pasan una corrida a mano».
+`HERMANOS.md` lo daba por cerrado el 2/9 y `pipeline/plazos.py` de
+`pipeline-drafter` levanta `conectores/mcp.mjs` por stdio. **Es el modo de falla
+propio de un pedido que se cierra en el repositorio del otro:** el que lo
+construyó no se entera. Lo que cambia no es una tilde en una lista, es el peso de
+un cambio: tocar la forma de una respuesta ahora rompe a alguien.
+
+**Y una trampa que no es de este repositorio.** «La consola de Next acumula
+errores viejos y no los limpia al recargar»: un guardado intermedio con el JSX
+roto dejaba errores de sintaxis en el buffer que seguían apareciendo después de
+arreglarlo, con números de línea de código que ya no existía. Lo resuelve una
+compilación fresca —`rm -rf .next && npm run build`—, y si `tsc --noEmit` está
+limpio, la consola miente. **Next es Honorio, que no vive acá**, así que la
+trampa se fue de las trampas vivas de este lado.
+
+---
+
 ## El calendario de agosto se dibujaba encima del de septiembre — cerrado el 2/9
 
 Javier mandó una captura de `vencimientos`: los dos meses del dibujo pisados uno

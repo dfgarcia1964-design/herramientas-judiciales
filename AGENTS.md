@@ -63,15 +63,15 @@ se desincronice. Abrilo antes de tomar una decisión que cruce de repo.
 
 Lo que hay que saber sin abrirlo:
 
-- **Éste es el único de los cuatro que es público y está desplegado.** Por eso
-  los otros tres no se fusionan con él, y por eso nada que venga de un repo
+- **Éste es el único de los cinco que es público y está desplegado.** Por eso
+  los otros cuatro no se fusionan con él, y por eso nada que venga de un repo
   privado entra sin barrer antes comentarios, nombres de variables, fixtures
   y mensajes de error: son los que arrastran ejemplos de documentos reales.
-- **El pedido de `pipeline-drafter` está construido de este lado desde el
-  25/8:** `conectores/` expone el calendario judicial y el cómputo de plazos por
-  HTTP local y por MCP. Falta que se consuma desde allá, y **el pedido se cierra
-  en el `ESTADO.md` de aquel repositorio, no acá.** Detalle en
-  [`docs/ESTADO.md`](docs/ESTADO.md).
+- **El pedido de `pipeline-drafter` está cerrado desde el 2/9:** `conectores/`
+  expone el calendario judicial y el cómputo de plazos por HTTP local y por MCP,
+  y de aquel lado `pipeline/plazos.py` ya los consume. **Cambiar la forma de una
+  respuesta rompe a alguien**, así que el contrato de `conectores/` no se toca
+  sin mirar allá. Detalle en [`docs/ESTADO.md`](docs/ESTADO.md).
 
 Y la regla que más ahorra trabajo: **antes de escribir un cálculo, un parser de
 citas o una serie de índices, fijate si ya existe en un hermano.**
@@ -402,7 +402,7 @@ escrita a mano, y uno nuevo no quedaba cubierto sin que nada avisara.
 Tres consecuencias que hay que tener presentes:
 
 - **Este archivo es la fuente única y lo lee otro repositorio en vivo.** Un patrón
-  que se afloja acá se afloja para los cuatro. Hubo dos copias hasta el 25/8 y se
+  que se afloja acá se afloja para todos. Hubo dos copias hasta el 25/8 y se
   desincronizaron: la de afuera tenía un arreglo que ésta no.
 - **`core.hooksPath` global desactiva `.git/hooks/` en toda la máquina.** Lo que
   sea propio de un repositorio va en su `.githooks/pre-commit`, al que el hook
