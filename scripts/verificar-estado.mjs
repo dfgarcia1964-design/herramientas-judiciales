@@ -40,21 +40,39 @@
 //      documento que se lee para orientarse manda a nadie a ningun
 //      lado. Se controlan tambien los enlaces a archivos.
 //
-// Uso: npm run verificar-estado
+// ES EL CONTROL DE LOS CINCO REPOS, NO SOLO DE ESTE. Desde el 7/9/2026
+// acepta la ruta del ESTADO.md y su techo por argumento, y el
+// `.githooks/pre-commit` de cada repositorio lo llama con los suyos.
+// Vive aca y no copiado, por el mismo motivo que `verificar-datos.sh`:
+// cuatro copias de la misma regla se desincronizan solas, y ya paso.
+//
+// Uso: npm run verificar-estado                  este repo (docs/ESTADO.md, techo 1000)
+//      node <ruta>/verificar-estado.mjs <archivo> <techo>
 // ---------------------------------------------------------------
 
 import { readFileSync, existsSync } from 'node:fs'
 import { join, dirname, resolve } from 'node:path'
 
 const RAIZ = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')
-const ESTADO = join(RAIZ, 'docs', 'ESTADO.md')
+// Sin argumentos se comporta como siempre, que es lo que corren npm y CI.
+const ESTADO = process.argv[2]
+  ? resolve(process.argv[2])
+  : join(RAIZ, 'docs', 'ESTADO.md')
+
+if (!existsSync(ESTADO)) {
+  console.error(`No existe ${ESTADO}`)
+  process.exit(2)
+}
 
 // El techo. Se eligio contra el tamanio que quedo despues de la poda del
 // 28/8 —893 lineas— con margen para una sesion de trabajo adentro: si un
 // dia hay que subirlo, la pregunta correcta no es cuanto sino QUE HAY
 // ADENTRO QUE YA ESTA CERRADO.
-const TECHO = 1000
-const AVISO = 900
+// Cada repo trae el suyo. El numero correcto es el tamanio que queda
+// despues de una poda mas margen para una sesion adentro, no una cifra
+// redonda igual para todos.
+const TECHO = process.argv[3] ? Number(process.argv[3]) : 1000
+const AVISO = Math.round(TECHO * 0.9)
 
 const rojo = (t) => `\x1b[31m${t}\x1b[0m`
 const verde = (t) => `\x1b[32m${t}\x1b[0m`
@@ -139,7 +157,7 @@ for (const m of texto.matchAll(/\]\(([^)#][^)]*)\)/g)) {
 }
 
 // --- el informe ----------------------------------------------------------
-console.log('\nControl de docs/ESTADO.md')
+console.log(`\nControl de ${ESTADO}`)
 console.log('================================================================')
 const porcentaje = Math.round((largo / TECHO) * 100)
 console.log(`  lineas              ${largo} de ${TECHO}  (${porcentaje} %)`)
