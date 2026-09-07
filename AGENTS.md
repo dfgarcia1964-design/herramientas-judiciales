@@ -14,6 +14,36 @@ miente. Si cerrás una sesión, actualizalo.
 cuando hace falta saber por qué algo quedó como quedó, si algo ya se probó, o de
 dónde salió una regla.
 
+## Los límites, para cualquier agente
+
+Método completo en `C:\IA\Pipeline drafter\METODO.md`. Lo que no se negocia:
+
+1. **La arquitectura no se decide acá.** Si el trabajo la toca, se para y se pregunta.
+2. **El criterio jurídico y la interpretación no son de ningún agente.** Son de Javier.
+3. **Los archivos constitutivos no se tocan** salvo indicación expresa: `AGENTS.md`,
+   `ESTADO.md`, `HISTORIA.md`, `HERMANOS.md`, `METODO.md`, `IDEAS.md`.
+4. **`ESTADO.md` lo leen todos y lo escriben Javier y los agentes de razonamiento.**
+   Un agente de ejecución reporta en `HANDOFF.md` y en el commit; no escribe la memoria.
+5. **Un agente de ejecución trabaja sólo desde un `HANDOFF.md` con línea de verificación**,
+   corre esa verificación, y **no decide si está terminado**: ejecuta y reporta.
+6. **Ante una duda de criterio, se para y se escribe.** No se resuelve por analogía.
+7. **Nada de datos personales ni material de causas propias**, en ningún archivo,
+   comentario ni mensaje de commit. El hook global bloquea lo que puede; no reemplaza
+   el criterio.
+8. **Antes de escribir un cálculo, un parser de citas o una serie de índices**, fijate si
+   ya existe en un repo hermano.
+
+> Estas ocho líneas están copiadas textual de `METODO.md` y son las mismas en los cinco
+> repos. Es la única duplicación deliberada del sistema: un límite tiene que estar visible
+> donde uno está parado, y un agente bajo presión de tokens puede no seguir un puntero.
+> **Si cambian, cambian en los cinco.**
+
+En este repositorio hay además una regla que manda sobre todas: ningún cambio puede mover
+un número sin que sea exactamente lo que se pidió. Está abajo, en «La regla que gobierna
+todo lo demás», y es la que hace que casi nada de lo que toca cálculo sea delegable.
+
+---
+
 ### `ESTADO.md` tiene presupuesto, y hay un control que lo hace cumplir
 
 **`ESTADO.md` se lee entero al empezar cada sesión, así que cada línea de más se
