@@ -3,7 +3,7 @@
 Documento de continuidad entre sesiones. **Leer antes de empezar a trabajar.**
 Se actualiza en el mismo commit que el trabajo, para que nunca mienta.
 
-Última actualización: 2026-09-06 · rama `main`
+Última actualización: 2026-09-08 · rama `main`
 
 **Lleva sólo lo que sigue vivo.** Dónde está el trabajo, qué está abierto, qué
 se sabe roto, qué decisiones no hay que contradecir sin saberlo, y qué trampas
@@ -207,18 +207,30 @@ Ninguno urgente y ninguno bloqueante.
   de fuentes en Node. **Se regenera cuando se carga un valor nuevo**, y lleva la
   vigencia al lado del número para que una imagen vieja compartida en un chat
   siga diciendo algo cierto.
-- **`www.javiercuneo.com.ar` anda por HTTP y no por HTTPS, y el DNS no tiene
-  nada que ver.** El CNAME `www` → `javiercuneo.github.io` está puesto en
-  Cloudflare, gris, y por HTTP redirige 301 al dominio pelado. Falta **el
-  certificado**: el de GitHub cubre `javiercuneo.com.ar` y nada más. Se arregla
-  volviendo a guardar el dominio en Settings → Pages, no tocando el DNS.
+- **`www` anda por HTTPS desde el 8/9, y el certificado no es de GitHub: es de
+  Cloudflare.** GitHub nunca emitió para `www` —su certificado cubre
+  `javiercuneo.com.ar` y nada más— y **sacar y reponer el dominio no lo obliga a
+  emitir**, probado el 7/9: volvió el mismo certificado, con el mismo
+  `expires_at`. Se resolvió del otro lado: el registro `www` pasó a **proxeado**
+  en Cloudflare, así que lo cubre el certificado del borde
+  (`*.javiercuneo.com.ar`, Google Trust Services). **El ápex sigue en gris y
+  directo a GitHub**, con su Let's Encrypt, y no se tocó.
+  **Dos cosas que conviene no romper.** La primera: quien emite el 301 de `www`
+  al dominio pelado **es GitHub, no una regla de Cloudflare** —los encabezados
+  `x-github-request-id` lo muestran—; la regla de redirección que se creó no
+  matchea y no hace nada. La segunda, que es la que muerde: Cloudflare le habla
+  al origen **sin validar su certificado**, porque el modo SSL/TLS es *Full*. El
+  origen de GitHub no tiene certificado para `www`, así que **en *Full (strict)*
+  esto se rompe**. Si `www` deja de andar sin que nadie lo haya tocado, mirar
+  ahí primero.
 
-### Del lado de Honorio: mudado, no hay nada que hacer acá
-
-Los tres puntos de `scripts/actualizar-uma.mjs` se mudaron el 1/9 al `ESTADO.md`
-de Honorio, que es donde se van a cerrar. De este lado quedan las series con las
-que se calibran y no hay que hacerles nada. Lo que todavía no existe va en
-`IDEAS.md`, que es cuaderno interno y **no se versiona**.
+  **Lo que cuesta, y es el motivo por el que sigue abierto:** mientras GitHub no
+  emita **se cae el ápex también**, no sólo `www`. Lo habitual son 10-30 minutos
+  y el techo declarado por GitHub son 24 horas; no hay forma de apurarlo, y
+  **el sitio manda HSTS** (`max-age=31556952`), así que el que ya entró alguna
+  vez no va a poder saltear el aviso del navegador. Se corre de noche y con
+  margen. La alternativa sin corte —proxear `www` en Cloudflare y redirigir
+  desde ahí— quedó como segunda opción: mete a Cloudflare en el camino.
 
 ---
 
@@ -240,10 +252,9 @@ está en [`HISTORIA.md`](HISTORIA.md). Lo vivo:
   excepción que no hay que arreglar: `pages.yml` publica en su URL el aviso de
   `redirects/honorarios-retirada/`, así que ese archivo no llega al sitio.
 
-**Y el peso del aviso es una decisión.** En `distancia` va en un `<details>`
-cerrado, **entero y sin recortar nada**: gritarlo arriba de todo insinuaba que
-en el resto del sitio sí sale algo, que es al revés. La promesa no se afloja;
-cambia el volumen. El razonamiento, en [`HISTORIA.md`](HISTORIA.md).
+**Y el peso del aviso es una decisión**: en `distancia` va **entero y sin
+recortar nada**, pero en un `<details>` cerrado. La promesa no se afloja; cambia
+el volumen. El razonamiento, en [`HISTORIA.md`](HISTORIA.md).
 
 ---
 
@@ -270,26 +281,18 @@ a propósito**: un control que nunca falló no es un control.
 Y **tres** que corren en el navegador, con el sitio servido y no con `file://`:
 
 - **`scripts/pruebas-calculadoras.html`** cubre **las pantallas** de plazos: 75
-  filas —21 verificados a mano, 6 invariantes, 3 fijados, los 24 cruzados contra
-  el motor, y los 21 verificados otra vez adentro del tablero—, **las 75
-  pasando**. Maneja las cinco por iframe y compara lo que muestran. **Los
-  iframes llevan rompe-caché**: sin él las pruebas corren contra la versión
-  anterior, que parece un bug del cambio que se acaba de hacer.
-- **`scripts/pruebas-tablero.html`** cubre **la navegación** del tablero: **37
-  comprobaciones, las 37 pasando**, en ocho grupos —las pestañas, que las dos
-  regiones sean independientes, el enlace directo por `#pestania`, las teclas,
-  las flechas, el montaje perezoso y el estado vivo, lo que el CSS inyectado le
-  hace al marco, y lo que va como enlace—. **Existe porque una pestaña que no
-  abre no mueve ningún número**, así que el banco de al lado no la ve: si la
-  navegación se rompe, las diez calculan perfecto y no llega nadie. **Cada
-  prueba abre su propio tablero**, porque varias dependen del estado de arranque
-  y ésas no se pueden correr sobre uno que ya se tocó.
+  filas, las 75 pasando, sobre las cinco por iframe. **Los iframes llevan
+  rompe-caché**: sin él las pruebas corren contra la versión anterior, que
+  parece un bug del cambio que se acaba de hacer.
+- **`scripts/pruebas-tablero.html`** cubre **la navegación** del tablero: 37
+  comprobaciones, las 37 pasando, en ocho grupos. Es el único que ve una
+  pestaña que no abre —el de al lado calcularía perfecto igual—. **Cada prueba
+  abre su propio tablero**, porque varias dependen del estado de arranque y no
+  se pueden correr sobre uno que ya se tocó.
 - **`scripts/pruebas-no-plazos.html`** cubre las cuatro que no son de plazos:
   **60 fijados** sobre `prorrateo`, `tasa`, `honorarios-mediacion` y
-  `ejecucion-estado`. Existe porque era la condición para poder refundarlas: una
-  reescritura sin red no se puede distinguir de un error. **Los casos de `tasa`
-  se remapearon dos veces sin que un solo número se moviera**, y eso es
-  exactamente para lo que están.
+  `ejecucion-estado`. Son la red que permite refundar una pantalla: los casos de
+  `tasa` se remapearon dos veces sin que un solo número se moviera.
 
 **Las tres se arrastran con el panel del navegador oculto** —de seis segundos a
 varios minutos— porque los iframes no dibujan: no es que estén rotas.
@@ -314,12 +317,11 @@ calendario sólo para eso, y el cómputo de cada calculadora sigue pasando adent
 de su propio marco.
 
 **Las teclas 1-6 se rompieron dos veces, por causas distintas, y las dos
-estuvieron publicadas** —el detalle, en [`HISTORIA.md`](HISTORIA.md)—. Lo que
-queda de eso son dos cosas: **un evento de teclado no cruza de un iframe al
-documento de arriba**, así que el mismo oyente se engancha adentro de cada marco
-al montarlo; y **las dos veces la pestaña siguió dibujando su número**, por lo
-que `pruebas-tablero.html` no comprueba que «alguna tecla haga algo» sino que
-**cada tecla abra la que dice su propio badge**.
+estuvieron publicadas** —el detalle, en [`HISTORIA.md`](HISTORIA.md)—. Lo vivo:
+**un evento de teclado no cruza de un iframe al documento de arriba**, así que
+el mismo oyente se engancha adentro de cada marco al montarlo; y como las dos
+veces la pestaña siguió dibujando su número, `pruebas-tablero.html` exige que
+**cada tecla abra la que dice su propio badge** y no que «alguna haga algo».
 
 **Las cuatro decisiones que lo sostienen**, para no revisarlas sin saber por qué
 están:
@@ -340,15 +342,12 @@ están:
   peor adentro de un marco ajeno, no mejor.
 
 **Lo que sólo tiene sentido con la página abierta sola se oculta adentro del
-tablero**, por el mismo CSS inyectado que anula el `min-height: 100vh`. El
-selector es **`.solo-suelta`, y es una sola regla**: la ponen las calculadoras
-sobre su pie de autoría y sobre su línea de cobertura del calendario, que el
-tablero dice una vez en la portada —una lista de selectores en el tablero crecía
-con cada pantalla; una clase que ponen las pantallas, no—. **Una herramienta
-nueva tiene que llevarla en su pie** o el tablero muestra la misma firma diez
-veces. **Lo que NO la lleva, a propósito:** el aviso que sale cuando el plazo
-toca un año sin Acordada, porque ése frena un número y tiene que estar donde se
-pide el número.
+tablero**, y el selector es **`.solo-suelta`, una sola regla que ponen las
+pantallas y no una lista que crece en el tablero**: va sobre el pie de autoría y
+sobre la línea de cobertura del calendario. **Una herramienta nueva tiene que
+llevarla en su pie** o el tablero muestra la misma firma diez veces. **Lo que NO
+la lleva, a propósito:** el aviso de que el plazo toca un año sin Acordada, que
+frena un número y tiene que estar donde se pide el número.
 
 **Lo que lo hace verificable:** `pruebas-calculadoras.html` corre los 21 casos
 verificados **dos veces**, sueltos y embebidos, y exige que den lo mismo. Toda
@@ -378,52 +377,33 @@ orden es la decisión, y cómo se llegó a él está en [`HISTORIA.md`](HISTORIA
 **LA REGLA DE LA CORTE NO ES «POR RUTA»: ES LA MÁS LARGA DE LAS DOS.** Acordada
 50/86, recitada en el considerando I de la 5/2010: «la distancia que se tendrá
 en cuenta será **la más larga** que resulte de la comparación entre las medidas
-por vía férrea y por ruta terrestre». **Formosa lo muestra**: 1.112 km por ruta
-y 2.501 por tren, y la Corte da **13 días** donde calcular por ruta da 6. Es la
-razón por la que la tabla se carga como dato en vez de recalcularse.
+por vía férrea y por ruta terrestre». Por eso la tabla se carga como dato en vez
+de recalcularse: hay pares donde el tren manda y la ruta da la mitad de los
+días. El caso que lo muestra —Formosa— está en [`HISTORIA.md`](HISTORIA.md).
 
 **La tabla mide desde la Capital Federal y nada más.** Tucumán–Salta no está y
 no se puede deducir restando dos filas; ese caso cae a la ruta. Está dicho en el
 archivo y comprobado en el banco.
 
 **Los dos controles no se superponen.** `verificar-acordada` prueba que el
-archivo diga lo que dice la imagen del anexo —los días publicados salen de
-aplicar la regla a la más larga, y el plazo de queja es eso más 5: 90
-comprobaciones—. `verificar-distancia` prueba el motor y, sobre todo, **la
-búsqueda**: que las 45 filas se encuentren por su nombre y por cómo la escribe
-la gente, y que no se encuentren de más. «San Juan Bautista» no puede devolver
-San Juan, y San Juan y San Luis no dan los mismos días.
+archivo diga lo que dice la imagen del anexo; `verificar-distancia` prueba el
+motor y, sobre todo, **la búsqueda**: que las 45 filas se encuentren por su
+nombre y por cómo la escribe la gente, y que **no se encuentren de más**. «San
+Juan Bautista» no puede devolver San Juan, y San Juan y San Luis no dan los
+mismos días.
 
 **Un `400` con `code: "NoRoute"` no es una falla del servicio**: es la respuesta
 correcta a cómo se va en auto a Puerto Argentino o a Jerusalén. Se distingue de
 una falla real y se cae a la recta diciendo el motivo.
 
-### El mapa
-
-**La regla que lo gobierna es que el dibujo no puede contradecir al número**, y
-tiene una vuelta más desde que existe la tabla: **la Corte publica kilómetros,
-no un recorrido.** Cuando el número sale de la tabla, el mapa dibuja la recta y
-la nota dice que el veredicto **no sale de ninguna línea de ese dibujo**.
-
-- **El contorno es un dato, no código.** `data/contorno-argentina.json`, de la
-  capa `ign:provincia` del IGN, con la fuente y la fecha adentro. Lo arma
-  `npm run contorno`. **No se recorta nada** —están las 24 jurisdicciones como
-  las publica el IGN, sector antártico incluido—: qué se dibuja lo decide el
-  encuadre, y así la decisión de sacar territorio no existe.
-- **El encuadre lo mandan los puntos y no el país.** Dos localidades bonaerenses
-  sobre el mapa entero son dos puntos pegados.
-- **La pestaña internacional no lleva mapa, y lo dice.** El contorno que hay es
-  el de la Argentina; un planisferio es otro trabajo.
-- **La tierra no usa un token de superficie.** Las tres superficies del sistema
-  son casi el mismo color a propósito, así que la primera versión salió un
-  rectángulo negro con los puntos flotando. Va `--fg` a opacidad baja: sale del
-  sistema y se da vuelta sola con el tema.
-- **A OSRM se le pide `overview=full` y se adelgaza acá.** Su `simplified`
-  devuelve unos 25 puntos para 700 km y la ruta sale casi recta: el mapa
-  terminaba diciendo lo contrario de lo que existe para decir. **El parámetro no
-  toca el número**, comprobado sobre tres pares. El trazado se poda a 400 puntos
-  y el caché de OSRM, a las últimas 25 consultas: llenar el `localStorage`
-  rompería el cálculo y no el dibujo.
+**El mapa se gobierna por una sola regla: el dibujo no puede contradecir al
+número**, y tiene una vuelta más desde que existe la tabla: **la Corte publica
+kilómetros, no un recorrido.** Cuando el número sale de la tabla, el mapa dibuja
+la recta y la nota dice que el veredicto **no sale de ninguna línea de ese
+dibujo**. Cómo está hecho —el contorno del IGN como dato sin recortar, el
+encuadre mandado por los puntos, la tierra en `--fg` a opacidad baja y el
+`overview=full` de OSRM que no mueve el número— está en
+[`HISTORIA.md`](HISTORIA.md); nada de eso está abierto.
 
 ## El cómputo de plazos, extraído y consultable
 
@@ -436,11 +416,10 @@ mora—. Hasta el 26/8 la segunda vivía adentro de los HTML, entre
 
 ### `calculadoras/js/plazos.js`
 
-**Es transcripción, no rediseño.** La aritmética se movió de archivo sin tocarse:
-misma tabla de saltos de la notificación automática, mismas cuatro funciones sin
-simplificar de mora —que están así a propósito, porque escritas de otra forma el
-resultado se mueve—, mismo conteo que arranca un día antes para que el de inicio
-cuente primero.
+**Es transcripción, no rediseño**, y hay que seguir tratándolo así: las cuatro
+funciones de mora están sin simplificar **a propósito**, porque escritas de otra
+forma el resultado se mueve, y el conteo arranca un día antes para que el de
+inicio cuente primero.
 
 **La trampa que había que no pisar:** las dos pantallas construyen la fecha con
 convenciones distintas. `vencimientos.html` usa `Date.UTC(..., 12)` —mediodía
@@ -449,12 +428,10 @@ local—. **No se unificaron**, y están las dos en el archivo con el comentario
 por qué: unificarlas es elegante y mueve un número de algún lado.
 
 **`npm run verificar-plazos`**, 121 comprobaciones, corre en Node. Lleva como
-regresión el caso con el que el hermano pidió esto —notificación 18/6/2026, diez
-hábiles del art. 257 CPCCN, firme, diez corridos del art. 54 de la ley 27.423,
-**mora el 12/7/2026**— más los invariantes: el vencimiento nunca cae en inhábil,
-el sábado a las 23 hs. suma un día y no dos, la ampliación del art. 158 se
-cuenta en hábiles y no en corridos, y la notificación automática siempre cae en
-martes o viernes hábil.
+regresión el caso con el que el hermano pidió esto, más los invariantes: el
+vencimiento nunca cae en inhábil, el sábado a las 23 hs. suma un día y no dos,
+la ampliación del art. 158 se cuenta en hábiles y no en corridos, y la
+notificación automática siempre cae en martes o viernes hábil.
 
 ### `conectores/`
 
@@ -468,25 +445,20 @@ Que sean dos transportes finos sobre un núcleo es el punto entero: **una segund
 implementación de una cuenta con consecuencia jurídica es el modo de falla que
 produjo el bug de la feria.**
 
-**La regla que el conector endurece:** la pantalla puede mostrar el aviso al
-lado del número porque hay alguien leyendo; un conector no tiene a nadie del
-otro lado. Por eso cuando falta un dato **la respuesta no trae fecha**: trae
-`ok: false` y el motivo, y el texto de las herramientas MCP se lo dice al modelo
-donde lo va a leer.
+**El contrato, que ya no es una decisión interna.** `pipeline-drafter` los
+consume desde el 2/9 —su `pipeline/plazos.py` levanta `conectores/mcp.mjs` por
+stdio—, así que **tocar la forma de una respuesta rompe a alguien**:
 
-**Las fechas viajan como `AAAA-MM-DD`.** Ni ISO completo ni epoch: los dos
-arrastran hora y huso. Un plazo judicial no tiene hora.
+- **Cuando falta un dato la respuesta no trae fecha**: `ok: false` y el motivo.
+  La pantalla puede poner el aviso al lado del número porque hay alguien
+  leyendo; un conector no tiene a nadie del otro lado. Es la única regla que no
+  se puede reparar después.
+- **Las fechas viajan como `AAAA-MM-DD`.** Ni ISO completo ni epoch: los dos
+  arrastran hora y huso, y un plazo judicial no tiene hora.
 
-**Los cubre `npm run verificar-conectores`**, 46 comprobaciones, en CI. **No
-cubre aritmética** —eso ya es `verificar-plazos`— sino lo que se rompe de un
-transporte, y **sobre todo que un dato faltante no devuelva una fecha**, que es
-la única regla del conector que no se puede reparar después.
-
-**Ya se consumen, y eso cambia el peso de un cambio acá.** `pipeline-drafter`
-los usa desde el 2/9 —su `pipeline/plazos.py` levanta `conectores/mcp.mjs` por
-stdio— y el pedido quedó cerrado en `HERMANOS.md`. **Tocar la forma de una
-respuesta ya rompe a alguien**, así que el contrato —`AAAA-MM-DD`, y `ok: false`
-con el motivo cuando falta un dato— dejó de ser una decisión interna.
+**Los cubre `npm run verificar-conectores`**, 46 comprobaciones, en CI. No cubre
+aritmética —eso es `verificar-plazos`— sino lo que se rompe de un transporte, y
+sobre todo que un dato faltante no devuelva una fecha.
 
 ---
 
@@ -552,16 +524,13 @@ día está en [`HISTORIA.md`](HISTORIA.md).
 Son suyas pero salen de allá: **la versión**, **17 validaciones**, **8 tipos de
 proceso**, **173 recorridos** y **29.929 cruces**. Viven en `index.html`, en
 `README.md`, en `documentacion.html` —la de validaciones, escrita con letras— y
-en la tabla de recorridos de [`01_PROCESOS.md`](domain/01_PROCESOS.md), que es
-de donde salen las dos últimas. **Si vuelve a moverse alguna, se mueven todas.**
+en la tabla de recorridos de [`01_PROCESOS.md`](domain/01_PROCESOS.md). **Si
+vuelve a moverse alguna, se mueven todas.**
 
 **`npm run verificar-honorio` las compara contra el motor** y dice qué archivo
-quedó viejo y en qué número; no arregla nada. Los recorridos no los cuenta él, y
-es a propósito: contarlos aparte sería una segunda implementación de la poda del
-wizard, que es la clase de problema que el script existe para evitar.
-
-**Necesita el clon de `honorio/`, así que no corre en CI** —allá no existe—: la
-limitación es que nada obliga a correrlo. Cuando sale una versión, se corre acá.
+quedó viejo y en qué número; no arregla nada. **Necesita el clon de `honorio/`,
+así que no corre en CI**: nada obliga a correrlo, y se corre acá cuando sale una
+versión de aquel lado.
 
 **Lo que el script no puede ver es la prosa, y es lo que más envejece.** La
 enumeración de al lado se desactualiza igual que el número —`index.html`
@@ -593,14 +562,13 @@ página del mismo comportamiento se desincroniza—. Lo llevan **todas las pági
 que el sitio publica salvo las tres de redirección y el asistente clásico**, los
 diez documentos de dominio incluidos.
 
-**Sin elección guardada el tema es oscuro, y el sistema ya no decide**, desde el
-6/9. Antes mandaba `prefers-color-scheme`, o sea el sistema operativo del que
-mira: que decida él no es más neutral, es otra decisión y encima no es la suya.
-La elección persiste en `localStorage`. **El `@media (prefers-color-scheme: dark)`
-de `comun.css` no sobra por eso** —acá siempre queda un `data-tema` puesto—:
-es lo único que decide cuando `tema.js` no corre, y sin él alguien con el JS
-bloqueado y el sistema en oscuro vería la página clara. **No alcanza a
-Honorio**, que tiene su propio interruptor y su propia clave.
+**Sin elección guardada el tema es oscuro y el sistema ya no decide**, desde el
+6/9; la elección persiste en `localStorage`. **El
+`@media (prefers-color-scheme: dark)` de `comun.css` no sobra por eso** —acá
+siempre queda un `data-tema` puesto—: es lo único que decide cuando `tema.js` no
+corre, y sin él alguien con el JS bloqueado y el sistema en oscuro vería la
+página clara. **No alcanza a Honorio**, que tiene su propio interruptor y su
+propia clave.
 
 **Cómo está hecho, para no romperlo:** los tokens oscuros están **dos veces**, en
 `@media (prefers-color-scheme: dark) { :root:not([data-tema="claro"]) }` y en
@@ -863,18 +831,14 @@ acá está la materia prima; el pendiente, no.
   configuración, `Set-Content -Encoding utf8` o un editor. Un archivo así queda
   inerte —git lo parsea como bytes y ve un nulo entre cada carácter— y se
   manifiesta como diffs enormes por finales de línea, no como un error.
-- **`node-version` de `pages.yml` no es la versión de Node de las acciones.**
-  Cuando Actions avisa que «estas acciones apuntan a Node 20», habla del
-  `runs.using` que cada action declara en su `action.yml`, y eso sólo se mueve
-  subiendo la versión del action; el `node-version` del `setup-node` es el Node
-  con el que corren `npm ci` y los scripts. **Subir uno no apaga el aviso del
-  otro.** Y una que confunde: el `upload-artifact` que nombra el aviso no está
-  en el workflow —lo trae adentro `upload-pages-artifact`, que es composite—,
-  así que se busca en vano hasta abrir el `action.yml` de la otra.
-- **`upload-pages-artifact` deja fuera del artefacto los archivos que empiezan
-  con punto**, desde v4 y salvo `include-hidden-files: true`. Hoy no hay
-  ninguno en lo que se publica, pero el día que entre uno **no falla nada**:
-  simplemente no llega al sitio.
+- **Dos de `pages.yml`, las dos explicadas adentro del propio workflow.** El
+  `node-version` del `setup-node` **no** es el Node de las acciones —eso es el
+  `runs.using` de cada `action.yml`, que sólo se mueve subiendo la versión del
+  action—, así que subir uno no apaga el aviso del otro; y el `upload-artifact`
+  que nombra el aviso no está en el workflow, lo trae adentro
+  `upload-pages-artifact`, que es composite. La segunda: esa misma action **deja
+  fuera del artefacto los archivos que empiezan con punto**, y el día que entre
+  uno **no falla nada**, simplemente no llega al sitio.
 - **El rompe-caché del HTML no toca los scripts que el HTML carga.** Un `?v=`
   en la URL de la página trae la página nueva y sigue ejecutando el
   `plazos.js` viejo que ya estaba en memoria, sin ningún síntoma salvo que el

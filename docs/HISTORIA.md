@@ -19,6 +19,74 @@ de 2026.
 
 ---
 
+## El certificado de `www`, resuelto por el otro lado — cerrado el 8/9
+
+Arrastrado desde el 5/8: el ápex andaba por HTTPS y `www` caía al wildcard
+`*.github.io`, con corte de nombre en el navegador. El 7/9 se confirmó contra la
+API en vez de deducirlo —`https_certificate.domains` traía `["javiercuneo.com.ar"]`
+y nada más— y se descartó el DNS: las cuatro A del ápex y el CNAME de `www`
+estaban bien, y el dominio ya estaba verificado a nivel cuenta.
+
+**El camino que parecía obvio no funciona.** Se escribió
+`scripts/reemitir-certificado-pages.sh` sobre la premisa de que sacar y reponer el
+dominio obliga a GitHub a emitir de nuevo, para el ápex y para `www`. Corrió
+entero y **fue una operación en vacío**: el certificado volvió con el mismo
+`expires_at: 2026-11-03` —o sea, el mismo— y GitHub volvió a prender
+`https_enforced` solo. Con 60 segundos de hueco el registro del certificado no se
+cae del lado de GitHub, y al reponer el dominio se le engancha el que ya tenía. No
+arregló nada y tampoco rompió nada: el sitio no llegó a caerse.
+
+**Y hubo un error de lectura que conviene no repetir.** Con el script todavía
+corriendo se leyó `https_enforced: true` y se concluyó que no había llegado ni al
+primer paso, que es el que lo apaga. Era al revés: los tres pasos habían corrido y
+**GitHub lo había vuelto a prender solo** al reenganchar el certificado. La
+captura de pantalla del operador fue el dato correcto contra el razonamiento.
+`https_enforced` no sirve para inferir por dónde va un proceso: lo mueve GitHub
+además de uno.
+
+**Se resolvió sin tocar GitHub.** El registro `www` pasó a proxeado en Cloudflare,
+donde el certificado del borde ya cubre `*.javiercuneo.com.ar`. Cero corte: el
+ápex nunca dejó de servir y siguió siendo el canónico. Verificado el 8/9: la
+cadena `www/uma-uhom.html` → 301 → ápex → 200, con la ruta preservada.
+
+Lo que quedó anotado en `ESTADO.md` como frágil son las dos cosas que la
+verificación destapó: que el 301 lo emite GitHub y no la regla de Cloudflare —que
+no matchea—, y que la cadena depende de que el modo SSL/TLS siga en *Full*, porque
+en *Full (strict)* Cloudflare validaría un certificado de origen que no cubre `www`.
+
+---
+
+## La poda del 7/9, y lo que encontró: el archivo ya casi no tiene grasa
+
+`ESTADO.md` estaba en 900 de 1000, o sea en el aviso, y quedó en **860**: se
+sacaron unas 60 líneas y entraron 20 nuevas con el diagnóstico del certificado de
+`www`, que antes era una conjetura de dos renglones. Lo que salió es lo que
+**este archivo ya contaba entero** y que allá había quedado duplicado: el
+mapa de `distancia` —el contorno del IGN, el encuadre, la tierra en `--fg`, el
+`overview=full` de OSRM—, el caso Formosa, la crónica de las dos roturas de las
+teclas del tablero, el porqué de cada uno de los tres bancos del navegador, y el
+detalle de la regresión de `verificar-plazos`. También bajó entera la sección
+«Del lado de Honorio: mudado, no hay nada que hacer acá», que decía de sí misma
+que no había nada que hacer: los tres puntos de `scripts/actualizar-uma.mjs` se
+mudaron el 1/9 al `ESTADO.md` de Honorio y de este lado sólo quedan las series
+con las que se calibran, que no piden nada.
+
+**Y lo que la poda encontró importa más que las líneas que sacó.** Después de dos
+limpiezas seguidas —la del 6/9 y ésta— lo que queda ya casi no es crónica: son
+diez calculadoras, tres bancos de navegador, doce controles, el contrato de
+`conectores/` que ya consume un hermano, los límites conocidos del anonimizador y
+una lista de trampas que siguen mordiendo. **El archivo está cerca del techo
+porque el repositorio tiene esa superficie viva, no porque nadie lo limpie**, que
+era la causa que el control se escribió para atacar. La pregunta que el propio
+`verificar-estado.mjs` manda hacerse antes de tocar el número —«no cuánto, sino
+qué hay adentro que ya está cerrado»— esta vez se contestó, y la respuesta fue
+poco. Queda anotada para Javier: o el techo sube a sabiendas, o hay que aceptar
+que las decisiones que un control ya hace cumplir no necesitan su prosa entera
+en el archivo que se lee todas las sesiones. **Eso último es arquitectura de la
+memoria y no lo decide un agente.**
+
+---
+
 ## El tema por defecto es oscuro, y el sistema deja de decidir — cerrado el 6/9
 
 Sin preferencia guardada mandaba `prefers-color-scheme`, o sea el sistema
