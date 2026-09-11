@@ -102,6 +102,15 @@ Lo que hay que saber sin abrirlo:
   y de aquel lado `pipeline/plazos.py` ya los consume. **Cambiar la forma de una
   respuesta rompe a alguien**, así que el contrato de `conectores/` no se toca
   sin mirar allá. Detalle en [`docs/ESTADO.md`](docs/ESTADO.md).
+- **Y hay un cuarto consumidor, que no pasa por `conectores/`:** desde el 11/9
+  el repositorio `ledger` —privado, fuera de los cinco— **carga
+  `calendario-judicial.js` y `plazos.js` desde el sitio publicado**, con los
+  tres JSON de `data/`, y los consulta en el navegador. Para él el contrato es
+  la API de `window` de los motores —`CalendarioJudicial.CONFIG` reescribible,
+  `init`, `Plazos.caducidad` y `Plazos.vencimiento`— y las rutas publicadas.
+  **No se cambian sin avisar al ledger**: si se rompen no da error, deja de
+  mostrar vencimientos —o muestra uno equivocado— sin decir por qué. Qué usa
+  exactamente, en [`docs/ESTADO.md`](docs/ESTADO.md).
 
 Y la regla que más ahorra trabajo: **antes de escribir un cálculo, un parser de
 citas o una serie de índices, fijate si ya existe en un hermano.**

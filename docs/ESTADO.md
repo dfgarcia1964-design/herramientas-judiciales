@@ -3,7 +3,7 @@
 Documento de continuidad entre sesiones. **Leer antes de empezar a trabajar.**
 Se actualiza en el mismo commit que el trabajo, para que nunca mienta.
 
-Última actualización: 2026-09-08 · rama `main`
+Última actualización: 2026-09-11 · rama `main`
 
 **Lleva sólo lo que sigue vivo.** Dónde está el trabajo, qué está abierto, qué
 se sabe roto, qué decisiones no hay que contradecir sin saberlo, y qué trampas
@@ -459,6 +459,36 @@ stdio—, así que **tocar la forma de una respuesta rompe a alguien**:
 **Los cubre `npm run verificar-conectores`**, 46 comprobaciones, en CI. No cubre
 aritmética —eso es `verificar-plazos`— sino lo que se rompe de un transporte, y
 sobre todo que un dato faltante no devuelva una fecha.
+
+### El cuarto consumidor, que no pasa por los conectores
+
+**Desde el 11/9 el repositorio `ledger` —privado, fuera de los cinco— carga los
+dos motores desde el sitio publicado** y les pregunta en el navegador la
+caducidad de seis meses, como alarma, y el vencimiento de una apelación por
+cédula. Ningún conector le sirve, así que **su contrato es la API de `window`
+de los motores**. Lo que usa, leído en su `web/js/app.js`:
+
+- **Las rutas publicadas** de `calendario-judicial.js`, `plazos.js` y
+  `data/feriados.json`, `data/dias-inhabiles.json` y `data/feria-judicial.json`.
+- **`CalendarioJudicial.CONFIG`, mutable**: reescribe `JSON_FERIADOS_URL`,
+  `JSON_CUSTOM_URL` y `JSON_FERIA_URL` con URLs absolutas entre cargar el script
+  y llamar a `CalendarioJudicial.init(anios)`. Si el motor leyera las URLs al
+  cargarse, o congelara `CONFIG`, buscaría los JSON al lado del ledger.
+- **`Plazos.caducidad({ anio, mes, dia, meses })`** → `{ problema, vencimiento }`
+  y **`Plazos.vencimiento({ modalidad: 'cedula', anio, mes, dia, plazo })`** →
+  `{ problema, vencimiento, vencimientoSinGracia }`. Lee cada `Date` con
+  getters **locales**, así que la hora que devuelve cada función —mediodía UTC
+  una, medianoche local la otra— también es contrato.
+- **`Access-Control-Allow-Origin: *`**, que Pages manda solo y que los JSON
+  necesitan porque los pide `fetch` desde otro origen. Comprobado el 11/9.
+
+**Si algo de esto cambia, el ledger no da error**: un campo que falta lo tira a
+su modo sin motor —sin vencimientos, caducidad por días corridos— sin aviso en
+pantalla, y un cambio de significado con la misma forma le hace mostrar una
+fecha equivocada. **No se cambia sin avisar al ledger**, en «Los plazos vienen
+de herramientas-judiciales» de su `ESTADO.md`. Un renombre probablemente lo
+agarren `verificar-plazos` o los conectores, que usan los mismos nombres;
+**`CONFIG` reescribible, las rutas y el CORS no los mira ningún control.**
 
 ---
 

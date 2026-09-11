@@ -18,6 +18,14 @@
 //   - conectores/http.mjs             (JSON sobre HTTP local)
 //   - conectores/mcp.mjs              (MCP por stdio, para un modelo)
 //
+// Y hay un cuarto consumidor que NO pasa por aca: desde el 11/9/2026 el
+// repositorio `ledger` carga calendario-judicial.js y plazos.js desde el sitio
+// publicado, en el navegador, y los consulta directo. Para el, el contrato no
+// es la forma de estas respuestas sino la API de `window` de los motores
+// --CalendarioJudicial.CONFIG reescribible antes de init(), Plazos.caducidad y
+// Plazos.vencimiento-- y las rutas del sitio. No se cambian sin avisar al
+// ledger: si se rompen, no da error. Que usa exactamente, en docs/ESTADO.md.
+//
 // LA REGLA QUE NO SE AFLOJA. Si el computo toca un anio cuya Acordada de feria
 // no se dicto, o cuyos feriados no estan cargados, la respuesta NO trae fecha:
 // trae `ok: false` y el motivo. La pantalla puede darse el lujo de mostrar el

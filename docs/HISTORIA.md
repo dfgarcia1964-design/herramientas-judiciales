@@ -19,6 +19,23 @@ de 2026.
 
 ---
 
+## El ledger pasa a cargar los motores desde el sitio — anotado el 11/9
+
+El repositorio `ledger` empezó a cargar `calendario-judicial.js` y `plazos.js`
+desde `javiercuneo.com.ar`, con los tres JSON del calendario, para la caducidad
+y el vencimiento de la apelación. No se tocó una línea de los motores: se anotó
+la dependencia en `ESTADO.md`, en `AGENTS.md` y en la cabecera de
+`conectores/nucleo.mjs`, que es donde se enumeraban los consumidores y decía
+«tres».
+
+Lo que se leyó para escribirlo, y no se tomó de la descripción del pedido: el
+`cargarCalendario()` del ledger —reescribe las tres URL de `CONFIG` entre cargar
+el script y llamar a `init`— y el `export` de los dos motores. Y se comprobó con
+`curl` que GitHub Pages devuelve `Access-Control-Allow-Origin: *` en los cinco
+archivos.
+
+---
+
 ## El certificado de `www`, resuelto por el otro lado — cerrado el 8/9
 
 Arrastrado desde el 5/8: el ápex andaba por HTTPS y `www` caía al wildcard
