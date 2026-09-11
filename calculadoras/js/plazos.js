@@ -763,6 +763,22 @@
         };
     }
 
+    // La API publica, y es contrato con otro repositorio. Ademas de las
+    // pantallas y de conectores/nucleo.mjs, desde el 11/9/2026 el `ledger`
+    // carga este archivo desde el sitio publicado y llama a:
+    //
+    //   caducidad({ anio, mes, dia, meses })
+    //       y lee `problema` y `vencimiento`
+    //   vencimiento({ modalidad: 'cedula', anio, mes, dia, plazo })
+    //       y lee `problema`, `vencimientoSinGracia` --el dia en que vence--
+    //       y `vencimiento` --el siguiente, el de las dos horas de gracia--
+    //
+    // Lee cada Date con getFullYear/getMonth/getDate, locales: la hora que
+    // devuelve cada funcion --mediodia UTC una, medianoche local la otra--
+    // tambien es contrato. Un nombre o un significado que cambia no le da
+    // error: deja de mostrar la fecha, o muestra otra. No se toca sin avisar
+    // alla (docs/ESTADO.md). Lo prueba el bloque del ledger de
+    // scripts/verificar-plazos.mjs.
     var API = {
         notificacionAutomatica: notificacionAutomatica,
         proximoDiaDeNota: proximoDiaDeNota,

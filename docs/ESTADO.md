@@ -207,30 +207,6 @@ Ninguno urgente y ninguno bloqueante.
   de fuentes en Node. **Se regenera cuando se carga un valor nuevo**, y lleva la
   vigencia al lado del número para que una imagen vieja compartida en un chat
   siga diciendo algo cierto.
-- **`www` anda por HTTPS desde el 8/9, y el certificado no es de GitHub: es de
-  Cloudflare.** GitHub nunca emitió para `www` —su certificado cubre
-  `javiercuneo.com.ar` y nada más— y **sacar y reponer el dominio no lo obliga a
-  emitir**, probado el 7/9: volvió el mismo certificado, con el mismo
-  `expires_at`. Se resolvió del otro lado: el registro `www` pasó a **proxeado**
-  en Cloudflare, así que lo cubre el certificado del borde
-  (`*.javiercuneo.com.ar`, Google Trust Services). **El ápex sigue en gris y
-  directo a GitHub**, con su Let's Encrypt, y no se tocó.
-  **Dos cosas que conviene no romper.** La primera: quien emite el 301 de `www`
-  al dominio pelado **es GitHub, no una regla de Cloudflare** —los encabezados
-  `x-github-request-id` lo muestran—; la regla de redirección que se creó no
-  matchea y no hace nada. La segunda, que es la que muerde: Cloudflare le habla
-  al origen **sin validar su certificado**, porque el modo SSL/TLS es *Full*. El
-  origen de GitHub no tiene certificado para `www`, así que **en *Full (strict)*
-  esto se rompe**. Si `www` deja de andar sin que nadie lo haya tocado, mirar
-  ahí primero.
-
-  **Lo que cuesta, y es el motivo por el que sigue abierto:** mientras GitHub no
-  emita **se cae el ápex también**, no sólo `www`. Lo habitual son 10-30 minutos
-  y el techo declarado por GitHub son 24 horas; no hay forma de apurarlo, y
-  **el sitio manda HSTS** (`max-age=31556952`), así que el que ya entró alguna
-  vez no va a poder saltear el aviso del navegador. Se corre de noche y con
-  margen. La alternativa sin corte —proxear `www` en Cloudflare y redirigir
-  desde ahí— quedó como segunda opción: mete a Cloudflare en el camino.
 
 ---
 
@@ -266,7 +242,7 @@ a propósito**: un control que nunca falló no es un control.
 | Control | Qué cubre |
 |---|---|
 | `npm run verificar-calculos` | El motor: 673 comprobaciones |
-| `npm run verificar-plazos` | El cómputo de las cinco de plazos: 121 |
+| `npm run verificar-plazos` | El cómputo de las cinco de plazos, y la API que carga el ledger: 135 |
 | `npm run verificar-series` | Las series de UMA, UHOM y monto fijo |
 | `npm run verificar-contraste` | Los tokens de color, AA sobre las tres superficies y en los dos temas |
 | `npm run verificar-conectores` | Los dos transportes de `conectores/`: 46 |
@@ -427,7 +403,8 @@ UTC— y `mora.html` usa `new Date(y, m, d)` con `setHours(0,0,0,0)` —medianoc
 local—. **No se unificaron**, y están las dos en el archivo con el comentario de
 por qué: unificarlas es elegante y mueve un número de algún lado.
 
-**`npm run verificar-plazos`**, 121 comprobaciones, corre en Node. Lleva como
+**`npm run verificar-plazos`**, 135 comprobaciones, corre en Node y, desde el
+11/9, en `pages.yml` antes de publicar. Lleva como
 regresión el caso con el que el hermano pidió esto, más los invariantes: el
 vencimiento nunca cae en inhábil, el sábado a las 23 hs. suma un día y no dos,
 la ampliación del art. 158 se cuenta en hábiles y no en corridos, y la
@@ -486,9 +463,13 @@ de los motores**. Lo que usa, leído en su `web/js/app.js`:
 su modo sin motor —sin vencimientos, caducidad por días corridos— sin aviso en
 pantalla, y un cambio de significado con la misma forma le hace mostrar una
 fecha equivocada. **No se cambia sin avisar al ledger**, en «Los plazos vienen
-de herramientas-judiciales» de su `ESTADO.md`. Un renombre probablemente lo
-agarren `verificar-plazos` o los conectores, que usan los mismos nombres;
-**`CONFIG` reescribible, las rutas y el CORS no los mira ningún control.**
+de herramientas-judiciales» de su `ESTADO.md`. **Lo cubren dos controles**,
+y los dos se vieron fallar a propósito: el bloque del ledger de
+`verificar-plazos` lo imita tal cual —`CONFIG` reescrito antes de `init`, las
+dos llamadas, la lectura local en el huso de Buenos Aires— y corre antes de
+publicar; y el job `publicado` de `pages.yml`, **después** de publicar, pide
+las cinco rutas al sitio y exige `200` y el encabezado CORS. Si ése falla, el
+sitio ya salió: la falla es el aviso.
 
 ---
 
@@ -889,5 +870,17 @@ acá está la materia prima; el pendiente, no.
   comentado —sin él «en un **dia**rio» sale como un plazo de un día—.
 - **Al leer un diff grande de un HTML, mirar primero si es de contenido.**
   `git diff --ignore-cr-at-eol` lo despeja en un segundo.
+- **`www` depende de Cloudflare, y de dos cosas que no se ven.** Desde el 8/9
+  el registro `www` está **proxeado** y lo cubre el certificado del borde
+  (`*.javiercuneo.com.ar`, Google Trust Services); **el ápex sigue en gris y
+  directo a GitHub**, con su Let's Encrypt. GitHub nunca emitió para `www`, y
+  sacar y reponer el dominio no lo obliga: el porqué, en
+  [`HISTORIA.md`](HISTORIA.md). Lo que no hay que romper: **el 301 de `www` al
+  ápex lo emite GitHub, no una regla de Cloudflare** —lo muestra
+  `x-github-request-id`; la regla que se creó no matchea—, y **el modo SSL/TLS
+  tiene que seguir en *Full***: Cloudflare le habla al origen sin validar su
+  certificado, y en *Full (strict)* se rompe, porque GitHub no tiene uno para
+  `www`. Si `www` deja de andar sin que nadie lo tocara, mirar ahí primero.
+  Comprobado el 11/9 con `curl` y `openssl`: sigue así.
 Las que ya no aplican —el `.gitattributes` en UTF-16, el caché de Pages,
 `npm run lint`— están en [`HISTORIA.md`](HISTORIA.md).

@@ -18,6 +18,15 @@
     // formula habria inventado doce dias inhabiles que juridicamente no
     // existieron. La feria la fija la Corte por Acordada y ahora sale de
     // data/feria-judicial.json, con la Acordada citada al lado de cada anio.
+    //
+    // CONFIG ES CONTRATO CON OTRO REPOSITORIO. Desde el 11/9/2026 el `ledger`
+    // carga este archivo desde el sitio publicado y, entre cargarlo y llamar a
+    // init(), reescribe las tres URL con las absolutas del sitio: las
+    // relativas de abajo apuntarian al ledger. Por eso CONFIG tiene que seguir
+    // siendo un objeto mutable, colgado de window.CalendarioJudicial, y las
+    // URL se tienen que leer en init() y no al cargar el archivo. Si esto
+    // cambia, el ledger no da error: se queda sin calendario y deja de
+    // mostrar vencimientos. No se toca sin avisar alla (docs/ESTADO.md).
     var CONFIG = {
         JSON_FERIADOS_URL: '../data/feriados.json',
         JSON_CUSTOM_URL: '../data/dias-inhabiles.json',
@@ -471,6 +480,9 @@
         };
     }
 
+    // La API publica. La consumen las pantallas, conectores/nucleo.mjs y el
+    // `ledger`, que la carga desde el sitio publicado: de aca usa CONFIG e
+    // init(). Ver el comentario de CONFIG, arriba.
     window.CalendarioJudicial = {
         CONFIG: CONFIG,
 

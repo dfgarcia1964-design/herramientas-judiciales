@@ -715,5 +715,98 @@ console.log('\nEntradas invalidas');
     rechaza(() => P.regresiva({ anio: 2026, mes: 3, dia: 10, dias: 0 }), 'regresiva con cero dias se rechaza');
 }
 
+// ---------------------------------------------------------------------------
+// EL LEDGER: la API que otro repositorio carga desde el sitio publicado.
+//
+// Desde el 11/9/2026 el `ledger` no pasa por conectores/: carga los dos motores
+// desde javiercuneo.com.ar y los consulta en el navegador (cargarCalendario()
+// en su web/js/app.js). Si esta API cambia, alla no hay error: deja de mostrar
+// vencimientos, o muestra uno equivocado. Aca se lo imita tal cual --el orden
+// de carga, las tres URL reescritas, las dos llamadas, la lectura de la fecha
+// con getters locales-- para que el cambio falle en este repositorio y no en
+// silencio en aquel. Que el sitio sirva estas rutas con CORS abierto no se ve
+// desde Node: eso lo mira pages.yml despues de publicar.
+//
+// Va al final a proposito: fija el huso de Buenos Aires, que es donde corre el
+// ledger, y el huso cambia todas las fechas que se construyan despues.
+// ---------------------------------------------------------------------------
+console.log('\nEl ledger: lo que carga desde el sitio publicado');
+{
+    process.env.TZ = 'America/Argentina/Buenos_Aires';
+    const SITIO = 'https://sitio-publicado.invalid/';
+    const ventana = {};
+    const pedidas = [];
+    const fetchDelSitio = async (url) => {
+        pedidas.push(String(url));
+        const limpia = String(url).split('?')[0];
+        if (!limpia.startsWith(SITIO)) {
+            return { ok: false, status: 404, json: async () => { throw new Error('404 ' + limpia); } };
+        }
+        const texto = await readFile(join(RAIZ, limpia.slice(SITIO.length)), 'utf8');
+        return { ok: true, status: 200, json: async () => JSON.parse(texto) };
+    };
+    const cargarScript = async (archivo) => {
+        const fuente = await readFile(join(RAIZ, 'calculadoras', 'js', archivo), 'utf8');
+        new Function('window', 'fetch', fuente)(ventana, fetchDelSitio);
+    };
+
+    // El orden del ledger: el calendario, las tres URL, plazos.js, init().
+    await cargarScript('calendario-judicial.js');
+    const L = ventana.CalendarioJudicial;
+    ok(!!L && !!L.CONFIG && typeof L.init === 'function', 'window.CalendarioJudicial expone CONFIG e init()');
+    let reescribible = true;
+    try {
+        L.CONFIG.JSON_FERIADOS_URL = SITIO + 'data/feriados.json';
+        L.CONFIG.JSON_CUSTOM_URL = SITIO + 'data/dias-inhabiles.json';
+        L.CONFIG.JSON_FERIA_URL = SITIO + 'data/feria-judicial.json';
+    } catch (e) {
+        reescribible = false;
+    }
+    ok(reescribible && L.CONFIG.JSON_FERIA_URL === SITIO + 'data/feria-judicial.json',
+        'las tres URL de CONFIG se pueden reescribir despues de cargar el script');
+
+    await cargarScript('plazos.js');
+    const LP = ventana.Plazos;
+    const anios = [];
+    for (let y = 2021; y <= new Date().getFullYear() + 2; y++) anios.push(y);
+    const cargaLedger = await L.init(anios);
+
+    for (const archivo of ['feriados.json', 'dias-inhabiles.json', 'feria-judicial.json']) {
+        ok(pedidas.some((u) => u.split('?')[0] === SITIO + 'data/' + archivo),
+            `init() pide data/${archivo} a la URL reescrita`, `pidio: ${pedidas.join(', ') || 'nada'}`);
+    }
+    ok(pedidas.every((u) => u.startsWith(SITIO)),
+        'y no pide nada a las rutas relativas de antes', `pidio: ${pedidas.join(', ')}`);
+    ok(cargaLedger.loadedYears.includes(new Date().getFullYear()),
+        'con las URL reescritas carga los feriados del año en curso');
+
+    // La fecha como la lee el ledger: getters locales, no toISOString.
+    const comoLeeElLedger = (f) => f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') +
+        '-' + String(f.getDate()).padStart(2, '0');
+
+    // Caducidad de seis meses, como la pide su radar.
+    const cad = LP.caducidad({ anio: 2026, mes: 3, dia: 10, meses: 6 });
+    ok(!cad.problema && cad.vencimiento instanceof Date,
+        'caducidad({ anio, mes, dia, meses }) devuelve problema vacío y vencimiento como Date');
+    igual(comoLeeElLedger(cad.vencimiento), d(cad.vencimiento),
+        'caducidad: leída con getters locales en Buenos Aires da el mismo día que el resto del banco');
+
+    // La apelacion: cinco dias habiles por cedula.
+    const ape = LP.vencimiento({ modalidad: 'cedula', anio: 2026, mes: 6, dia: 18, plazo: 5 });
+    ok(!ape.problema && ape.vencimiento instanceof Date && ape.vencimientoSinGracia instanceof Date,
+        'vencimiento({ modalidad: cedula, ... }) devuelve vencimiento y vencimientoSinGracia como Date');
+    igual(comoLeeElLedger(ape.vencimientoSinGracia), d(ape.vencimientoSinGracia),
+        'vencimientoSinGracia: leído con getters locales en Buenos Aires da el día que publica el conector');
+    igual(comoLeeElLedger(ape.vencimiento), d(ape.vencimiento),
+        'vencimiento: leído con getters locales en Buenos Aires da el día que publica el conector');
+    igual(d(ape.vencimiento), d(L.siguienteDiaHabil(ape.vencimientoSinGracia)),
+        'vencimiento es el hábil siguiente a vencimientoSinGracia, que es lo que el ledger muestra como gracia');
+
+    // Con un dato faltante, `problema` no viene vacio: el ledger lo mira antes
+    // que la fecha. 2040 no tiene ni feriados ni feria cargados.
+    const sinDatos = LP.vencimiento({ modalidad: 'cedula', anio: 2040, mes: 7, dia: 20, plazo: 5 });
+    ok(!!sinDatos.problema, 'un plazo que toca un año sin datos cargados trae problema', 'problema vacío');
+}
+
 console.log(`\n${pruebas} comprobaciones, ${fallos} fallas.`);
 process.exit(fallos ? 1 : 0);

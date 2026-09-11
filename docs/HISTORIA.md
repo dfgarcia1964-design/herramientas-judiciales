@@ -34,6 +34,18 @@ el script y llamar a `init`— y el `export` de los dos motores. Y se comprobó 
 `curl` que GitHub Pages devuelve `Access-Control-Allow-Origin: *` en los cinco
 archivos.
 
+El mismo día, a pedido de Javier, se sumaron tres cosas. **Comentarios en los
+dos motores**, sobre `CONFIG` y sobre cada API pública, porque ahí es donde
+alguien la cambiaría; no se tocó una línea de código. **Un bloque del ledger al
+final de `verificar-plazos`**, que carga los motores como él —el script, las
+tres URL reescritas, `plazos.js`, `init`— y lee las fechas con getters locales
+en el huso de Buenos Aires: 14 comprobaciones, 121 → 135. Se lo vio fallar con
+tres roturas a propósito —`CONFIG` congelado, `vencimiento` a medianoche UTC y
+un campo renombrado— y `verificar-plazos` pasó a correr en `pages.yml`, que
+antes no lo corría: sólo el cron de feriados. **Y un job `publicado`** que,
+después de cada despliegue, pide las cinco rutas al sitio y exige `200` y el
+encabezado CORS; se lo vio fallar con una ruta inexistente.
+
 ---
 
 ## El certificado de `www`, resuelto por el otro lado — cerrado el 8/9
@@ -70,6 +82,15 @@ Lo que quedó anotado en `ESTADO.md` como frágil son las dos cosas que la
 verificación destapó: que el 301 lo emite GitHub y no la regla de Cloudflare —que
 no matchea—, y que la cadena depende de que el modo SSL/TLS siga en *Full*, porque
 en *Full (strict)* Cloudflare validaría un certificado de origen que no cubre `www`.
+
+**Lo que costaba el camino descartado**, que siguió escrito en `ESTADO.md` como
+si estuviera abierto hasta el 11/9, cuando se mudó acá: mientras GitHub no
+emitiera **se caía el ápex también**, no sólo `www`. Lo habitual eran 10-30
+minutos y el techo declarado por GitHub, 24 horas, sin forma de apurarlo; y como
+el sitio manda HSTS (`max-age=31556952`), el que ya había entrado alguna vez no
+iba a poder saltear el aviso del navegador. Por eso se pensaba correr de noche y
+con margen, y proxear `www` en Cloudflare era la segunda opción —metía a
+Cloudflare en el camino—. Terminó siendo la que se usó.
 
 ---
 
