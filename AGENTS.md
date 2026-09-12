@@ -14,6 +14,9 @@ miente. Si cerrás una sesión, actualizalo.
 cuando hace falta saber por qué algo quedó como quedó, si algo ya se probó, o de
 dónde salió una regla.
 
+## Modo de contestar en el chat al usuario:
+Se breve y directo. El usuario es abogado, no dev y entiende de temas legales, no de software. Si tenes que responder sobre código, esforzate por hablar claro.
+
 ## Los límites, para cualquier agente
 
 Método completo en `C:\IA\Pipeline drafter\METODO.md`. Lo que no se negocia:
