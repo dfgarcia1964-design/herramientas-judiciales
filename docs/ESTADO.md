@@ -527,6 +527,13 @@ día está en [`HISTORIA.md`](HISTORIA.md).
 - **La detección de nombres propios no cubre razones sociales.** «Seguros del
   Sur S.A.» no dispara ningún patrón de los tres, así que no se ofrece como
   candidato y hay que anonimizarlo mirando el texto.
+- **Las fugas que aparecen en uso real se anotan en otro repositorio.** Desde el
+  12/9, `redactor` ingresa casos con el anonimizador del pipeline, y cada nombre
+  que el operador tiene que tapar a mano queda en
+  `Pipeline drafter/FUGAS-ANONIMIZADOR.md`: la forma del nombre y las palabras de
+  alrededor, sin el nombre ni el texto. **Cada entrada vale también para
+  `js/motor/anonimizar.js`**: las reglas son otras, pero los huecos suelen ser los
+  mismos. No se copian acá porque este repositorio es público.
 
 ---
 
