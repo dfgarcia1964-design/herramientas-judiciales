@@ -110,7 +110,9 @@ Lo que hay que saber sin abrirlo:
   `calendario-judicial.js` y `plazos.js` desde el sitio publicado**, con los
   tres JSON de `data/`, y los consulta en el navegador. Para él el contrato es
   la API de `window` de los motores —`CalendarioJudicial.CONFIG` reescribible,
-  `init`, `Plazos.caducidad` y `Plazos.vencimiento`— y las rutas publicadas.
+  `init`, `Plazos.caducidad` y `Plazos.vencimiento`—, las rutas publicadas y,
+  desde el 14/9, el enlace con que abre `vencimientos.html`
+  (`#modalidad=automatica&fecha=AAAA-MM-DD&plazo=N`).
   **No se cambian sin avisar al ledger**: si se rompen no da error, deja de
   mostrar vencimientos —o muestra uno equivocado— sin decir por qué. Qué usa
   exactamente, en [`docs/ESTADO.md`](docs/ESTADO.md).
@@ -268,6 +270,9 @@ calculadoras/                   Herramientas de un solo archivo HTML con JS embe
                                   js/dibujo-plazo.js y css/dibujo-plazo.css son el
                                   plazo dibujado, por el mismo motivo: cuatro copias
                                   de la misma grilla se desincronizan.
+                                  js/enlace.js lee el caso que viene en el enlace
+                                  (#fecha=...&plazo=...) para las cinco de plazos:
+                                  completa el formulario y no calcula.
 conectores/                     El calendario y el computo de plazos, consultables desde
                                   codigo. nucleo.mjs carga los motores de navegador en
                                   Node; http.mjs y mcp.mjs son transportes finos encima
@@ -371,7 +376,7 @@ Un archivo HTML cada una, con su CSS y su JS adentro. Sin build y sin bundler:
 se abren, se editan y se guardan. Esa simplicidad es deliberada: duran años sin
 mantenimiento.
 
-Comparten tres cosas, y las tres afectan a varias herramientas a la vez:
+Comparten cuatro cosas, y las cuatro afectan a varias herramientas a la vez:
 
 - **`calculadoras/js/calendario-judicial.js`**, del que depende todo lo que
   computa fechas. Lo usan las **cinco** de plazos: `caducidad`, `entre-fechas`,
@@ -388,6 +393,12 @@ Comparten tres cosas, y las tres afectan a varias herramientas a la vez:
   **El módulo decide cómo se dibuja un día y no qué significa:** recibe un mapa
   de marcas ya armado y no mira un resultado del motor. Lo que significa cada día
   lo arma cada pantalla, porque las cuatro contestan preguntas distintas.
+- **`calculadoras/js/enlace.js`**, el caso que viene en el enlace. Lo usan las
+  cinco de plazos. **El módulo decide cómo se lee y cómo se avisa; qué nombre va
+  a qué campo lo pone cada pantalla**, en su esquema. Las tres decisiones —el
+  fragmento y no la consulta, completar sin calcular, y con un dato inválido no
+  completar ninguno— están en su cabecera. **Los nombres de `vencimientos` son
+  contrato con el `ledger`**: la lista entera está en `ESTADO.md`.
 - **`calculadoras/css/comun.css`**, que define los tokens del sistema visual y
   una base mínima. Cada archivo lo carga *antes* de su propio `<style>`, así que
   lo local sigue ganando y cada uno resuelve su layout. **No redefinas un token
