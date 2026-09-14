@@ -335,6 +335,7 @@
 <script src="js/calendario-judicial.js"></script>
 <script src="js/plazos.js"></script>
 <script src="js/dibujo-plazo.js"></script>
+<script src="js/enlace.js"></script>
 <script>
 'use strict';
 
@@ -612,6 +613,32 @@ document.getElementById('limpiar').addEventListener('click', function () {
     resultado.classList.remove('visible');
     espera.style.display = '';
     dibujoDiv.innerHTML = '';
+    EnlaceCaso.olvidar(formulario);
+});
+
+// El caso que viene en el enlace (js/enlace.js): completa y no calcula. Lo
+// que el enlace no trae se queda en el valor de arranque de la pantalla, que
+// son 10 y 10: por eso el aviso pide revisar los dos numeros.
+EnlaceCaso.aplicar({
+    contenedor: formulario,
+    esquema: {
+        fecha: EnlaceCaso.fecha,
+        firme: EnlaceCaso.entero(1, 999),
+        pago: EnlaceCaso.entero(0, 999)
+    },
+    completar: function (d) {
+        if (d.fecha) {
+            document.getElementById('d_dia').value = d.fecha.dia;
+            document.getElementById('d_mes').value = d.fecha.mes;
+            document.getElementById('d_anio').value = d.fecha.anio;
+        }
+        if (d.firme !== undefined) document.getElementById('diasHabiles').value = String(d.firme);
+        if (d.pago !== undefined) document.getElementById('plazoDias').value = String(d.pago);
+    },
+    texto: function () {
+        return 'Estos datos vienen del enlace. Revisá los días hasta que quede firme ' +
+            'y los días para pagar, y apretá Calcular.';
+    }
 });
 </script>
 </body>

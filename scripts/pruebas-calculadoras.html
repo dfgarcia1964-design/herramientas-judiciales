@@ -704,6 +704,203 @@ const MOTORES = {
     }
 };
 
+// ---------------------------------------------------------------------------
+// El caso que viene en el enlace (calculadoras/js/enlace.js).
+//
+// No compara fechas: compara CAMPOS. Un enlace bueno tiene que dejar el
+// formulario exactamente como lo dejaria alguien tipeando `campos` ---y
+// entonces el calculo es el mismo camino de siempre, que ya cubren las otras
+// secciones--- y SIN resultado a la vista: la decision del 14/9/2026 es que
+// el enlace completa y no calcula. Un enlace roto tiene que dejar el
+// formulario como arranca y el aviso en --warn.
+//
+// El primer caso es el enlace que arma el ledger, armado con la misma
+// llamada que usa su app.js: esos tres nombres son contrato.
+// ---------------------------------------------------------------------------
+const ENLACES = [
+    {
+        calc: 'vencimientos', rotulo: 'El enlace que arma el ledger: automática, firma y plazo',
+        enlace: new URLSearchParams({ modalidad: 'automatica', fecha: '2026-09-11', plazo: '15' }).toString(),
+        campos: { modalidad: 'automatica', dia: '11', mes: '09', anio: '2026', plazo: '15' }
+    },
+    {
+        calc: 'vencimientos', rotulo: 'Sin modalidad en el enlace: queda en cédula',
+        enlace: 'fecha=2026-03-03&plazo=10',
+        campos: { modalidad: 'cedula', dia: '03', mes: '03', anio: '2026', plazo: '10' }
+    },
+    {
+        calc: 'caducidad', rotulo: '6 meses, que tiene su opción en el desplegable',
+        enlace: 'meses=6&fecha=2025-01-25',
+        campos: { plazo: '6', customValue: '', day: '25', month: '01', year: '2025' }
+    },
+    {
+        calc: 'caducidad', rotulo: '4 meses, que no la tiene y va a prescripción menor',
+        enlace: 'meses=4&fecha=2025-01-25',
+        campos: { plazo: 'custom', customValue: '4', day: '25', month: '01', year: '2025' }
+    },
+    {
+        calc: 'entre-fechas', rotulo: 'Dos fechas, hábiles, sin contar el día de inicio',
+        enlace: 'desde=2024-07-14&hasta=2024-07-31&habiles=si&inicio=no',
+        campos: { startDay: '14', startMonth: '07', startYear: '2024', endDay: '31', endMonth: '07',
+                  endYear: '2024', businessDays: true, includeStart: false, includeEnd: true }
+    },
+    {
+        calc: 'regresiva', rotulo: 'Fecha objetivo y antelación',
+        enlace: 'fecha=2024-07-30&antelacion=7',
+        campos: { dia: '30', mes: '07', anio: '2024', diasAntelacion: '7' }
+    },
+    {
+        calc: 'mora', rotulo: 'Notificación, días hasta firme y días para pagar',
+        enlace: 'fecha=2024-07-10&firme=5&pago=30',
+        campos: { d_dia: '10', d_mes: '07', d_anio: '2024', diasHabiles: '5', plazoDias: '30' }
+    }
+];
+
+// `campos` es como arranca la pantalla: con un dato roto no se completa
+// NINGUNO, asi que tampoco los que estaban bien.
+const ENLACES_ROTOS = [
+    {
+        calc: 'vencimientos', rotulo: 'Un plazo que no es un número',
+        enlace: 'modalidad=automatica&fecha=2026-09-11&plazo=cinco',
+        campos: { modalidad: 'cedula', dia: '', mes: '', anio: '', plazo: '' }
+    },
+    {
+        calc: 'vencimientos', rotulo: 'Un dato que la pantalla no lee',
+        enlace: 'fecha=2026-09-11&dias=5',
+        campos: { dia: '', plazo: '' }
+    },
+    {
+        calc: 'vencimientos', rotulo: 'El 31 de febrero',
+        enlace: 'fecha=2026-02-31&plazo=5',
+        campos: { dia: '', plazo: '' }
+    },
+    {
+        calc: 'caducidad', rotulo: 'Siete meses, que ningún supuesto del art. 310 tiene',
+        enlace: 'meses=7&fecha=2025-01-25',
+        campos: { plazo: '', day: '' }
+    },
+    {
+        calc: 'entre-fechas', rotulo: 'Una casilla que no dice «si» ni «no»',
+        enlace: 'desde=2024-07-14&habiles=quizas',
+        campos: { startDay: '', businessDays: false }
+    },
+    {
+        calc: 'mora', rotulo: 'Cero días hasta que quede firme',
+        enlace: 'fecha=2024-07-10&firme=0',
+        campos: { d_dia: '', diasHabiles: '10' }
+    }
+];
+
+// Si la pantalla ya muestra un resultado. Uno por calculadora porque cada
+// una lo muestra distinto; son los mismos anclajes que leen los DRIVERS.
+const CALCULADO = {
+    vencimientos: (d) => !!d.querySelector('#results .veredicto'),
+    caducidad: (d) => d.getElementById('resultDate').innerText.trim() !== '',
+    'entre-fechas': (d) => d.getElementById('results').classList.contains('show'),
+    regresiva: (d) => d.defaultView.getComputedStyle(d.getElementById('resultadoPanel')).display !== 'none',
+    mora: (d) => d.getElementById('resultado').classList.contains('visible')
+};
+
+// Lo que dice cada campo del formulario, con el mismo nombre que usa `campos`.
+function campoEnPantalla(d, k) {
+    if (k === 'modalidad') return d.querySelector('input[name="modalidad"]:checked').value;
+    const el = d.getElementById(k);
+    return el.type === 'checkbox' ? el.checked : el.value;
+}
+
+function diferencias(d, campos) {
+    return Object.keys(campos)
+        .filter((k) => campoEnPantalla(d, k) !== campos[k])
+        .map((k) => `${k}: esperado «${campos[k]}», hay «${campoEnPantalla(d, k)}»`);
+}
+
+// Un marco nuevo por enlace: la pantalla lee el fragmento UNA vez, al
+// cargar, asi que no se puede reusar el de las otras secciones.
+async function abrirConEnlace(calc, sufijo) {
+    const drv = DRIVERS[calc];
+    const f = document.createElement('iframe');
+    f.src = drv.archivo + '?v=' + Date.now() + sufijo;
+    document.body.appendChild(f);
+    await new Promise((r) => { f.onload = r; });
+    const ok = await esperar(() => drv.lista(f.contentDocument), 12000);
+    if (!ok) { f.remove(); throw new Error(`${calc}: no terminó de cargar en 12 s`); }
+    return f;
+}
+
+async function correrEnlaces(cuerpo) {
+    let pasan = 0, fallan = 0;
+    const anotar = (bien, c, detalle) => {
+        bien ? pasan++ : fallan++;
+        cuerpo.appendChild(fila(bien ? 'pasa' : 'FALLA', bien ? 'ok' : 'mal', c.rotulo, c.calc, detalle, null));
+    };
+
+    for (const c of ENLACES) {
+        let f;
+        try {
+            f = await abrirConEnlace(c.calc, '#' + c.enlace);
+            // Un rato despues de cargado, y no enseguida: una pantalla que
+            // calculara al terminar de leer el calendario lo haria unos
+            // milisegundos despues de que `lista` da verde, y se escaparia.
+            await pausa(400);
+            const d = f.contentDocument;
+            const aviso = d.querySelector('.aviso-enlace');
+            const mal = diferencias(d, c.campos);
+            if (!aviso || aviso.classList.contains('problema')) mal.push('falta el aviso de que los datos vienen del enlace');
+            if (CALCULADO[c.calc](d)) mal.push('calculó al abrir, y el enlace completa sin calcular');
+            anotar(!mal.length, c, mal.length ? mal.join(' · ') : 'completa igual que a mano, y espera');
+        } catch (e) {
+            anotar(false, c, e.message);
+        } finally { if (f) f.remove(); }
+    }
+
+    for (const c of ENLACES_ROTOS) {
+        let f;
+        try {
+            f = await abrirConEnlace(c.calc, '#' + c.enlace);
+            const d = f.contentDocument;
+            const aviso = d.querySelector('.aviso-enlace.problema');
+            const mal = diferencias(d, c.campos);
+            if (!aviso) mal.push('no avisa que el enlace trae un dato roto');
+            anotar(!mal.length, c, mal.length ? mal.join(' · ') : 'no completa nada: ' + aviso.textContent.slice(0, 90));
+        } catch (e) {
+            anotar(false, c, e.message);
+        } finally { if (f) f.remove(); }
+    }
+
+    // El enlace viejo del ledger, con los datos detras de un ?. La pantalla no
+    // lo lee a proposito ---el ? llega al servidor--- y tampoco avisa: un ? es
+    // tambien el rompe-cache de estas mismas pruebas.
+    const viejo = { calc: 'vencimientos', rotulo: 'Los mismos datos detrás de un ?, como armaba el ledger hasta el 14/9' };
+    let fv;
+    try {
+        fv = await abrirConEnlace('vencimientos', '&modalidad=automatica&fecha=2026-09-11&plazo=15');
+        const d = fv.contentDocument;
+        const mal = diferencias(d, { modalidad: 'cedula', dia: '', plazo: '' });
+        if (d.querySelector('.aviso-enlace')) mal.push('aparece un aviso, y sin datos en el fragmento no hay nada que avisar');
+        anotar(!mal.length, viejo, mal.length ? mal.join(' · ') : 'no completa nada');
+    } catch (e) {
+        anotar(false, viejo, e.message);
+    } finally { if (fv) fv.remove(); }
+
+    // Limpiar olvida el enlace. Si no, recargar vuelve a llenar lo que la
+    // persona acaba de borrar.
+    const limpiar = { calc: 'vencimientos', rotulo: 'Limpiar saca los datos de la dirección y el aviso' };
+    let fl;
+    try {
+        fl = await abrirConEnlace('vencimientos', '#' + ENLACES[0].enlace);
+        const d = fl.contentDocument;
+        d.getElementById('btnResetear').click();
+        const mal = [];
+        if (fl.contentWindow.location.hash) mal.push('la dirección sigue con ' + fl.contentWindow.location.hash);
+        if (d.querySelector('.aviso-enlace')) mal.push('el aviso sigue a la vista');
+        anotar(!mal.length, limpiar, mal.length ? mal.join(' · ') : 'la dirección queda sin fragmento');
+    } catch (e) {
+        anotar(false, limpiar, e.message);
+    } finally { if (fl) fl.remove(); }
+
+    return { pasan, fallan };
+}
+
 async function correrCruce(cuerpo) {
     let pasan = 0, fallan = 0, sinCruce = 0;
 
@@ -815,6 +1012,17 @@ document.getElementById('correr').addEventListener('click', async () => {
     } catch (e) {
         fallan++;
         cuerpoM.appendChild(fila('ERROR', 'mal', 'No se pudo cruzar', 'motor', e.message, null));
+    }
+
+    const cuerpoE = seccion('El caso que viene en el enlace',
+        'Un enlace bueno deja el formulario igual que si se tipeara a mano, y no calcula. Uno roto no completa nada y lo dice.');
+    try {
+        const e = await correrEnlaces(cuerpoE);
+        pasan += e.pasan;
+        fallan += e.fallan;
+    } catch (e) {
+        fallan++;
+        cuerpoE.appendChild(fila('ERROR', 'mal', 'No se pudieron abrir los enlaces', 'enlace', e.message, null));
     }
 
     const cuerpoT = seccion('Los mismos casos, adentro del tablero',

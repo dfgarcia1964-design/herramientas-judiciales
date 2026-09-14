@@ -464,6 +464,7 @@
     </div>
     <script src="js/calendario-judicial.js"></script>
     <script src="js/plazos.js"></script>
+    <script src="js/enlace.js"></script>
 <script>
     const apiStatus = document.getElementById('apiStatus');
     const form = document.getElementById('calculatorForm');
@@ -686,6 +687,34 @@
         document.getElementById('hitos').innerHTML = '';
         document.getElementById('customMonths').classList.remove('show');
         document.getElementById('dateError').classList.remove('show');
+        EnlaceCaso.olvidar(form);
+    });
+
+    // El caso que viene en el enlace (js/enlace.js): completa y no calcula.
+    // `meses` va a la opcion del desplegable que tiene ese numero, y 2, 4 y 5,
+    // que no tienen una, al plazo de prescripcion menor. Un 3 cae siempre en
+    // «segunda instancia», aunque quien arma el enlace haya pensado en una
+    // prescripcion de tres meses: el numero que se computa es el mismo, y el
+    // enlace no dice cual de las dos es.
+    EnlaceCaso.aplicar({
+        contenedor: form,
+        esquema: {
+            meses: EnlaceCaso.entero(1, 6),
+            fecha: EnlaceCaso.fecha
+        },
+        completar: function (d) {
+            if (d.meses) {
+                var conOpcion = [6, 3, 1].indexOf(d.meses) !== -1;
+                document.getElementById('plazo').value = conOpcion ? String(d.meses) : 'custom';
+                document.getElementById('customValue').value = conOpcion ? '' : String(d.meses);
+                document.getElementById('customMonths').classList.toggle('show', !conOpcion);
+            }
+            if (d.fecha) {
+                document.getElementById('day').value = d.fecha.dia;
+                document.getElementById('month').value = d.fecha.mes;
+                document.getElementById('year').value = d.fecha.anio;
+            }
+        }
     });
 </script>
 </body>

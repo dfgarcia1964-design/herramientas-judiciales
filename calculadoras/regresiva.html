@@ -385,6 +385,7 @@
 <script src="js/calendario-judicial.js"></script>
 <script src="js/plazos.js"></script>
 <script src="js/dibujo-plazo.js"></script>
+<script src="js/enlace.js"></script>
 <script>
     (function() {
         let datosCargados = false;
@@ -599,7 +600,26 @@
             resultadoPanel.style.display = 'none';
             document.getElementById('espera').style.display = '';
             dibujoDiv.innerHTML = '';
+            EnlaceCaso.olvidar(document.querySelector('.tablero > .panel'));
         }
+
+        // El caso que viene en el enlace (js/enlace.js): completa y no calcula.
+        // Sin `antelacion` el campo se queda en 5, que es su valor de arranque.
+        EnlaceCaso.aplicar({
+            contenedor: document.querySelector('.tablero > .panel'),
+            esquema: {
+                fecha: EnlaceCaso.fecha,
+                antelacion: EnlaceCaso.entero(1, 999)
+            },
+            completar: function (d) {
+                if (d.fecha) {
+                    diaInput.value = d.fecha.dia;
+                    mesInput.value = d.fecha.mes;
+                    anioInput.value = d.fecha.anio;
+                }
+                if (d.antelacion) diasInput.value = String(d.antelacion);
+            }
+        });
 
         window.addEventListener('load', async function() {
             var currentYear = new Date().getFullYear();

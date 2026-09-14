@@ -225,6 +225,26 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   color: var(--fg);
 }
 
+/* El aviso de que el formulario vino lleno de un enlace. Lo pone
+   js/enlace.js como primer hijo del panel del formulario. En acento y
+   no en --warn porque no es una alarma: dice de donde salieron los
+   datos. Si el enlace traia un dato roto si es un problema, y va en
+   --warn. Nombre propio y no .aviso, que varias pantallas redefinen. */
+.aviso-enlace {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  background: var(--accent-tint);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--fg);
+  font-size: .875rem;
+  line-height: 1.45;
+}
+.aviso-enlace.problema {
+  background: var(--warn-tint);
+  border-color: var(--warn);
+}
+
 /* ---------- Interruptor de tema ----------
 
    Lo inyecta assets/tema.js al final del <body>, así que no hay que

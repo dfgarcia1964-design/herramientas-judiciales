@@ -19,6 +19,58 @@ de 2026.
 
 ---
 
+## Las cinco de plazos se abren con los datos del enlace — 14/9
+
+Salió de un pedido del ledger que estaba anotado como prioridad: con la
+notificación automática el ledger no computa —el vencimiento depende de las
+notas del Libro de Asistencia, que pregunta la pantalla— y abría
+`vencimientos.html?modalidad=automatica&fecha=AAAA-MM-DD&plazo=N`, que la
+pantalla ignoraba. Javier lo extendió: *«esa idea podría usarse para todas las
+calculadoras, que vengan links para poder abrirlas con esos datos»*.
+
+**Había un choque, y se resolvió a favor de la regla vieja.** El ledger ponía
+los datos detrás de un `?`, y la decisión de `tasa` y `prorrateo` era el `#`: lo
+que va detrás del `#` no llega al servidor ni a sus registros. Se le planteó a
+Javier y eligió el `#`; en el ledger fue cambiar un carácter, y la pantalla **no
+lee el `?`** a propósito, ni avisa: un `?` es también el rompe-caché de las
+pruebas.
+
+Las otras dos preguntas, con la recomendación que Javier aceptó:
+
+- **Completa y no calcula.** Las pantallas de plazos preguntan lo que un enlace
+  no sabe —las notas, el horario, la ampliación—, y un resultado calculado al
+  abrir parece terminado sin que nadie las haya contestado. En `distancia`, si
+  algún día lee un enlace, calcular sola mandaría las localidades a terceros
+  apenas se abre. Por eso siempre aparece un aviso arriba del formulario que
+  dice que los datos vienen del enlace: sin él, la persona espera un resultado
+  que no llega.
+- **Las cinco de plazos en la misma tanda, con una pieza compartida**,
+  `js/enlace.js`, por el motivo de siempre: cinco copias del mismo lector se
+  desincronizan. Cada pantalla pone su esquema —qué nombre va a qué campo— y el
+  módulo lee, valida y avisa.
+
+**Los nombres son legibles y no el base64 de `tasa`**, porque los arma otro
+programa: `#fecha=2026-09-11&plazo=15` se escribe y se lee a mano. `tasa` y
+`prorrateo` lo necesitan porque llevan listas de renglones.
+
+Tres cosas del diseño que no son obvias: **un dato desconocido o repetido
+invalida el enlace entero** —un `plaza=5` ignorado en silencio dejaría el campo
+vacío sin que nadie sepa por qué—; **Limpiar saca el fragmento** de la dirección,
+porque si no, recargar vuelve a llenar lo que se acaba de borrar; y **un enlace
+nuevo pegado sobre la página abierta la recarga**, porque cambiar sólo el
+fragmento no recarga y rellenar encima dejaría datos del caso anterior. En
+`caducidad`, `meses=3` cae en «segunda instancia» aunque quien arma el enlace
+piense en una prescripción de tres meses: el número es el mismo y el enlace no
+dice cuál de las dos es.
+
+Verificado: `verificar-plazos` 135 antes y después; las 15 filas nuevas de
+`pruebas-calculadoras.html` —y las 75 de antes— pasando, vistas fallar dos
+veces a propósito. La segunda rotura, calcular apenas carga el calendario,
+pasaba la primera versión de la prueba: miraba enseguida de cargada la página
+y se escapaba por milisegundos. Ahora espera un rato antes de mirar.
+
+---
+
 ## El ledger pasa a cargar los motores desde el sitio — anotado el 11/9
 
 El repositorio `ledger` empezó a cargar `calendario-judicial.js` y `plazos.js`

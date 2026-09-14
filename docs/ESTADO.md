@@ -65,18 +65,13 @@ intacto, cerrado midiendo y no mirando— quedó abajo, en las trampas vivas.
 > nadie, y el único pedido que había —el calendario judicial consultable— está
 > cerrado y consumido desde el 2/9.
 
-**Lo que queda abierto, y son dos cosas:**
+**Lo que queda abierto:**
 
-- **Prioridad: que `vencimientos.html` lea los datos del link.** Lo pide el
-  `ledger` (ver [El cuarto consumidor](#el-cuarto-consumidor-que-no-pasa-por-los-conectores)).
-  Cuando un traslado se notifica en forma automática el ledger no cuenta
-  —depende de las notas del Libro de Asistencia, que pregunta la pantalla— y
-  abre `calculadoras/vencimientos.html?modalidad=automatica&fecha=AAAA-MM-DD&plazo=N`.
-  Hoy la pantalla ignora esos parámetros y abre vacía. Tendría que completar la
-  modalidad, la fecha y el plazo, y dejar que la persona agregue las notas y
-  calcule; con un parámetro inválido, no completar ninguno. Es pantalla y no
-  cómputo, pero toca lo que lee el formulario: `verificar-plazos` antes y
-  después. Hecho, esos tres parámetros pasan a ser contrato del ledger.
+- **Publicar el enlace con datos, y después el ledger.** Las cinco de plazos ya
+  lo leen (ver [El caso en el enlace](#el-caso-en-el-enlace)) y el ledger ya lo
+  arma con `#`, en su copia local (`?v=25`). **Ninguno de los dos está
+  publicado**, y el orden no importa: mientras falte uno, la calculadora abre
+  vacía, como antes.
 - **Faltan las capturas del tablero en la landing.** Hoy hay un plano en SVG,
   que es la estructura y no la pantalla. Se hacen cuando el tablero deje de
   moverse —las de Honorio ya envejecieron dos veces— y **hay que pedir el panel
@@ -157,14 +152,14 @@ Ninguno urgente y ninguno bloqueante.
 
 ### Lo que está abierto en las pantallas
 
-- **El permalink y el imprimible existen en `tasa` y en `prorrateo`.** Faltan en
-  las demás y no está decidido si van. **La decisión que hay que repetir si se
-  extienden:** el caso va en el **fragmento** (`#…`), que no viaja al servidor.
-  Una URL con el caso adentro se pega en un mail, en un chat y en un historial;
-  un monto de proceso y una fecha de notificación no son datos personales, pero
-  sí son datos de un expediente concreto. Y la UMA **no** va en el enlace: es un
-  dato del sistema y no del caso, y guardarla congelaría un valor viejo adentro
-  de un enlace que se abre meses después.
+- **El caso en el enlace llega a siete de las diez.** Las cinco de plazos lo
+  **leen** ([El caso en el enlace](#el-caso-en-el-enlace)); `tasa` y `prorrateo`
+  lo leen y además lo **escriben** —permalink e imprimible—, con su propio
+  formato. Sin decidir: `distancia`, `honorarios-mediacion`, `ejecucion-estado`,
+  y si las de plazos escriben el suyo. **Si se extiende, van las mismas tres
+  decisiones de `js/enlace.js`**, y la UMA **no** va en el enlace: es un dato del
+  sistema y no del caso, y congelaría un valor viejo adentro de un enlace que se
+  abre meses después.
 - **Los cuatro criterios con los que se despejó `tasa` valen para las diez.** Se
   pregunta **el caso y no la mecánica**; lo que el sistema puede decidir **lo
   decide** ---un desplegable de una sola opción es una decisión disfrazada de
@@ -266,8 +261,9 @@ a propósito**: un control que nunca falló no es un control.
 
 Y **tres** que corren en el navegador, con el sitio servido y no con `file://`:
 
-- **`scripts/pruebas-calculadoras.html`** cubre **las pantallas** de plazos: 75
-  filas, las 75 pasando, sobre las cinco por iframe. **Los iframes llevan
+- **`scripts/pruebas-calculadoras.html`** cubre **las pantallas** de plazos: 90
+  filas, las 90 pasando, sobre las cinco por iframe, y desde el 14/9 lo que
+  completa un enlace. **Los iframes llevan
   rompe-caché**: sin él las pruebas corren contra la versión anterior, que
   parece un bug del cambio que se acaba de hacer.
 - **`scripts/pruebas-tablero.html`** cubre **la navegación** del tablero: 37
@@ -482,6 +478,26 @@ dos llamadas, la lectura local en el huso de Buenos Aires— y corre antes de
 publicar; y el job `publicado` de `pages.yml`, **después** de publicar, pide
 las cinco rutas al sitio y exige `200` y el encabezado CORS. Si ése falla, el
 sitio ya salió: la falla es el aviso.
+
+### El caso en el enlace
+
+Desde el 14/9 las cinco de plazos se abren con los datos puestos. Lo lee
+`calculadoras/js/enlace.js`, con **tres decisiones en su cabecera**: el caso va
+en el **fragmento** (`#…`), que no llega al servidor; el enlace **completa y no
+calcula** —decisión de Javier—; y con un dato inválido **no completa ninguno**.
+
+| Pantalla | Nombres (fechas `AAAA-MM-DD`, días de 1 a 999) |
+|---|---|
+| `vencimientos` | `modalidad` (`cedula`/`automatica`), `fecha`, `plazo` |
+| `caducidad` | `meses` (1 a 6; 2, 4 y 5 van a «prescripción menor»), `fecha` |
+| `mora` | `fecha`, `firme` (hábiles), `pago` (corridos, desde 0) |
+| `regresiva` | `fecha`, `antelacion` |
+| `entre-fechas` | `desde`, `hasta`, `inicio`, `fin`, `habiles` (`si`/`no`) |
+
+**Los tres de `vencimientos` son contrato con el ledger**, que los arma en su
+`app.js`. Lo cubren 15 filas de `pruebas-calculadoras.html`, vistas fallar
+renombrando `plazo` y calculando al abrir. **El tablero no pasa el enlace a la
+embebida** —su fragmento es la pestaña—: un enlace con datos va a la suelta.
 
 ---
 

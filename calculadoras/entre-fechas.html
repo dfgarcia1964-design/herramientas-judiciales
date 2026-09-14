@@ -457,6 +457,7 @@
 <script src="js/calendario-judicial.js"></script>
 <script src="js/plazos.js"></script>
 <script src="js/dibujo-plazo.js"></script>
+<script src="js/enlace.js"></script>
 <script>
     var YEARS = [];
     (function() {
@@ -754,7 +755,41 @@
         document.querySelectorAll('input[type="text"]').forEach(function(input) {
             input.classList.remove('error');
         });
+        EnlaceCaso.olvidar(document.querySelector('.tablero > .panel'));
     }
+
+    // El caso que viene en el enlace (js/enlace.js): completa y no calcula.
+    // Las tres casillas mueven el total, asi que la que el enlace no trae se
+    // queda como arranca la pantalla ---inicio y fin contados, corridos--- y
+    // el aviso pide revisarlas.
+    EnlaceCaso.aplicar({
+        contenedor: document.querySelector('.tablero > .panel'),
+        esquema: {
+            desde: EnlaceCaso.fecha,
+            hasta: EnlaceCaso.fecha,
+            inicio: EnlaceCaso.siNo,
+            fin: EnlaceCaso.siNo,
+            habiles: EnlaceCaso.siNo
+        },
+        completar: function (d) {
+            if (d.desde) {
+                document.getElementById('startDay').value = d.desde.dia;
+                document.getElementById('startMonth').value = d.desde.mes;
+                document.getElementById('startYear').value = d.desde.anio;
+            }
+            if (d.hasta) {
+                document.getElementById('endDay').value = d.hasta.dia;
+                document.getElementById('endMonth').value = d.hasta.mes;
+                document.getElementById('endYear').value = d.hasta.anio;
+            }
+            if (d.inicio !== undefined) document.getElementById('includeStart').checked = d.inicio;
+            if (d.fin !== undefined) document.getElementById('includeEnd').checked = d.fin;
+            if (d.habiles !== undefined) document.getElementById('businessDays').checked = d.habiles;
+        },
+        texto: function () {
+            return 'Estos datos vienen del enlace. Revisá qué días se cuentan y apretá Calcular.';
+        }
+    });
 </script>
 </body>
 </html>

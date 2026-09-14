@@ -863,6 +863,7 @@
 <script src="js/calendario-judicial.js"></script>
 <script src="js/plazos.js"></script>
 <script src="js/dibujo-plazo.js"></script>
+<script src="js/enlace.js"></script>
 <script>
     let datosCargados = false;
 
@@ -1791,6 +1792,7 @@
         mostrarDiasDeNota();
         actualizarSeccionHorario();
         actualizarSeccionAmpliacion();
+        EnlaceCaso.olvidar(document.querySelector('.tablero > .panel'));
     }
 
     // El rotulo va corto porque el estilo es de etiqueta --once pixeles, en
@@ -1969,6 +1971,43 @@
     });
     document.getElementById('mes').addEventListener('input', function() {
         if (this.value.length === 2) document.getElementById('anio').focus();
+    });
+
+    // El caso que viene en el enlace (js/enlace.js). Completa y NO calcula:
+    // con la notificacion automatica el vencimiento depende de si se dejo
+    // nota en el Libro de Asistencia, y eso lo sabe la persona, no el enlace.
+    // Los tres nombres son contrato con el ledger, que arma el enlace con
+    // modalidad=automatica. El plazo no marca ningun atajo: el enlace dice
+    // cuantos dias, no de que plazo se trata, y el atajo lo afirmaria.
+    EnlaceCaso.aplicar({
+        contenedor: document.querySelector('.tablero > .panel'),
+        esquema: {
+            modalidad: EnlaceCaso.opcion(['cedula', 'automatica']),
+            fecha: EnlaceCaso.fecha,
+            plazo: EnlaceCaso.entero(1, 999)
+        },
+        completar: function (d) {
+            if (d.modalidad) ponerModalidad(d.modalidad);
+            if (d.fecha) {
+                document.getElementById('dia').value = d.fecha.dia;
+                document.getElementById('mes').value = d.fecha.mes;
+                document.getElementById('anio').value = d.fecha.anio;
+            }
+            if (d.plazo) document.getElementById('plazo').value = String(d.plazo);
+            actualizarLabelFecha();
+            mostrarDiasDeNota();
+            actualizarSeccionHorario();
+            actualizarSeccionAmpliacion();
+        },
+        // Sin modalidad en el enlace la pantalla queda en cedula, que es su
+        // valor de arranque: por eso el segundo texto vale para los dos casos.
+        texto: function (d) {
+            return d.modalidad === 'automatica'
+                ? 'Estos datos vienen del enlace. Si se dejó nota en el Libro de ' +
+                  'Asistencia, marcalo más abajo; después apretá Calcular.'
+                : 'Estos datos vienen del enlace. Revisá el horario y la ampliación ' +
+                  'por distancia, si corresponden, y apretá Calcular.';
+        }
     });
 </script>
 </body>
