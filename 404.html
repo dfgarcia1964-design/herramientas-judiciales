@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Esta página no existe</title>
+<meta name="robots" content="noindex">
+<!--
+  La pagina que GitHub Pages sirve, con estado 404, en CUALQUIER direccion
+  del sitio que no exista. Antes del 14/9/2026 era la generica de GitHub, en
+  ingles y sin forma de volver.
+
+  TODAS LAS RUTAS VAN DESDE LA RAIZ (/calculadoras/..., /assets/...), y es
+  lo unico que no se puede tocar: esta misma pagina se sirve en
+  /calculadoras/lo-que-sea, y ahi una ruta relativa apunta a una carpeta que
+  no existe y la pagina sale sin estilos y con los enlaces rotos.
+
+  Los enlaces con datos del caso no llegan aca por un dato roto: el caso va
+  en el fragmento (#...), que no viaja al servidor, y de eso se ocupa
+  calculadoras/js/enlace.js. Llegan aca cuando lo roto es el NOMBRE de la
+  pagina ---un enlace cortado por un cliente de correo, un error de tipeo---,
+  y por eso la sugerencia conserva el fragmento: el caso sigue intacto.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/calculadoras/css/comun.css">
+<script src="/assets/tema.js"></script>
+<style>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px 20px;
+        box-sizing: border-box;
+    }
+    main { max-width: 32rem; width: 100%; }
+    .codigo {
+        font-family: var(--font-meter);
+        font-size: .8rem;
+        font-weight: 500;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--muted-fg);
+        margin: 0 0 8px;
+    }
+    h1 { font-size: 1.6rem; margin: 0 0 12px; line-height: 1.25; }
+    p { margin: 0 0 16px; }
+    .direccion {
+        font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+        font-size: .85rem;
+        color: var(--muted-fg);
+        overflow-wrap: anywhere;
+    }
+    /* La sugerencia: en acento y no en --warn, porque no es una alarma. */
+    .sugerencia {
+        background: var(--accent-tint);
+        border: 1px solid var(--accent);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin: 0 0 20px;
+    }
+    .sugerencia p { margin: 0 0 6px; }
+    .sugerencia p:last-child { margin: 0; }
+    .sugerencia a { font-weight: 600; }
+    .nota { font-size: .875rem; color: var(--muted-fg); }
+    .acciones { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 24px; }
+    .btn {
+        display: inline-block;
+        background: var(--accent);
+        color: var(--on-accent);
+        text-decoration: none;
+        padding: 11px 20px;
+        border-radius: var(--radius);
+        font-weight: 500;
+    }
+    .btn-suave {
+        background: transparent;
+        color: var(--fg);
+        border: 1px solid var(--border);
+    }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main>
+    <p class="codigo">Error 404</p>
+    <h1>Esta página no existe</h1>
+    <p>
+        La dirección no lleva a ninguna página de este sitio. Lo más común es
+        que el enlace se haya cortado al copiarlo o pegarlo, o que tenga un
+        error de tipeo.
+    </p>
+    <p class="direccion" id="direccion"></p>
+
+    <div class="sugerencia" id="sugerencia" hidden></div>
+
+    <div class="acciones">
+        <a class="btn" href="/calculadoras/tablero.html">Ir al tablero de herramientas</a>
+        <a class="btn btn-suave" href="/">Página principal</a>
+    </div>
+
+    <p class="nota">
+        Si llegaste desde un enlace de este sitio que tendría que funcionar,
+        avisame a <a href="mailto:javier@javiercuneo.com.ar">javier@javiercuneo.com.ar</a>.
+    </p>
+</main>
+
+<script>
+(function () {
+    'use strict';
+
+    // Las paginas que se pueden sugerir. Es una lista escrita a mano, y
+    // esta bien que lo sea: si una pagina nueva no esta, lo unico que se
+    // pierde es la sugerencia ---el boton del tablero sigue andando---. El
+    // nombre es el <title> de cada una, para que se reconozca.
+    var PAGINAS = [
+        ['/calculadoras/tablero.html', 'Tablero de herramientas'],
+        ['/calculadoras/vencimientos.html', 'Calculadora de plazos judiciales'],
+        ['/calculadoras/distancia.html', 'Ampliación por distancia'],
+        ['/calculadoras/caducidad.html', 'Caducidad de instancia'],
+        ['/calculadoras/entre-fechas.html', 'Días entre dos fechas'],
+        ['/calculadoras/regresiva.html', 'Calculadora regresiva'],
+        ['/calculadoras/mora.html', 'Inicio de la mora'],
+        ['/calculadoras/prorrateo.html', 'Prorrateo del art. 730'],
+        ['/calculadoras/tasa.html', 'Tasa de justicia'],
+        ['/calculadoras/honorarios-mediacion.html', 'Honorarios del mediador'],
+        ['/calculadoras/ejecucion-estado.html', 'Ejecución contra el Estado'],
+        ['/uma-uhom.html', 'Valor de la UMA y del UHOM'],
+        ['/escribiente/', 'Escribiente'],
+        ['/documentacion.html', 'Guía de uso'],
+        ['/quien-soy.html', 'Quién soy'],
+        ['https://honorio.ar/', 'Honorio']
+    ];
+
+    // Lo que sigue a «.html» se tira: es lo que pega un cliente de correo al
+    // cortar un enlace ---un «…», un paréntesis, un punto final---.
+    function normalizar(t) {
+        return t.toLowerCase()
+            .normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .replace(/\.html?.*$/, '')
+            .replace(/[^a-z0-9-]/g, '');
+    }
+
+    function nombreDe(ruta) {
+        var partes = ruta.replace(/^https?:\/\/[^/]+/, '').split('/').filter(Boolean);
+        return normalizar(partes.length ? partes[partes.length - 1] : 'honorio');
+    }
+
+    function distancia(a, b) {
+        var fila = [];
+        for (var j = 0; j <= b.length; j++) fila.push(j);
+        for (var i = 1; i <= a.length; i++) {
+            var previo = fila[0];
+            fila[0] = i;
+            for (var k = 1; k <= b.length; k++) {
+                var guardado = fila[k];
+                fila[k] = Math.min(fila[k] + 1, fila[k - 1] + 1,
+                                   previo + (a[i - 1] === b[k - 1] ? 0 : 1));
+                previo = guardado;
+            }
+        }
+        return fila[b.length];
+    }
+
+    // Primero el error de tipeo ---a lo sumo dos letras de diferencia---, y
+    // despues el enlace cortado ---lo pedido es el principio de UN solo
+    // nombre---. En ese orden porque «honorario» esta a dos letras de
+    // Honorio y tambien es el principio de «honorarios-mediacion»: el que lo
+    // escribio casi seguro buscaba Honorio. Si nada encaja, no se adivina.
+    function encajar(pedido) {
+        if (!pedido) return null;
+        // La carpeta de las calculadoras no tiene pagina propia: su puerta es
+        // el tablero.
+        if (pedido === 'calculadoras') return PAGINAS[0];
+
+        // Dos letras de tolerancia sólo con nombres largos: con uno de cuatro,
+        // dos letras son la mitad de la palabra, y «nada» salía como «tasa».
+        var mejor = null, menor = 3;
+        PAGINAS.forEach(function (p) {
+            var n = nombreDe(p[0]);
+            var d = distancia(pedido, n);
+            var tope = Math.min(n.length, pedido.length) <= 5 ? 1 : 2;
+            if (d <= tope && d < menor) { menor = d; mejor = p; }
+        });
+        if (mejor) return mejor;
+
+        if (pedido.length < 3) return null;
+        var empiezan = PAGINAS.filter(function (p) { return nombreDe(p[0]).indexOf(pedido) === 0; });
+        if (empiezan.length === 1) return empiezan[0];
+
+        // Y al reves: el nombre de una pagina es el principio de lo pedido
+        // (caducidad-de-instancia -> caducidad), si es uno solo.
+        var contienen = PAGINAS.filter(function (p) {
+            var n = nombreDe(p[0]);
+            return n.length >= 4 && pedido.indexOf(n) === 0;
+        });
+        return contienen.length === 1 ? contienen[0] : null;
+    }
+
+    // Del ultimo tramo de la direccion para atras: si la pagina no se
+    // reconoce, la carpeta dice al menos donde se estaba
+    // (/escribiente/algo -> Escribiente, /calculadoras/algo -> tablero).
+    function sugerir(ruta) {
+        var partes = ruta.split('/').filter(Boolean);
+        for (var i = partes.length - 1; i >= 0; i--) {
+            var p = encajar(normalizar(decodeURIComponent(partes[i])));
+            if (p) return p;
+        }
+        return null;
+    }
+
+    document.getElementById('direccion').textContent =
+        'Dirección pedida: ' + location.pathname;
+
+    var p;
+    try { p = sugerir(location.pathname); } catch (e) { p = null; }
+    if (!p) return;
+
+    // El fragmento se conserva: es el caso que traia el enlace.
+    var interno = p[0].charAt(0) === '/';
+    var conDatos = interno && location.hash.indexOf('=') !== -1;
+    var caja = document.getElementById('sugerencia');
+    var linea = document.createElement('p');
+    linea.appendChild(document.createTextNode('¿Buscabas '));
+    var a = document.createElement('a');
+    a.href = p[0] + (interno ? location.hash : '');
+    a.textContent = p[1];
+    linea.appendChild(a);
+    linea.appendChild(document.createTextNode('?'));
+    caja.appendChild(linea);
+    if (conDatos) {
+        var nota = document.createElement('p');
+        nota.className = 'nota';
+        nota.textContent = 'El enlace traía datos del caso después del «#», y este los conserva.';
+        caja.appendChild(nota);
+    }
+    caja.hidden = false;
+})();
+</script>
+</body>
+</html>

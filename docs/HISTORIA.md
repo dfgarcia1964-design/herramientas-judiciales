@@ -19,6 +19,32 @@ de 2026.
 
 ---
 
+## La página 404, y las cifras de Honorio 3.5.0 — 14/9
+
+**La 404.** Javier preguntó si con los enlaces nuevos —acá y en Honorio— tenía
+sentido una página de error propia. La respuesta fue que sí, pero no por los
+enlaces: el caso va en el fragmento, que no llega al servidor, así que un dato
+roto nunca da 404 —lo atiende el aviso de `enlace.js`—. Lo que da 404 es un
+**nombre** de página roto: un enlace cortado por un cliente de correo o un
+error de tipeo. Hasta ese día GitHub mostraba su página genérica, en inglés y
+sin forma de volver.
+
+`404.html` dice qué pasó, lleva al tablero y **sugiere la página más parecida,
+conservando el fragmento**: un enlace del ledger con el nombre mutilado sigue
+abriendo la calculadora con el caso puesto. La búsqueda se probó contra
+diecinueve direcciones rotas y en la primera pasada tenía un falso positivo:
+`/docs/nada.html` sugería «Tasa de justicia», porque «nada» y «tasa» difieren en
+dos letras. Con nombres cortos la tolerancia bajó a una. Honorio queda sin 404
+propia: es una sola página y el arreglo va en su repositorio.
+
+**Las cifras.** `verificar-honorio` avisaba desde que salió Honorio 3.5.0 (9/9):
+la versión y las validaciones —17 a 18— estaban viejas en `index.html` y en
+`documentacion.html`. La prosa también: la landing decía «diecisiete
+validaciones sobre el cálculo», y la 18 no es sobre el cálculo: compara cada
+texto de ley que la app muestra contra la ley. Ahora lo dice así.
+
+---
+
 ## Las cinco de plazos se abren con los datos del enlace — 14/9
 
 Salió de un pedido del ledger que estaba anotado como prioridad: con la

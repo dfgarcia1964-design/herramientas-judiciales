@@ -102,7 +102,7 @@ function paginas() {
         if (NO_SE_PUBLICAN.has(f)) continue;
         salida.push(['calculadoras/' + f, join(RAIZ, 'calculadoras', f)]);
     }
-    for (const f of ['index.html', 'documentacion.html', 'quien-soy.html', 'uma-uhom.html']) {
+    for (const f of ['index.html', 'documentacion.html', 'quien-soy.html', 'uma-uhom.html', '404.html']) {
         salida.push([f, join(RAIZ, f)]);
     }
     return salida;

@@ -567,7 +567,7 @@ día está en [`HISTORIA.md`](HISTORIA.md).
 
 ### Las cinco cifras que este repositorio sigue de Honorio
 
-Son suyas pero salen de allá: **la versión**, **17 validaciones**, **8 tipos de
+Son suyas pero salen de allá: **la versión**, **18 validaciones**, **8 tipos de
 proceso**, **173 recorridos** y **29.929 cruces**. Viven en `index.html`, en
 `README.md`, en `documentacion.html` —la de validaciones, escrita con letras— y
 en la tabla de recorridos de [`01_PROCESOS.md`](domain/01_PROCESOS.md). **Si
@@ -903,6 +903,12 @@ acá está la materia prima; el pendiente, no.
   precisión, mejor cobertura. Está escrito en
   `scripts/barrer-plazos-cpccn.mjs`, con el `\b` del final de cada unidad
   comentado —sin él «en un **dia**rio» sale como un plazo de un día—.
+- **`404.html` va con todas sus rutas desde la raíz**, porque GitHub la sirve
+  en cualquier dirección que no existe, también adentro de `/calculadoras/`: una
+  ruta relativa ahí apunta a una carpeta que no existe. Y **sugiere la página
+  más parecida desde una lista escrita a mano**: una página nueva que no se
+  sume ahí no rompe nada, pero no se sugiere. El servidor local no la sirve
+  sola; se prueba abriendo `/404.html`.
 - **Al leer un diff grande de un HTML, mirar primero si es de contenido.**
   `git diff --ignore-cr-at-eol` lo despeja en un segundo.
 - **`www` depende de Cloudflare, y de dos cosas que no se ven.** Desde el 8/9

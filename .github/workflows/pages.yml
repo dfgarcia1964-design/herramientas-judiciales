@@ -137,6 +137,10 @@ jobs:
           cp documentacion.html site/
           cp quien-soy.html site/
           cp uma-uhom.html site/
+          # GitHub Pages sirve /404.html, con estado 404, en cualquier
+          # direccion que no exista. Tiene que ir en la raiz del sitio y con
+          # todas sus rutas absolutas: el porque esta adentro del archivo.
+          cp 404.html site/
           cp -r assets site/
           cp -r calculadoras site/
           cp -r data site/
