@@ -3,7 +3,7 @@
 Documento de continuidad entre sesiones. **Leer antes de empezar a trabajar.**
 Se actualiza en el mismo commit que el trabajo, para que nunca mienta.
 
-Última actualización: 2026-09-11 · rama `main`
+Última actualización: 2026-09-14 · rama `main`
 
 **Lleva sólo lo que sigue vivo.** Dónde está el trabajo, qué está abierto, qué
 se sabe roto, qué decisiones no hay que contradecir sin saberlo, y qué trampas
@@ -65,8 +65,18 @@ intacto, cerrado midiendo y no mirando— quedó abajo, en las trampas vivas.
 > nadie, y el único pedido que había —el calendario judicial consultable— está
 > cerrado y consumido desde el 2/9.
 
-**Lo que queda abierto, y es una sola cosa:**
+**Lo que queda abierto, y son dos cosas:**
 
+- **Prioridad: que `vencimientos.html` lea los datos del link.** Lo pide el
+  `ledger` (ver [El cuarto consumidor](#el-cuarto-consumidor-que-no-pasa-por-los-conectores)).
+  Cuando un traslado se notifica en forma automática el ledger no cuenta
+  —depende de las notas del Libro de Asistencia, que pregunta la pantalla— y
+  abre `calculadoras/vencimientos.html?modalidad=automatica&fecha=AAAA-MM-DD&plazo=N`.
+  Hoy la pantalla ignora esos parámetros y abre vacía. Tendría que completar la
+  modalidad, la fecha y el plazo, y dejar que la persona agregue las notas y
+  calcule; con un parámetro inválido, no completar ninguno. Es pantalla y no
+  cómputo, pero toca lo que lee el formulario: `verificar-plazos` antes y
+  después. Hecho, esos tres parámetros pasan a ser contrato del ledger.
 - **Faltan las capturas del tablero en la landing.** Hoy hay un plano en SVG,
   que es la estructura y no la pantalla. Se hacen cuando el tablero deje de
   moverse —las de Honorio ya envejecieron dos veces— y **hay que pedir el panel
@@ -441,9 +451,11 @@ sobre todo que un dato faltante no devuelva una fecha.
 
 **Desde el 11/9 el repositorio `ledger` —privado, fuera de los cinco— carga los
 dos motores desde el sitio publicado** y les pregunta en el navegador la
-caducidad de seis meses, como alarma, y el vencimiento de una apelación por
-cédula. Ningún conector le sirve, así que **su contrato es la API de `window`
-de los motores**. Lo que usa, leído en su `web/js/app.js`:
+caducidad de seis meses, como alarma, y el vencimiento por cédula de una
+apelación y, desde el 14/9, de los plazos para contestar la demanda y los
+traslados, con el plazo que cargue la persona. Ningún conector le sirve, así que
+**su contrato es la API de `window` de los motores**. Lo que usa, leído en su
+`web/js/app.js`:
 
 - **Las rutas publicadas** de `calendario-judicial.js`, `plazos.js` y
   `data/feriados.json`, `data/dias-inhabiles.json` y `data/feria-judicial.json`.
