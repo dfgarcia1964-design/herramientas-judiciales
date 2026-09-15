@@ -37,6 +37,48 @@ const LETRA = MAY + MIN;
 const ANTES = `(^|[^${LETRA}\\d])`;
 const DESPUES = `(?=[^${LETRA}\\d]|$)`;
 
+// Las particulas de un apellido o de un nombre compuesto: "Del Monte", "de la
+// Fuente", "Maria de los Angeles", "Di Pietro". Tres de ellas —del, las, los—
+// estan tambien en NO_SON_PERSONAS, porque sueltas en un titulo delatan que no
+// hay un nombre; EN EL MEDIO de dos palabras de nombre, en cambio, son parte
+// del nombre. Quien las consulta decide cual de las dos cosas mira.
+const PARTICULAS = ['de', 'del', 'la', 'las', 'los', 'di', 'da', 'van', 'von'];
+const PARTICULA = `(?:${PARTICULAS.join('|')})`;
+// Para los patrones que corren SIN la bandera `i`: "de", "De" y "DE".
+const PARTICULA_CUALQUIER_CAJA = `(?:${PARTICULAS
+    .flatMap((p) => [p, p[0].toUpperCase() + p.slice(1), p.toUpperCase()])
+    .join('|')})`;
+
+function limpiarPalabra(palabra) {
+    return sinTildes(palabra.replace(/[,.;:"“”'()]/g, '').toLowerCase());
+}
+
+function esParticula(palabra) {
+    return PARTICULAS.includes(limpiarPalabra(palabra));
+}
+
+// Terminaciones que no lleva ningun nombre de persona y lleva casi todo el
+// vocabulario de un titulo: "PRESCRIPCION ADQUISITIVA", "INTERPONE
+// REVOCATORIA", "SOLICITA SUSPENSION". Agregar a mano cada una de esas palabras
+// a NO_SON_PERSONAS es una lista que no termina nunca; la terminacion las
+// alcanza a todas.
+//
+// LAS EXCEPCIONES SON NOMBRES, y sin ellas la regla se come uno: "Concepcion"
+// y "Asuncion" son nombres de pila, y una parte que se llama asi dejaba de
+// salir entera de la caratula.
+const TERMINACION_QUE_NO_ES_NOMBRE = /(?:cion|sion|miento|mente|tivo|tiva|tivos|tivas|sivo|siva)$/;
+const NOMBRES_CON_ESA_TERMINACION = new Set([
+    'concepcion', 'asuncion', 'encarnacion', 'purificacion', 'anunciacion',
+    'consolacion', 'ascension', 'visitacion',
+]);
+
+// Lo que delata que una palabra no es parte de un nombre de persona.
+function noEsNombre(palabra) {
+    const p = limpiarPalabra(palabra);
+    if (NO_SON_PERSONAS.has(p)) return true;
+    return TERMINACION_QUE_NO_ES_NOMBRE.test(p) && !NOMBRES_CON_ESA_TERMINACION.has(p);
+}
+
 // Las reglas de formulario y la de tratamiento corren con la bandera `i`
 // —"DOMICILIO:" y "Domicilio:" son la misma etiqueta— y eso apaga la
 // distincion entre mayuscula y minuscula tambien en el valor. La guarda va
@@ -48,12 +90,34 @@ function empiezaEnMayuscula(valor) {
 
 // Guarda de la regla de tratamiento, que es la unica que corre sobre PROSA con
 // la bandera `i`: ahi no alcanza con la mayuscula inicial, porque "Sres. Los
-// Abogados" la tiene. Se le exige ademas no llevar ninguna de las palabras que
-// delatan un falso positivo, la misma lista que filtra los candidatos.
-function pareceNombrePropio(valor) {
-    if (!empiezaEnMayuscula(valor)) return false;
-    return !valor.trim().split(/\s+/).some(
-        (p) => NO_SON_PERSONAS.has(sinTildes(p.replace(/[,.;:]/g, '').toLowerCase())));
+// Abogados" la tiene. Devuelve cuantas palabras del principio son el nombre, o
+// 0 si no hay nombre.
+//
+// POR QUE DEVUELVE UN LARGO Y NO UN SI O UN NO, 15/9/2026. La regla toma hasta
+// cuatro palabras y no vuelve atras: si la guarda rechaza el calce, el nombre
+// entero queda en el texto. Con "Dra. Lucia Ines Del Monte" en un solo
+// renglon, el "Del" —que esta en NO_SON_PERSONAS— rechazaba todo, y un
+// tratamiento seguido de un nombre salia completo. Ahora las particulas del
+// medio ("Del", "de la") son parte del nombre, y lo que sobra al final ("Dr.
+// Juan Perez Juzgado") se devuelve al texto en vez de tirar el calce. Lo que
+// sobra puede ser un cargo, y por eso los cargos estan en NO_SON_PERSONAS: sin
+// "directora", "la Sra. Directora General" salia como "Sra. [PERSONA] General".
+//
+// El nombre es lo que viene detras del tratamiento HASTA la primera palabra que
+// no es de nombre: una del oficio ("Dr. Juan Perez Juzgado Nro. 3"), o una en
+// minuscula que no sea particula —con la bandera `i` el patron no las distingue,
+// y "el Dr. Carlos Pietro contesto" se llevaba el verbo adentro del reemplazo—.
+// Si la primera ya no es de nombre ("Sr. Juez", "Sres. Los Abogados"), no hay
+// nombre. Una particula adelante seguida de un nombre es un apellido: "Sr. De
+// la Rua".
+function largoDeNombre(valor) {
+    if (!empiezaEnMayuscula(valor)) return 0;
+    const palabras = valor.trim().split(/\s+/);
+    let fin = palabras.findIndex((p, i) => !esParticula(p) &&
+        (noEsNombre(p) || (i > 0 && !new RegExp(`^[${MAY}]`).test(p))));
+    if (fin === -1) fin = palabras.length;
+    while (fin > 0 && esParticula(palabras[fin - 1])) fin--;
+    return fin;
 }
 
 // ---------------------------------------------------------------------------
@@ -343,11 +407,18 @@ export const REGLAS_NOMBRES = [
             // el resto de la palabra se va adentro del reemplazo:
             // "INGENIERO JUAN" quedaba como "Ing [PERSONA]".
             `(?=[^${LETRA}]|$)` +
-            `[ \\t]*:?[ \\t]*([${MAY}][${LETRA}]+(?:[ \\t]+[${MAY}][${LETRA}]+){0,3})`,
+            // Las particulas no cuentan entre las cuatro palabras: sin eso,
+            // "Dr. Juan Perez de la Fuente" llenaba el cupo en "la" y el
+            // apellido quedaba afuera, en claro.
+            `[ \\t]*:?[ \\t]*([${MAY}][${LETRA}]+(?:[ \\t]+(?:${PARTICULA}[ \\t]+){0,2}[${MAY}][${LETRA}]+){0,3})`,
             'gi'
         ),
-        reemplazo: (todo, tratamiento, nombre) =>
-            pareceNombrePropio(nombre) ? `${tratamiento} [PERSONA]` : todo,
+        reemplazo: (todo, tratamiento, nombre) => {
+            const largo = largoDeNombre(nombre);
+            if (!largo) return todo;
+            const conservado = nombre.match(new RegExp(`^\\S+(?:[ \\t]+\\S+){${largo - 1}}`))[0];
+            return `${tratamiento} [PERSONA]` + nombre.slice(conservado.length);
+        },
     },
     {
         nombre: 'domicilio con ancla',
@@ -409,16 +480,31 @@ export const REGLAS_NOMBRES = [
 // principio del siguiente y propone como nombre algo que nunca estuvo escrito.
 const S = '[ \\t]+';
 
+// Entre dos palabras de un nombre puede ir una particula, o dos: "Del Monte",
+// "de la Fuente". Sin esto "Lucia del Monte" no calzaba en ningun patron
+// —"del" no empieza en mayuscula— y el nombre no se ofrecia.
+const J = `${S}(?:${PARTICULA_CUALQUIER_CAJA}${S}){0,2}`;
+
 const CANDIDATOS = [
     // "Perez, Juan Carlos" — forma de caratula y de cita de doctrina.
     new RegExp(`[${MAY}][${MIN}]{2,15},${S}[${MAY}][${MIN}]{2,15}(?:${S}[${MAY}][${MIN}]{2,15})?`, 'g'),
     // "ANALIA GABRIELA ARIAS" — tres o mas palabras seguidas en mayusculas.
-    new RegExp(`[${MAY}]{3,}(?:${S}[${MAY}]{3,}){2,}`, 'g'),
-    // "Juan Carlos Perez" — tres palabras capitalizadas seguidas.
-    new RegExp(`[${MAY}][${MIN}]{2,14}(?:${S}[${MAY}][${MIN}]{2,14}){2}`, 'g'),
+    new RegExp(`[${MAY}]{3,}(?:${J}[${MAY}]{3,}){2,}`, 'g'),
+    // "Juan Carlos Perez" — de tres a cinco palabras capitalizadas seguidas.
+    //
+    // ERAN TRES EXACTAS HASTA EL 15/9/2026, y un nombre de cuatro —"Juan Carlos
+    // Perez Garcia"— salia partido: este patron ofrecia "Juan Carlos Perez" y el
+    // de dos palabras, "Perez Garcia". Tildar el primero dejaba el segundo
+    // apellido en claro, y nada avisaba que el nombre seguia.
+    new RegExp(`[${MAY}][${MIN}]{2,14}(?:${J}[${MAY}][${MIN}]{2,14}){2,4}`, 'g'),
     // "PEREZ, Juan" — apellido en mayusculas y nombre capitalizado, que es como
     // el PJN escribe las partes en la caratula.
     new RegExp(`[${MAY}]{3,}(?:${S}[${MAY}]{2,})*,${S}[${MAY}][${MIN}]{2,15}`, 'g'),
+    // "PEREZ, JUAN CARLOS" — la caratula entera en mayusculas. Ninguno de los
+    // otros la toma: el de mayusculas se corta en la coma, y el de arriba pide
+    // el nombre en minusculas. Salia "JUAN CARLOS" solo, y tildarlo dejaba el
+    // apellido —lo que mas identifica— a la vista.
+    new RegExp(`[${MAY}]{3,}(?:${S}[${MAY}]{3,})*,${S}[${MAY}]{3,}(?:${J}[${MAY}]{3,}){0,3}`, 'g'),
 
     // "Ernesto Quiroga" y "ERNESTO QUIROGA" — DOS palabras, que es como se
     // llama la gente en un escrito una vez que ya fue presentada.
@@ -436,8 +522,8 @@ const CANDIDATOS = [
     // los candidatos ya no vengan tildados de fabrica (ver app.js). Un candidato
     // de mas cuesta una mirada; uno de menos es un nombre que sale del
     // expediente sin que nadie se entere.
-    new RegExp(`[${MAY}][${MIN}]{2,15}${S}[${MAY}][${MIN}]{2,15}`, 'g'),
-    new RegExp(`[${MAY}]{3,}${S}[${MAY}]{3,}`, 'g'),
+    new RegExp(`[${MAY}][${MIN}]{2,15}${J}[${MAY}][${MIN}]{2,15}`, 'g'),
+    new RegExp(`[${MAY}]{3,}${J}[${MAY}]{3,}`, 'g'),
 ];
 
 // Palabras que delatan un falso positivo. Un nombre propio no lleva verbos,
@@ -511,10 +597,40 @@ pregunta preguntas indicativa indicativas afirmativa afirmativas hechos
 hecho relevantes facturas impagas debidamente rechazadas rechazada
 economico economica contenido derechos humanos
 inhabil inhabiles audiencia designe nuevo nueva unica unico
+
+# Las de abajo entraron el 15/9/2026, de un escrito de contestacion de traslado
+# que ofrecio siete candidatos que no eran nadie. Las palabras que terminan en
+# -cion, -tiva y parecidas no estan: las alcanza TERMINACION_QUE_NO_ES_NOMBRE.
+#
+# Los tratamientos, porque pegados a un lugar arman la forma "Apellido, Nombre":
+# "...de la CABA, Dra. Ana" proponia "CABA, Dra". Y porque en la caratula son el
+# borde del nombre: "SUCESORES DEL SR. JUAN PEREZ" ofrecia el "SR." adentro.
+sr sra sres sras srta dr dra dres dras
+#
+# Los cargos, porque detras de un tratamiento lo que viene hasta la primera
+# palabra que no es de nombre se toma como nombre: "la Sra. Directora General"
+# sin estas saldria como "Sra. [PERSONA] General".
+director directora secretario subsecretario subsecretaria procurador
+procuradora coordinador coordinadora jefe jefa gerente vicepresidente
+intendente gobernador gobernadora diputado diputada senador senadora concejal
+asesor asesora curador curadora sindico sindica interventor interventora
+administrador administradora
+caba departamento sucesores sucesor sucesion herederos
+heredero cedente cedentes cesionario cesionaria litigiosos expresa expreso
+ineficacia eficacia sustancial sobre todo toda evento cobro pesos
 `.replace(/^\s*#.*$/gm, '').trim().split(/\s+/));
 
 // La caratula tiene forma fija: "X c/ Y s/ OBJETO". De ahi salen las partes.
-const CARATULA = new RegExp(`([${MAY}][^/\\n]{2,60}?)\\s+c/\\s*([${MAY}][^/\\n]{2,60}?)\\s+s/`);
+//
+// La "c/" y la "s/" van en cualquier caja. Hasta el 15/9/2026 el patron exigia
+// la minuscula, y un escrito que transcribe la caratula entera en mayusculas
+// —"PEREZ, JUAN C/ GARCIA, MARIA S/ DANOS"— no daba ninguna parte: ninguna
+// venia tildada y el apellido del actor no se ofrecia en ningun lado.
+const CARATULA = new RegExp(`([${MAY}][^/\\n]{2,60}?)\\s+[cC]/\\s*([${MAY}][^/\\n]{2,60}?)\\s+[sS]/`);
+
+// "PEREZ, JUAN Y OTROS C/ ...": el "y otros" es de la caratula, no del nombre.
+// Tolera "OTOR", la transposicion de letras mas facil de cometer al tipearlo.
+const Y_OTROS = /\s+y\s+ot(?:r[oa]|or)s?\.?$/i;
 
 // Los incidentes del PJN no usan "c/": vienen como
 //   "INCIDENTE Nº 2 - ACTOR: FICTICIO, ADRIAN DEMANDADO: INVENTADA, BEATRIZ S/EJECUCION"
@@ -633,18 +749,21 @@ export function anonimizar(texto, elegidos = []) {
  * que importaba— no se ofrecia nunca, y no porque no se lo detectara: porque
  * el verbo de adelante se lo llevo puesto. Recortando, queda "Hector Ernesto".
  */
+// Las particulas se recortan de los bordes —"Registro de la" no termina en un
+// nombre— pero se aceptan en el medio: "Lucia Del Monte" es un nombre, y hasta
+// el 15/9/2026 el "Del" lo hacia descartar entero.
 function recortarPalabrasQueNoSonNombre(completo) {
     const tokens = completo.split(/\s+/);
-    const limpio = (t) => sinTildes(t.replace(/,/g, '').toLowerCase());
+    const sobra = (t) => noEsNombre(t) || esParticula(t);
 
     let i = 0;
     let j = tokens.length - 1;
-    while (i <= j && NO_SON_PERSONAS.has(limpio(tokens[i]))) i++;
-    while (j >= i && NO_SON_PERSONAS.has(limpio(tokens[j]))) j--;
+    while (i <= j && sobra(tokens[i])) i++;
+    while (j >= i && sobra(tokens[j])) j--;
 
     const nombre = tokens.slice(i, j + 1);
     if (nombre.length < 2) return '';
-    if (nombre.some((t) => NO_SON_PERSONAS.has(limpio(t)))) return '';
+    if (nombre.some((t) => noEsNombre(t) && !esParticula(t))) return '';
     return nombre.join(' ').replace(/^,+|,+$/g, '');
 }
 
@@ -676,6 +795,10 @@ function esFragmentoDeOtro(encontrados) {
  */
 export function candidatosANombre(texto) {
     const encontrados = new Map();
+    // Dos patrones pueden calzar el mismo nombre en el mismo lugar —"Lucia Del
+    // Monte" es de tres palabras y tambien de dos con particula—, y contarlo dos
+    // veces hace que la pantalla diga "2 veces" de algo que esta una.
+    const vistos = new Set();
     for (const patron of CANDIDATOS) {
         patron.lastIndex = 0;
         for (const match of texto.matchAll(patron)) {
@@ -683,6 +806,9 @@ export function candidatosANombre(texto) {
             if (completo.includes('[')) continue;      // ya lo tomo otra regla
             const nombre = recortarPalabrasQueNoSonNombre(completo);
             if (!nombre) continue;
+            const lugar = match.index + match[0].indexOf(nombre.split(' ')[0]);
+            if (vistos.has(`${lugar}|${nombre}`)) continue;
+            vistos.add(`${lugar}|${nombre}`);
             encontrados.set(nombre, (encontrados.get(nombre) || 0) + 1);
         }
     }
@@ -700,7 +826,13 @@ export function candidatosANombre(texto) {
  * lo que hay que ocultar—.
  */
 export function partesDeCaratula(texto) {
-    const plano = texto.slice(0, 4000).replace(/\s+/g, ' ');
+    // Sin las marcas de Markdown: un renglon de la caratula que queda todo en
+    // mayusculas sale marcado como titulo, y el "##" cortaba el nombre del actor
+    // por la mitad —se recorta de derecha a izquierda y "##" no es un nombre—.
+    const plano = texto.slice(0, 4000)
+        .replace(/^#{1,6}[ \t]+/gm, '')
+        .replace(/\*\*/g, '')
+        .replace(/\s+/g, ' ');
     const match = CARATULA.exec(plano) || CARATULA_ACTOR_DEMANDADO.exec(plano);
     if (!match) return [];
     return [match[1], match[2]].map(recortarAlNombre).filter((p) => p.length > 3);
@@ -714,15 +846,22 @@ export function partesDeCaratula(texto) {
  * cortar de mas deja el apellido a medias, y un apellido a medias filtra igual.
  */
 function recortarAlNombre(fragmento) {
-    const tokens = fragmento.trim().replace(/^[\s,.;:"“”']+|[\s,.;:"“”']+$/g, '').split(/\s+/);
+    const tokens = fragmento.trim()
+        .replace(/^[\s,.;:"“”']+|[\s,.;:"“”']+$/g, '')
+        .replace(Y_OTROS, '')
+        .split(/\s+/);
     const nombre = [];
     for (let i = tokens.length - 1; i >= 0; i--) {
         const limpio = tokens[i].replace(/^[,.;:"“”']+|[,.;:"“”']+$/g, '');
         if (!limpio) continue;
+        // La particula pasa: "JUAN DEL MONTE" se cortaba en el "DEL" y la parte
+        // salia como "MONTE". Si queda en el borde izquierdo, se saca abajo.
+        if (esParticula(limpio)) { nombre.unshift(tokens[i]); continue; }
         if (!new RegExp(`^[${MAY}]`).test(limpio)) break;
-        if (NO_SON_PERSONAS.has(sinTildes(limpio.toLowerCase()))) break;
+        if (noEsNombre(limpio)) break;
         nombre.unshift(tokens[i]);
         if (nombre.length >= 6) break;
     }
+    while (nombre.length && esParticula(nombre[0])) nombre.shift();
     return nombre.join(' ').replace(/\s+/g, ' ').replace(/^[\s,.;:]+|[\s,.;:]+$/g, '');
 }

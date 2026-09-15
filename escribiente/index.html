@@ -161,6 +161,19 @@
         <button type="button" class="chico" id="desmarcar-todos">Desmarcar todos</button>
       </div>
       <ul id="candidatos" class="candidatos"></ul>
+      <div class="agregar">
+        <label for="agregar-texto">¿Falta algo? Agregalo a mano</label>
+        <input type="text" id="agregar-texto" autocomplete="off" spellcheck="false"
+               placeholder="Copialo como está escrito en el texto">
+        <select id="agregar-etiqueta" aria-label="Etiqueta para lo que agregás"></select>
+        <button type="button" class="chico" id="agregar-btn">Agregar</button>
+        <p class="agregar-aviso oculto" id="agregar-aviso" role="status"></p>
+      </div>
+      <p class="ayuda">
+        Sirve para lo que ninguna regla detecta: un cargo que identifica a
+        una persona, una razón social, un nombre que el OCR ensució. Se
+        reemplaza en todo el documento, sin importar mayúsculas.
+      </p>
     </section>
 
     <!-- Resultado -->

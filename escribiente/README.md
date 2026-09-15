@@ -120,7 +120,7 @@ probar:
 npm run verificar-escribiente
 ```
 
-Son 184 comprobaciones sobre el motor, e incluyen como regresión los seis bugs
+Son 214 comprobaciones sobre el motor, e incluyen como regresión los seis bugs
 que tenía la versión anterior —o que aparecieron al probar esta contra PDF
 reales—. Corre en CI antes de publicar.
 

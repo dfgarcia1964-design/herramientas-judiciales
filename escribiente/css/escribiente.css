@@ -295,6 +295,24 @@ button.chico:hover { color: var(--accent); border-color: var(--accent); filter: 
   text-transform: uppercase;
   color: var(--accent);
 }
+.candidatos .marca.a-mano { color: var(--muted-fg); }
+
+/* Lo que ninguna regla ofrecio: un cargo que identifica a alguien, una razon
+   social, un nombre que el OCR ensucio. Va debajo de la lista porque es el
+   ultimo recurso, no el primero. */
+.agregar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.agregar label { flex-basis: 100%; font-size: .88rem; font-weight: 600; }
+/* La base de 12rem es lo que lo manda a su propio renglon en un telefono, en
+   vez de dejarlo de tres letras de ancho al lado del desplegable. */
+.agregar input[type="text"] { flex: 1 1 12rem; min-width: 0; }
+.agregar select { flex: none; padding: 4px 8px; font-size: .82rem; }
+.agregar-aviso { flex-basis: 100%; margin: 0; font-size: .82rem; color: var(--warn); }
 
 /* ---------- Informe ---------- */
 

@@ -201,6 +201,57 @@ console.log('\nMOTOR DE CONVERSION\n');
         'los renglones del mismo parrafo se unen en una linea');
 }
 
+// --- REGRESION 15: el renglon cortado en medio de un nombre -----------------
+{
+    // El reflujo unia solo si el renglon siguiente empezaba en minuscula, y un
+    // corte en medio de un nombre deja el renglon siguiente en mayuscula: el
+    // tratamiento tapaba la mitad de arriba y la de abajo quedaba en claro.
+    // Lo decide la geometria de un texto justificado: el renglon cortado llega
+    // al margen derecho, y el parrafo nuevo arranca con sangria.
+    //
+    // Cada renglon: [texto, x, y, ancho]. La caja va de 72 a 522.
+    const hoja = (renglones) => ({
+        numero: 1, ancho: 595, alto: 842,
+        fragmentos: renglones.map(([str, x, y, ancho]) =>
+            ({ str, width: ancho, transform: [1, 0, 0, 1, x, y] })),
+    });
+    const { markdown } = convertir([hoja([
+        ['CONTESTA TRASLADO', 72, 760, 130],
+        ['Se presenta con el patrocinio letrado de la Sra. Directora y de la Dra. Ana', 107, 730, 415],
+        ['Maria Del Monte y constituye domicilio en la sede de su oficina de siempre', 72, 715, 450],
+        ['II. OPOSICION A LA PRETENSION DEL ACTOR POR LAS RAZONES QUE SIGUEN AHORA', 72, 690, 450],
+        ['Para el caso en que se entienda lo contrario se deja asentado que la parte', 72, 675, 450],
+        ['Nuevo parrafo con sangria que arranca en mayuscula y es otro parrafo real', 107, 660, 415],
+        ['del mismo modo que la parte actora lo planteo en su escrito de inicio sin', 72, 645, 450],
+        ['a) Una enumeracion pegada al renglon de arriba sigue siendo una enumeracion', 72, 630, 450],
+        ['que continua en el renglon siguiente con el texto del punto del escrito', 72, 615, 450],
+        ['Domicilio: Una etiqueta de formulario no es la continuacion del parrafo', 72, 600, 450],
+        ['Un renglon despues de un espacio grande es otro bloque aunque este en el', 72, 560, 450],
+        ['mismo margen, y la suma que se reclama asciende a la cantidad de $1.234.567', 72, 545, 450],
+        [',89 en concepto de capital con mas los intereses que correspondan al pago', 72, 530, 450],
+    ])]);
+
+    contiene(markdown, 'la Dra. Ana Maria Del Monte y constituye',
+        'REGRESION: el renglon que llega al margen se une con el siguiente aunque empiece en mayuscula');
+    ok(/\n(## )?II\. OPOSICION/.test(markdown),
+        'un titulo no se pega al final del parrafo de arriba', markdown);
+    contiene(markdown, 'que la parte\nNuevo parrafo',
+        'el renglon con sangria es un parrafo nuevo');
+    contiene(markdown, 'escrito de inicio sin\n', 'la enumeracion no se une al renglon de arriba');
+    contiene(markdown, '\nDomicilio: Una etiqueta',
+        'el campo de formulario tampoco, que si no la regla del campo se lleva los dos');
+    contiene(markdown, 'no es la continuacion del parrafo\nUn renglon despues',
+        'un espacio vertical grande corta el parrafo');
+    contiene(markdown, 'CONTESTA TRASLADO\n', 'el titulo corto no llega al margen y queda solo');
+    contiene(markdown, '$1.234.567,89 en concepto',
+        'el monto cortado en la coma se une sin espacio, y sigue siendo un monto');
+
+    // Y el efecto que se buscaba, sobre el texto convertido.
+    const { texto } = anonimizar(normalizarEspacios(markdown));
+    contiene(texto, 'Dra. [PERSONA] y constituye',
+        'REGRESION: el nombre partido por el renglon se tapa entero');
+}
+
 console.log('DIAGNOSTICO DE OCR\n');
 
 // --- Rechazo del escaneo puro ----------------------------------------------
@@ -654,6 +705,119 @@ ok(Object.keys(conteo).length >= 8, 'el conteo registra cada regla que actuo',
     ok(suelto.includes('Ernesto Quiroga'),
         'el corto que ademas aparece por su cuenta si se ofrece',
         `candidatos: ${suelto.join(' | ')}`);
+}
+
+// ---------------------------------------------------------------------------
+// REGRESION 14: un escrito corto con la caratula en mayusculas.
+//
+// El 15/9/2026 paso por la herramienta una contestacion de traslado de dos
+// carillas. Ofrecio siete candidatos que no eran nadie —titulos del escrito—,
+// no detecto la caratula, y dejo en claro tres nombres. Las formas estan abajo,
+// con datos inventados.
+// ---------------------------------------------------------------------------
+
+// --- Los titulos del escrito no son nombres ---------------------------------
+{
+    const ruido = candidatosANombre([
+        'se tenga presente la EXPRESA RESERVA PREVENTIVA del caso',
+        'IV. RECHAZO DE LA INTERVENCIÓN A TODO EVENTO',
+        'V. INEFICACIA SUSTANCIAL SOBRE LA PRESCRIPCIÓN ADQUISITIVA',
+        'S/ PRESCRIPCION ADQUISITIVA',
+        'con domicilio en la CABA, Dra. Ana',
+        'SOLICITA SUSPENSIÓN DEL PLAZO. INTERPONE REVOCATORIA CON APELACIÓN EN SUBSIDIO',
+    ].join('\n')).map((c) => c.texto);
+    ok(ruido.length === 0, 'REGRESION: los titulos de un escrito no se ofrecen como nombres',
+        `candidatos: ${ruido.join(' | ')}`);
+
+    // La terminacion que delata un titulo tiene excepciones, y son nombres.
+    const nombre = candidatosANombre('ASUNCION ARIAS GOMEZ comparecio').map((c) => c.texto);
+    ok(nombre.includes('ASUNCION ARIAS GOMEZ'),
+        'un nombre de pila terminado en -cion sigue siendo un nombre',
+        `candidatos: ${nombre.join(' | ')}`);
+}
+
+// --- El nombre de cuatro palabras se ofrece entero --------------------------
+{
+    const c = candidatosANombre('Tomas Andres Ficticio Inventado, abogado, por la actora')
+        .map((x) => x.texto);
+    ok(c.includes('Tomas Andres Ficticio Inventado'),
+        'REGRESION: un nombre de cuatro palabras se ofrece entero',
+        `candidatos: ${c.join(' | ')}`);
+    ok(!c.includes('Ficticio Inventado') && !c.includes('Tomas Andres Ficticio'),
+        'REGRESION: y no partido en dos, que dejaba el ultimo apellido en claro al tildar uno',
+        `candidatos: ${c.join(' | ')}`);
+}
+
+// --- Las particulas son parte del nombre ------------------------------------
+{
+    contiene(anonimizar('Dra. Lucia Ines Del Monte y el patrocinio').texto,
+        'Dra. [PERSONA] y el patrocinio',
+        'REGRESION: el "Del" de un apellido no hace descartar el nombre entero');
+    contiene(anonimizar('el Dr. Juan Perez de la Fuente, abogado').texto,
+        'Dr. [PERSONA], abogado', 'las particulas no gastan el cupo de palabras del nombre');
+    contiene(anonimizar('el Sr. De la Rua').texto, 'Sr. [PERSONA]',
+        'un apellido que empieza con particula tambien es un nombre');
+
+    // El nombre cortado por el renglon: el tratamiento toma su mitad y la otra
+    // mitad tiene que ofrecerse, que es lo que no pasaba.
+    const cortado = 'Dra. Lucia\nInes Del Monte y el patrocinio';
+    contiene(anonimizar(cortado).texto, 'Dra. [PERSONA]\n', 'la mitad del renglon del tratamiento se va');
+    const c = candidatosANombre(cortado).map((x) => x.texto);
+    ok(c.includes('Ines Del Monte'), 'REGRESION: y la otra mitad se ofrece',
+        `candidatos: ${c.join(' | ')}`);
+
+    const minuscula = candidatosANombre('Lucia del Monte declaro.');
+    ok(minuscula.length === 1 && minuscula[0].texto === 'Lucia del Monte',
+        'con la particula en minuscula tambien, y contado una vez',
+        JSON.stringify(minuscula));
+}
+
+// --- Lo que sobra detras del nombre vuelve al texto -------------------------
+{
+    // Antes, cualquier palabra de mas al final hacia rechazar el calce entero,
+    // y el nombre quedaba en claro.
+    contiene(anonimizar('Dr. Juan Perez Juzgado Civil').texto, 'Dr. [PERSONA] Juzgado Civil',
+        'un cargo detras del nombre no hace que el nombre se salve');
+    contiene(anonimizar('Dr. Juan Perez Juzgado Nro. 3').texto, 'Dr. [PERSONA] Juzgado Nro. 3',
+        'tampoco una palabra del oficio con otra que no lo es detras');
+    contiene(anonimizar('el Sr. Procurador General informa').texto, 'Sr. Procurador General',
+        'un cargo solo, detras del tratamiento, no se tapa como persona');
+    contiene(anonimizar('el Dr. Carlos Di Pietro contesto').texto, '[PERSONA] contesto',
+        'el verbo en minuscula no entra en el reemplazo');
+    contiene(anonimizar('la Sra. Directora General de Asuntos').texto, 'Directora General de Asuntos',
+        'un cargo detras del tratamiento no es un nombre');
+    contiene(anonimizar('ante el SR. PEDRO ASUNCION GOMEZ comparece').texto, 'SR. [PERSONA] comparece',
+        'el nombre de pila terminado en -cion no frena el reemplazo');
+}
+
+// --- La caratula en mayusculas ----------------------------------------------
+{
+    const partes = partesDeCaratula(
+        'en los autos caratulados: “FICTICIO, ANA MARIA Y\n' +
+        '## OTROS C/ SUCESORES DEL SR. JUAN INVENTADO S/\n' +
+        'COBRO DE PESOS'
+    );
+    ok(partes[0] === 'FICTICIO, ANA MARIA',
+        'REGRESION: la caratula con "C/" y "S/" en mayusculas da el actor, sin el "## " ni el "y otros"',
+        `partes=${JSON.stringify(partes)}`);
+    ok(partes[1] === 'JUAN INVENTADO',
+        'REGRESION: y el demandado, sin el "SR." adelante',
+        `partes=${JSON.stringify(partes)}`);
+
+    const otros = partesDeCaratula('en los autos PEREZ, JUAN Y OTOR C/ GARCIA, MARIA S/ DANOS');
+    ok(otros[0] === 'PEREZ, JUAN' && otros[1] === 'GARCIA, MARIA',
+        'el "y otros" no queda adentro del nombre del actor, tampoco mal tipeado',
+        `partes=${JSON.stringify(otros)}`);
+
+    const particula = partesDeCaratula('caratulados GOMEZ JUAN DEL MONTE C/ SUAREZ ANA S/ COBRO');
+    ok(particula[0] === 'GOMEZ JUAN DEL MONTE',
+        'la parte no se corta en el "DEL"', `partes=${JSON.stringify(particula)}`);
+
+    // Y como candidato: el apellido en mayusculas, con la coma, entero.
+    const c = candidatosANombre('caratulados: “FICTICIO, ANA MARIA Y OTRO c/').map((x) => x.texto);
+    ok(c.includes('FICTICIO, ANA MARIA') && !c.includes('ANA MARIA'),
+        'REGRESION: "APELLIDO, NOMBRE" en mayusculas se ofrece entero y no sin el apellido',
+        `candidatos: ${c.join(' | ')}`);
 }
 
 console.log('ARMADO DEL ARCHIVO\n');

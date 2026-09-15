@@ -210,6 +210,68 @@ export function partirEnColumnas(fragmentos, anchoDePagina) {
     return utiles.length > 1 ? utiles : [fragmentos];
 }
 
+/** Donde esta la caja de texto de una columna, y cuanto mide un interlineado.
+ *
+ * Se mide sobre los renglones de mas de 20 caracteres: un numero de pagina en
+ * el margen o un sello corrido correrian el borde, y con el borde corrido
+ * ningun renglon "llega al margen".
+ */
+function medirCaja(lineas) {
+    const largas = lineas.filter((l) => textoDeLinea(l).trim().length > 20);
+    if (largas.length < 2) return null;
+    const izquierda = Math.min(...largas.map((l) => l[0].transform[4]));
+    const derecha = Math.max(...largas.map(bordeDerecho));
+    const saltos = [];
+    for (let i = 1; i < lineas.length; i++) {
+        const salto = lineas[i - 1][0].transform[5] - lineas[i][0].transform[5];
+        if (salto > 0) saltos.push(salto);
+    }
+    saltos.sort((a, b) => a - b);
+    const interlineado = saltos[Math.floor(saltos.length / 2)] || 0;
+    return { izquierda, derecha, ancho: derecha - izquierda, interlineado };
+}
+
+function bordeDerecho(fragmentos) {
+    return Math.max(...fragmentos.map((f) => f.transform[4] + (f.width || 0)));
+}
+
+function esTodoMayusculas(texto) {
+    const letras = texto.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/g, '');
+    return letras.length >= 3 && letras === letras.toUpperCase();
+}
+
+/** Si el renglon que sigue es la continuacion del parrafo aunque empiece en
+ *  mayuscula.
+ *
+ * POR QUE, 15/9/2026. El reflujo de abajo une solo si el renglon siguiente
+ * empieza en minuscula, porque uno en mayuscula puede ser un parrafo nuevo. Pero
+ * un renglon tambien empieza en mayuscula cuando el corte cae en medio de un
+ * nombre: "...con el patrocinio de la Dra. Ana" / "Maria Del Monte y...". Asi
+ * partido, el nombre no lo agarra ninguna regla entera —el tratamiento tapa la
+ * mitad de arriba, y la de abajo queda sola—.
+ *
+ * La geometria lo decide sin adivinar: un renglon cortado por el ancho de la
+ * hoja LLEGA AL MARGEN DERECHO, y el que sigue arranca en el izquierdo, pegado.
+ * Un parrafo nuevo lleva sangria o un espacio de mas; un titulo no llega al
+ * margen. Las cuatro guardas de abajo son los casos donde la geometria sola se
+ * equivoca.
+ */
+function continuaElParrafo(previa, fragmentos, texto, caja) {
+    if (!caja || caja.ancho <= 0) return false;
+    if (previa.borde < caja.izquierda + caja.ancho * 0.9) return false;             // no llega al margen
+    if (fragmentos[0].transform[4] > caja.izquierda + caja.ancho * 0.02) return false; // sangria
+    if (caja.interlineado && previa.y - fragmentos[0].transform[5] > caja.interlineado * 1.6) return false;
+    // Un titulo en mayusculas que llega al margen no se come el parrafo de abajo,
+    // ni un parrafo que llega al margen se come el titulo que sigue. Lo que se
+    // pierde: un renglon de caratula todo en mayusculas queda aparte, y eso no
+    // le hace nada a la caratula, que se busca sobre el texto sin renglones.
+    if (esTodoMayusculas(previa.ultimo) !== esTodoMayusculas(texto)) return false;
+    // Un campo de formulario tambien: "Domicilio: ..." pegado al renglon de
+    // arriba haria que la regla del campo se lleve los dos.
+    if (/^[A-ZÁÉÍÓÚÜÑ][^:,.\n]{0,30}:/.test(texto)) return false;
+    return true;
+}
+
 /** Marca titulos y enumeraciones.
  *
  * Conservador a proposito. Un escrito judicial tiene parrafos enteros en
@@ -287,6 +349,7 @@ export function convertir(paginas, opciones = {}) {
 
         for (const fragmentosDeColumna of grupos) {
             const lineas = agruparEnLineas(fragmentosDeColumna);
+            const caja = medirCaja(lineas);
             const salida = [];
 
             for (let i = 0; i < lineas.length; i++) {
@@ -324,27 +387,50 @@ export function convertir(paginas, opciones = {}) {
                     const terminaEnGuion = /[-­]$/.test(previa.texto.trimEnd());
                     const empiezaMinuscula = /^[a-záéíóúüñ]/.test(texto);
 
-                    if (terminaEnGuion && empiezaMinuscula) {
-                        previa.texto = previa.texto.trimEnd().replace(/[-­]$/, '') + texto;
+                    const seguir = (unido) => {
+                        previa.texto = unido;
                         previa.fragmentos = [...previa.fragmentos, ...fragmentos];
+                        previa.borde = bordeDerecho(fragmentos);
+                        previa.y = fragmentos[0].transform[5];
+                        previa.ultimo = texto;
                         informe.unidas++;
+                    };
+
+                    if (terminaEnGuion && empiezaMinuscula) {
+                        seguir(previa.texto.trimEnd().replace(/[-­]$/, '') + texto);
                         continue;
                     }
 
                     // Reflujo: el renglon anterior no cerro una oracion y este
-                    // arranca en minuscula. Son el mismo parrafo, cortado por el
+                    // arranca en minuscula —o, aunque arranque en mayuscula, la
+                    // geometria dice que sigue el mismo parrafo: ver
+                    // continuaElParrafo—. Son el mismo parrafo, cortado por el
                     // ancho de la hoja. Unirlos es lo que hace que el Markdown
                     // se lea como texto y no como una lista de renglones.
+                    //
+                    // Una enumeracion es un renglon nuevo aunque este pegado y
+                    // aunque empiece en minuscula: hasta el 15/9/2026 un "a)"
+                    // se pegaba al final del renglon de arriba.
                     const cerroOracion = /[.:;!?]["'”)]?$/.test(previa.texto.trimEnd());
-                    if (!cerroOracion && empiezaMinuscula) {
-                        previa.texto = previa.texto.trimEnd() + ' ' + texto;
-                        previa.fragmentos = [...previa.fragmentos, ...fragmentos];
-                        informe.unidas++;
+                    const esEnumeracion = /^\s*(?:[IVXLCDM]+\s*[.)-]|\d+\s*[.)-]|[a-z]\))/.test(texto);
+                    if (!cerroOracion && !esEnumeracion &&
+                        (empiezaMinuscula || continuaElParrafo(previa, fragmentos, texto, caja))) {
+                        // Sin espacio si el corte cayo en la coma o la barra de
+                        // un numero: "$1.234.567" / ",89" es un monto con
+                        // decimales, y con el espacio en el medio parece otra cosa.
+                        const junto = /^[,/]/.test(texto) ? '' : ' ';
+                        seguir(previa.texto.trimEnd() + junto + texto);
                         continue;
                     }
                 }
 
-                salida.push({ texto: crudo, fragmentos });
+                salida.push({
+                    texto: crudo,
+                    fragmentos,
+                    borde: bordeDerecho(fragmentos),
+                    y: fragmentos[0].transform[5],
+                    ultimo: texto,
+                });
                 informe.lineas++;
             }
 

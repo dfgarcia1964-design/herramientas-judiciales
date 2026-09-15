@@ -258,6 +258,7 @@ function prepararCandidatos() {
     estado.candidatos = [...vistos.values()]
         .sort((a, b) => (b.esParte - a.esParte) || (b.apariciones - a.apariciones));
 
+    avisarAgregado('');
     dibujarCandidatos();
 }
 
@@ -281,7 +282,9 @@ function dibujarCandidatos() {
     const lista = $('candidatos');
     lista.innerHTML = '';
 
-    if (estado.candidatos.length === 0 || !$('opt-anonimizar').checked) {
+    // La revision se muestra aunque la lista venga vacia: ahi esta el campo
+    // para agregar a mano, que es justamente para lo que ninguna regla ofrecio.
+    if (!estado.crudo || !$('opt-anonimizar').checked) {
         $('revision').classList.add('oculto');
         return;
     }
@@ -315,10 +318,10 @@ function dibujarCandidatos() {
         selector.addEventListener('change', () => { c.etiqueta = selector.value; recomputar(); });
 
         li.append(casilla, etiqueta, veces);
-        if (c.esParte) {
+        if (c.esParte || c.aMano) {
             const marca = document.createElement('span');
-            marca.className = 'marca';
-            marca.textContent = 'parte';
+            marca.className = c.esParte ? 'marca' : 'marca a-mano';
+            marca.textContent = c.esParte ? 'parte' : 'a mano';
             li.appendChild(marca);
         }
         li.appendChild(selector);
@@ -410,6 +413,68 @@ $('opt-anonimizar').addEventListener('change', () => {
     if (!estado.crudo) return;
     dibujarCandidatos();
     recomputar();
+});
+
+// ---------------------------------------------------------------------------
+// Agregar a mano
+//
+// POR QUE EXISTE, 15/9/2026. La lista solo ofrece lo que alguna regla detecto,
+// y habia cosas que ninguna puede detectar sin romper otras: un cargo que
+// identifica a una sola persona ("la Directora General de..."), una razon
+// social, un nombre que el OCR ensucio. Hasta ese dia la unica salida era
+// editar el .md a mano despues de bajarlo, que es donde se olvida.
+//
+// Lo agregado entra TILDADO: aca no hay adivinanza, lo escribio el usuario.
+// Y si no aparece en el texto se dice, en vez de agregar una casilla que no
+// reemplaza nada y hace creer que se tapo algo.
+// ---------------------------------------------------------------------------
+
+for (const opcion of ETIQUETAS) {
+    const o = document.createElement('option');
+    o.value = o.textContent = opcion;
+    $('agregar-etiqueta').appendChild(o);
+}
+
+function avisarAgregado(mensaje) {
+    const aviso = $('agregar-aviso');
+    aviso.textContent = mensaje;
+    aviso.classList.toggle('oculto', !mensaje);
+}
+
+function agregarAMano() {
+    const escrito = $('agregar-texto').value.replace(/\s+/g, ' ').trim();
+    if (!escrito) return;
+
+    const apariciones = contarApariciones(estado.crudo, escrito);
+    if (apariciones === 0) {
+        avisarAgregado(`«${escrito}» no aparece en el texto. Fijate que esté escrito igual que en el documento.`);
+        return;
+    }
+
+    const existente = estado.candidatos.find((c) => c.texto.toLowerCase() === escrito.toLowerCase());
+    if (existente) {
+        existente.marcado = true;
+        existente.etiqueta = $('agregar-etiqueta').value;
+    } else {
+        estado.candidatos.push({
+            texto: escrito,
+            apariciones,
+            marcado: true,
+            etiqueta: $('agregar-etiqueta').value,
+            esParte: false,
+            aMano: true,
+        });
+    }
+
+    $('agregar-texto').value = '';
+    avisarAgregado('');
+    dibujarCandidatos();
+    recomputar();
+}
+
+$('agregar-btn').addEventListener('click', agregarAMano);
+$('agregar-texto').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); agregarAMano(); }
 });
 
 $('marcar-todos').addEventListener('click', () => cambiarTodos(true));

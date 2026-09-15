@@ -3,7 +3,7 @@
 Documento de continuidad entre sesiones. **Leer antes de empezar a trabajar.**
 Se actualiza en el mismo commit que el trabajo, para que nunca mienta.
 
-Última actualización: 2026-09-14 · rama `main`
+Última actualización: 2026-09-15 · rama `main`
 
 **Lleva sólo lo que sigue vivo.** Dónde está el trabajo, qué está abierto, qué
 se sabe roto, qué decisiones no hay que contradecir sin saberlo, y qué trampas
@@ -254,7 +254,7 @@ a propósito**: un control que nunca falló no es un control.
 | `npm run verificar-acordada` | Que la tabla de la Acordada 5/2010 diga lo que dice el anexo: 90 |
 | `npm run verificar-distancia` | El cómputo del art. 158 y la búsqueda en esa tabla: 64 |
 | `npm run verificar-red` | Qué terceros nombran las quince páginas que se publican, contra una lista con el motivo al lado de cada uno |
-| `npm run verificar-escribiente` | El motor de Escribiente: 184 |
+| `npm run verificar-escribiente` | El motor de Escribiente: 214 |
 | `npm run verificar-honorio` | Las cinco cifras que este repositorio sigue del motor |
 | `npm run verificar-docs` | Que los documentos de dominio no citen artículos ni archivos que no existen |
 | `npm run verificar-estado` | El presupuesto y la higiene de este archivo |
@@ -516,9 +516,18 @@ se puede levantar un servidor local. **Sacar el aviso es decisión de Javier.**
 **Lo que hay que saber para tocarla:**
 
 - **El motor está en `escribiente/js/motor/`, es código puro y no toca el DOM.**
-  Por eso corre en Node y tiene pruebas: `npm run verificar-escribiente`, 184
-  comprobaciones, en CI. Los seis bugs de la versión anterior y las seis fugas
-  del 21/8 están ahí como regresión. `js/app.js` es sólo la pantalla.
+  Por eso corre en Node y tiene pruebas: `npm run verificar-escribiente`, 214
+  comprobaciones, en CI. Los seis bugs de la versión anterior, las seis fugas
+  del 21/8 y las del 15/9 están ahí como regresión. `js/app.js` es sólo la
+  pantalla.
+- **`pipeline/sanitizar.py` es el otro anonimizador, y desde el 15/9 comparte
+  con éste la lógica de nombres**: las partículas, la terminación que no es
+  nombre (`-ción`, `-tiva`), la guarda del tratamiento, el recorte de
+  candidatos y la carátula en mayúsculas. **Un arreglo de nombres acá se lleva
+  allá**, porque `redactor` ingresa casos con aquél. Las listas de palabras no
+  son iguales, y a propósito: `redactor` usa la de allá para buscar restos de un
+  nombre confirmado, y una palabra de más ahí es un apellido que deja de
+  buscarse.
 - **Las librerías van versionadas en `escribiente/vendor/`** —pdf.js 3.11.174 y
   pdf-lib 1.17.1— **y no vuelven a un CDN**, y **no carga la tipografía
   Archivo**: es la única página del sitio que no la pide a Google. Las dos cosas
@@ -552,9 +561,22 @@ día está en [`HISTORIA.md`](HISTORIA.md).
   una por una y dice que lo que decían no está en el archivo, pero conviene
   tenerlo presente al leer una constancia: **de lo que no vio, la anonimización
   no puede decir nada.**
+- **El reflujo une por geometría desde el 15/9, y eso cambió el Markdown de
+  todos los documentos.** Un renglón que llega al margen derecho se une con el
+  siguiente aunque éste empiece en mayúscula —así un nombre cortado por el
+  renglón queda entero—, salvo sangría, espacio de más, cambio de mayúsculas a
+  minúsculas, enumeración o campo `Etiqueta:`. Se comparó contra nueve PDF
+  locales antes de publicar y todas las uniones nuevas eran renglones cortados.
+  **Lo que no se probó: texto sin justificar**, donde un renglón cortado puede
+  quedar lejos del margen y entonces no se une, como antes. Si aparece un
+  párrafo pegado a un título, la guarda está en `continuaElParrafo`.
+- **Lo que ninguna regla ofrece se agrega a mano**, debajo de la lista, y entra
+  tildado. Es la salida para el cargo que identifica a una persona («la
+  Directora General de…»), que **no se tapa solo a propósito**: si es dato
+  personal lo decide quien firma, documento por documento.
 - **La detección de nombres propios no cubre razones sociales.** «Seguros del
   Sur S.A.» no dispara ningún patrón de los tres, así que no se ofrece como
-  candidato y hay que anonimizarlo mirando el texto.
+  candidato y hay que agregarla a mano.
 - **Las fugas que aparecen en uso real se anotan en otro repositorio.** Desde el
   12/9, `redactor` ingresa casos con el anonimizador del pipeline, y cada nombre
   que el operador tiene que tapar a mano queda en

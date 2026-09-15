@@ -19,6 +19,94 @@ de 2026.
 
 ---
 
+## Escribiente: siete candidatos que no eran nadie y tres nombres en claro — 15/9
+
+Javier pasó por Escribiente una contestación de traslado de dos carillas —la
+misma que había entrado por la bandeja de `redactor`— y la lista de nombres
+propios salió al revés de lo que tiene que salir: ofrecía como nombres cinco
+pedazos de títulos en mayúsculas —tres de los capítulos del escrito y la acción
+de la carátula dos veces, con y sin tilde— y dejaba en claro tres nombres. Se reprodujo corriendo el motor en Node con el pdf.js de
+`vendor/` sobre el mismo PDF, que da exactamente lo que ve la pantalla.
+
+**Las cinco causas, y ninguna era de un solo documento:**
+
+- **La carátula en mayúsculas no daba ninguna parte.** El patrón exigía `c/` y
+  `s/` en minúscula, y el escrito la transcribía entera en mayúsculas. Además,
+  el renglón del medio había salido marcado como título (`## `) y el recorte de
+  derecha a izquierda se paraba ahí; el «y otros» —escrito con una letra
+  traspuesta— quedaba adentro del actor, y el «SR.» adentro del demandado.
+- **«APELLIDO, NOMBRE NOMBRE» en mayúsculas no calzaba en ningún patrón**: el
+  de mayúsculas se corta en la coma y el de la coma pide el nombre en
+  minúsculas. Se ofrecía el nombre sin el apellido, y tildarlo dejaba el
+  apellido a la vista.
+- **Un nombre de cuatro palabras salía partido**: el patrón de tres ofrecía las
+  tres primeras y el de dos, las dos últimas. Tildar el primero dejaba el
+  segundo apellido en claro.
+- **La partícula de un apellido descartaba el nombre entero.** «Del» está en
+  `NO_SON_PERSONAS`, así que un nombre «X Y Del Z» no se ofrecía nunca, y si
+  venía detrás de un tratamiento la guarda lo rechazaba y el nombre salía
+  completo. En este escrito el renglón cortaba el nombre después del tratamiento
+  —«Dra. X» en uno y «Y Del Z» en el siguiente—: la regla tapaba la primera
+  mitad y la segunda no se ofrecía.
+- **Los títulos del escrito**, que es el ruido de siempre. En vez de sumar cada
+  palabra a la lista, entró una regla por terminación —`-ción`, `-sión`,
+  `-tiva`, `-miento`, `-mente`— con una lista de excepciones que son nombres
+  de pila: Concepción, Asunción. Sin ellas, la regla se come a una parte que se
+  llame así.
+
+**La guarda del tratamiento cambió de forma.** Devolvía sí o no, y como la
+regla toma hasta cuatro palabras y no vuelve atrás, un «no» dejaba el nombre
+entero en el texto: «Dr. X Y Juzgado Nro. 3» salía completo. Ahora devuelve
+cuántas palabras son nombre —hasta la primera que no lo es— y el resto vuelve
+al texto. Eso obligó a meter los cargos en la lista (`directora`,
+`procurador`, `secretario`...): sin ellos, «la Sra. Directora General» salía
+como «Sra. [PERSONA] General». Es el falso positivo que ya tenía el
+anonimizador del pipeline con ese mismo escrito.
+
+**El anonimizador del pipeline quedó coordinado el mismo día.** Con el mismo
+PDF daba algo peor: la carátula tampoco se detectaba y el actor no se ofrecía
+en ningún lado, el cuarto nombre salía partido igual, y el tratamiento en
+mayúsculas no se tocaba. Se le llevaron las mismas piezas —partículas,
+terminación, guarda, recorte de candidatos, carátula en mayúsculas, el patrón
+de «APELLIDO, NOMBRE»— y el recorte, que allá no existía: cualquier palabra del
+oficio descartaba el candidato entero. **Las listas de palabras no se
+igualaron**, y es deliberado: `redactor` usa la de allá para buscar los restos
+de un nombre confirmado, y cada palabra de más ahí es un apellido —«Paz»,
+«Sala»— que deja de buscarse.
+
+**El reflujo, que era la causa de fondo del nombre partido.** `markdown.js`
+unía un renglón con el siguiente sólo si éste empezaba en minúscula, porque uno
+en mayúscula puede ser un párrafo nuevo. Se le planteó a Javier que arreglarlo
+cambiaba el Markdown de todos los documentos, y dijo que sí. Lo decide la
+geometría de un texto justificado: el renglón cortado por el ancho de la hoja
+**llega al margen derecho**, y el párrafo nuevo **arranca con sangría**. En el
+escrito los dos se cumplían sin excepción. Las guardas son los casos donde la
+geometría sola se equivoca: un espacio vertical de más, un cambio de
+mayúsculas a minúsculas —un título que llega al margen—, una enumeración, un
+campo de formulario. Salió de paso un bug viejo: un `a)` en minúscula se pegaba
+al final del renglón de arriba. Antes de publicar se convirtieron nueve PDF
+locales con el motor viejo y el nuevo, y se listaron las uniones nuevas: todas
+eran renglones cortados —nombres, carátulas, citas, domicilios—. De esa
+comparación salió un ajuste: un monto cortado en la coma («$1.234.567» /
+«,89») se une sin espacio.
+
+Con el reflujo, el nombre del escrito quedó en un solo renglón y el tratamiento
+lo tapa entero: ya no hace falta tildarlo.
+
+**Y el campo para agregar a mano.** La lista sólo ofrece lo que una regla
+detectó, y lo que queda afuera no tenía salida: hubo que editar el `.md` después
+de bajarlo. El caso que lo pidió fue el cargo unipersonal —«la Directora General
+de…» identifica a una persona sin nombrarla—, que **no se tapa solo a
+propósito**: si es dato personal lo decide quien firma. Lo agregado entra
+tildado, y si no aparece en el texto se dice en vez de sumar una casilla que no
+reemplaza nada.
+
+Treinta comprobaciones nuevas —214 en total—. Las que prueban un arreglo se
+vieron fallar contra el motor anterior (20); el resto son guardas, que tienen
+que pasar con los dos.
+
+---
+
 ## La página 404, y las cifras de Honorio 3.5.0 — 14/9
 
 **La 404.** Javier preguntó si con los enlaces nuevos —acá y en Honorio— tenía
