@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plazos de Tutela — Decreto Ley 2591/1991</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/comun.css">
+  <script src="../assets/tema.js"></script>
+  <style>
+    body {
+      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      padding: 2rem 1rem;
+    }
+
+    .contenedor {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .subtitulo {
+      color: var(--faint);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .seccion {
+      background-color: var(--card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .etiqueta {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .fila {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="time"] {
+      background-color: var(--sunk);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem;
+      font-size: 1rem;
+      color: var(--fg);
+      font-family: 'Courier New', monospace;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    input[type="time"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(30, 69, 206, 0.1);
+    }
+
+    .boton {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: 100%;
+    }
+
+    .boton:hover {
+      opacity: 0.9;
+    }
+
+    .resultado {
+      background-color: var(--sunk);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+    }
+
+    .fecha-vencimiento {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+    }
+
+    .explicacion {
+      font-size: 0.9rem;
+      color: var(--faint);
+      margin-top: 0.5rem;
+    }
+
+    .info {
+      background-color: rgba(30, 69, 206, 0.1);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .tabla-info {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .tabla-info th,
+    .tabla-info td {
+      text-align: left;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabla-info th {
+      font-weight: 600;
+      color: var(--faint);
+    }
+
+    .pie {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--faint);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .solo-suelta {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .fila {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Plazos de Tutela</h1>
+    <p class="subtitulo">Decreto Ley 2591 de 1991 — son dos plazos distintos, no uno solo</p>
+
+    <div class="info">
+      <strong>Acción de Tutela:</strong> Mecanismo constitucional para proteger derechos fundamentales.
+      <table class="tabla-info">
+        <tr>
+          <th>Plazo para fallar</th>
+          <td><strong>10 días calendario</strong> desde la presentación</td>
+        </tr>
+        <tr>
+          <th>Plazo para cumplir la orden</th>
+          <td><strong>48 horas</strong> desde que se profiere el fallo</td>
+        </tr>
+        <tr>
+          <th>Norma</th>
+          <td>Decreto Ley 2591/1991</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="seccion" id="seccion-presentacion">
+      <label class="etiqueta">1. Fecha y hora de presentación de la tutela</label>
+      <div class="fila">
+        <div class="campo">
+          <input type="number" id="dia-presentacion" placeholder="DD" min="1" max="31" inputmode="numeric">
+        </div>
+        <div class="campo">
+          <input type="number" id="mes-presentacion" placeholder="MM" min="1" max="12" inputmode="numeric">
+        </div>
+      </div>
+      <div class="campo">
+        <input type="number" id="anio-presentacion" placeholder="AAAA" min="2000" inputmode="numeric">
+      </div>
+      <div class="campo" style="margin-top: 1rem;">
+        <input type="time" id="hora-presentacion">
+      </div>
+      <button class="boton" onclick="calcularPlazoFallo()">Calcular plazo para fallar</button>
+    </div>
+
+    <div id="resultado-fallo-container" style="display: none;">
+      <div class="resultado">
+        <div class="etiqueta">Vencimiento del plazo para fallar (10 días)</div>
+        <div class="fecha-vencimiento" id="fecha-resultado-fallo"></div>
+        <div class="explicacion" id="explicacion-resultado-fallo"></div>
+      </div>
+    </div>
+
+    <div class="seccion" id="seccion-fallo">
+      <label class="etiqueta">2. Fecha y hora en que el juez profirió el fallo</label>
+      <div class="fila">
+        <div class="campo">
+          <input type="number" id="dia-fallo" placeholder="DD" min="1" max="31" inputmode="numeric">
+        </div>
+        <div class="campo">
+          <input type="number" id="mes-fallo" placeholder="MM" min="1" max="12" inputmode="numeric">
+        </div>
+      </div>
+      <div class="campo">
+        <input type="number" id="anio-fallo" placeholder="AAAA" min="2000" inputmode="numeric">
+      </div>
+      <div class="campo" style="margin-top: 1rem;">
+        <input type="time" id="hora-fallo">
+      </div>
+      <button class="boton" onclick="calcularPlazoCumplimiento()">Calcular plazo de cumplimiento</button>
+    </div>
+
+    <div id="resultado-cumplimiento-container" style="display: none;">
+      <div class="resultado">
+        <div class="etiqueta">Vencimiento del plazo de cumplimiento (48 horas)</div>
+        <div class="fecha-vencimiento" id="fecha-resultado-cumplimiento"></div>
+        <div class="explicacion" id="explicacion-resultado-cumplimiento"></div>
+      </div>
+    </div>
+
+    <div class="pie solo-suelta">
+      <p>Calculadora de referencia. Úsala para orientarte. La responsabilidad de cumplir el plazo es de quien interpone la acción o de quien debe cumplir la orden.</p>
+      <p>L. Javier Cúneo Libarona — adaptada para Colombia</p>
+    </div>
+  </div>
+
+  <script>
+    const NOMBRE_MES = [
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+
+    const NOMBRE_DIA = [
+      'domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'
+    ];
+
+    function leerFecha(prefijo) {
+      const dia = parseInt(document.getElementById(`dia-${prefijo}`).value);
+      const mes = parseInt(document.getElementById(`mes-${prefijo}`).value);
+      const anio = parseInt(document.getElementById(`anio-${prefijo}`).value);
+      const hora = document.getElementById(`hora-${prefijo}`).value;
+
+      if (!dia || !mes || !anio || !hora) {
+        alert('Completá todos los campos');
+        return null;
+      }
+
+      if (dia < 1 || dia > 31 || mes < 1 || mes > 12) {
+        alert('Fecha inválida');
+        return null;
+      }
+
+      const [horas, minutos] = hora.split(':').map(Number);
+      const fecha = new Date(anio, mes - 1, dia, horas, minutos, 0);
+
+      if (fecha.getDate() !== dia) {
+        alert('Fecha inválida');
+        return null;
+      }
+
+      return fecha;
+    }
+
+    function formatearFecha(fecha) {
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const anio = fecha.getFullYear();
+      const horas = String(fecha.getHours()).padStart(2, '0');
+      const minutos = String(fecha.getMinutes()).padStart(2, '0');
+
+      return {
+        corta: `${dia} / ${mes} / ${anio} ${horas}:${minutos}`,
+        larga: `${NOMBRE_DIA[fecha.getDay()]}, ${dia} de ${NOMBRE_MES[fecha.getMonth()]} de ${anio}`
+      };
+    }
+
+    function calcularPlazoFallo() {
+      const presentacion = leerFecha('presentacion');
+      if (!presentacion) return;
+
+      // Decreto 306/1992, art. 1: los términos de la tutela corren en
+      // días calendario, no hábiles.
+      const vencimiento = new Date(presentacion);
+      vencimiento.setDate(vencimiento.getDate() + 10);
+
+      const formato = formatearFecha(vencimiento);
+      document.getElementById('fecha-resultado-fallo').textContent = formato.corta;
+      document.getElementById('explicacion-resultado-fallo').innerHTML = `
+        ${formato.larga}
+        <br>
+        <strong>Plazo para fallar:</strong> 10 días calendario desde la presentación
+      `;
+      document.getElementById('resultado-fallo-container').style.display = 'block';
+    }
+
+    function calcularPlazoCumplimiento() {
+      const fallo = leerFecha('fallo');
+      if (!fallo) return;
+
+      const vencimiento = new Date(fallo);
+      vencimiento.setHours(vencimiento.getHours() + 48);
+
+      const formato = formatearFecha(vencimiento);
+      document.getElementById('fecha-resultado-cumplimiento').textContent = formato.corta;
+      document.getElementById('explicacion-resultado-cumplimiento').innerHTML = `
+        ${formato.larga}
+        <br>
+        <strong>Plazo de cumplimiento:</strong> 48 horas desde que se profirió el fallo
+      `;
+      document.getElementById('resultado-cumplimiento-container').style.display = 'block';
+    }
+
+    document.getElementById('seccion-presentacion').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') calcularPlazoFallo();
+    });
+
+    document.getElementById('seccion-fallo').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') calcularPlazoCumplimiento();
+    });
+  </script>
+</body>
+</html>
