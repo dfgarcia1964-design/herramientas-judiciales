@@ -65,13 +65,6 @@ jobs:
       - name: Verificar el motor de Escribiente
         run: npm run verificar-escribiente
 
-      # Las dos series de valores que muestra uma-uhom.html. Se editan a mano
-      # cada vez que sale un acto nuevo, y las tres formas en que un archivo
-      # asi se rompe --vigencia repetida, serie que baja, acto anterior a la
-      # vigencia-- dan las tres un numero plausible que nadie ve en el diff.
-      - name: Verificar las series de UMA y UHOM
-        run: npm run verificar-series
-
       # Los tokens de color, que estan escritos seis veces porque son
       # paginas sin build. Dos formas de fallar y las dos son invisibles
       # mirando una pantalla: un token de texto que no llega a AA sobre
@@ -83,23 +76,8 @@ jobs:
       - name: Verificar el contraste de los tokens
         run: npm run verificar-contraste
 
-      # Los dos conectores: se levanta cada proceso --el HTTP en un puerto
-      # propio, el MCP por stdio-- y se les pega. No cubren aritmetica,
-      # que ya cubre verificar-plazos: cubren que arranquen, que el
-      # formato no cambie, y sobre todo que cuando falta un dato NO
-      # devuelvan una fecha. Del otro lado de un conector no hay nadie
-      # leyendo un aviso al lado del numero.
-      - name: Verificar los conectores
-        run: npm run verificar-conectores
-
-      # El computo de plazos, y con el la API que el repositorio `ledger`
-      # carga desde este sitio (el bloque del ledger, al final del script).
-      # Corre aca y no solo en el cron de feriados porque plazos.js y
-      # calendario-judicial.js se sirven tal cual a otro repositorio: un cambio
-      # que les rompe la API no puede llegar a produccion, porque alla no da
-      # error, deja de mostrar vencimientos.
-      - name: Verificar el computo de plazos
-        run: npm run verificar-plazos
+      - name: Verificar calendario y reglas colombianas
+        run: npm run verificar-colombia
 
       # Que terceros nombran las paginas que se publican. Existe porque el
       # 26/8/2026 se contesto "que sale del navegador" leyendo las once
@@ -107,21 +85,6 @@ jobs:
       # que le pedia la UMA a una planilla de Google desde una llamada
       # escondida a cuatrocientas lineas del calculo. Un host nuevo no rompe
       # nada visible, asi que sin este control entra en silencio.
-      # La tabla del anexo de la Acordada 5/2010 se transcribio de una IMAGEN
-      # escaneada: 45 filas por cinco columnas, o sea 225 oportunidades de
-      # errar un digito, y un digito de mas en una distancia devuelve un plazo
-      # plausible y equivocado. La propia tabla trae con que controlarse ---los
-      # dias publicados salen de las distancias por una regla escrita--- y eso
-      # es lo que se comprueba.
-      - name: Verificar la tabla de la Acordada 5/2010
-        run: npm run verificar-acordada
-
-      # El computo de la ampliacion por distancia, y sobre todo la busqueda en
-      # esa tabla: un nombre que no matchea cae en silencio a la ruta y da otro
-      # numero; uno que matchea de mas da los dias de otra ciudad.
-      - name: Verificar el computo de la ampliacion por distancia
-        run: npm run verificar-distancia
-
       - name: Verificar que terceros nombra el sitio
         run: npm run verificar-red
 
@@ -135,8 +98,6 @@ jobs:
           # index.html o no va a existir para nadie.
           cp index.html site/
           cp documentacion.html site/
-          cp quien-soy.html site/
-          cp uma-uhom.html site/
           # GitHub Pages sirve /404.html, con estado 404, en cualquier
           # direccion que no exista. Tiene que ir en la raiz del sitio y con
           # todas sus rutas absolutas: el porque esta adentro del archivo.
@@ -144,8 +105,14 @@ jobs:
           cp -r assets site/
           cp -r calculadoras site/
           cp -r data site/
-          cp -r asistente-honorarios-clasico site/
-          cp -r "proyectos finalizados" "site/proyectos finalizados"
+          cp -r docs/domain-colombia site/docs-colombia
+          for ruta in caducidad distancia ejecucion-estado entre-fechas honorarios honorarios-mediacion mora prorrateo regresiva tasa vencimientos; do
+            cp calculadoras/migrada-colombia.html "site/calculadoras/$ruta.html"
+          done
+          rm -f site/calculadoras/js/{calendario-judicial,dibujo-plazo,enlace,plazos,distancia}.js
+          rm -f site/calculadoras/css/dibujo-plazo.css
+          rm -f site/calculadoras/tablero-colombia.html
+          rm -f site/data/{feriados,dias-inhabiles,feria-judicial,serie-uma,serie-uhom,tasa-monto-fijo,plazos-cpccn,acordada-5-2010-distancias,contorno-argentina}.json
 
           # Escribiente: PWA estatica de vanilla JS, todo del lado del
           # navegador. La carpeta del repositorio ya es la raiz servible, asi
@@ -159,28 +126,10 @@ jobs:
           # 17/8. La URL vieja estuvo publicada meses y sigue viva con un
           # aviso, que es la regla de la casa: retirar algo no puede ser
           # dejar un 404.
-          cp -r redirects/pdf-studio site/PDF-studio
-
-          # /honorio/ ya no sirve la app: Honorio vive en honorio.ar,
-          # en su propio repositorio. Queda una pagina de redireccion para
-          # que los enlaces viejos —los que ya andan dando vueltas— no
-          # mueran en un 404.
-          cp -r redirects/honorio site/honorio
-
-          # calculadoras/honorarios.html se retiro el 7/8: su "grupo 4"
-          # aplicaba la reduccion del art. 22 sobre la escala en vez de
-          # sobre la base, o sea devolvia un numero mas alto que el
-          # correcto. Se dio de baja en lugar de corregirse porque
-          # Honorio ya la reemplaza. El archivo queda en el repositorio
-          # como historia; lo que se publica en su URL es el aviso, para
-          # que ningun enlace viejo muera en un 404 ni entregue un
-          # numero equivocado.
-          cp redirects/honorarios-retirada/index.html site/calculadoras/honorarios.html
-
       # docs/domain/ renderizado a HTML. Va despues del ensamblado
       # porque escribe dentro de site/.
       - name: Build domain docs
-        run: npm run docs -- site/docs
+        run: npm run docs
 
       # Esta es composite: el node20 que anotaba Actions venia del
       # actions/upload-artifact que usa adentro, no de ella. Hasta v4 pinea
@@ -209,26 +158,20 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
-  # Lo que el `ledger` carga de este sitio, mirado en produccion y despues de
-  # publicar. Desde el 11/9/2026 aquel repositorio carga los dos motores y los
-  # tres JSON del calendario desde javiercuneo.com.ar, en el navegador y desde
-  # otro origen: los JSON los pide con fetch, asi que ademas de existir tienen
-  # que venir con Access-Control-Allow-Origin. Eso lo pone GitHub Pages solo y
-  # no se configura desde aca, pero tampoco se ve desde Node: un archivo que se
-  # mueve, o un encabezado que Pages deja de mandar, dejaria al ledger sin
-  # vencimientos y sin ningun error. Si esto falla, el sitio ya se publico: la
-  # falla es el aviso.
+  # Verificación posterior a publicar de los motores y datos colombianos.
+  # GitHub Pages debe servirlos con CORS para permitir integraciones de
+  # navegador desde otros orígenes.
   publicado:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Verificar lo que el ledger carga del sitio
+      - name: Verificar motores y datos colombianos publicados
         run: |
           set -uo pipefail
           sitio="https://javiercuneo.com.ar"
           fallas=0
-          for ruta in calculadoras/js/calendario-judicial.js calculadoras/js/plazos.js \
-                      data/feriados.json data/dias-inhabiles.json data/feria-judicial.json; do
+          for ruta in calculadoras/js/calendario-colombia.js calculadoras/js/plazos-colombia.js \
+                      data/feriados-colombia.json; do
             encabezados=$(curl -sSI --retry 3 --retry-delay 10 -H "Origin: https://ejemplo.invalid" "$sitio/$ruta" | tr -d '\r')
             if ! printf '%s\n' "$encabezados" | head -1 | grep -q ' 200'; then
               echo "::error::$ruta no responde 200: $(printf '%s\n' "$encabezados" | head -1)"

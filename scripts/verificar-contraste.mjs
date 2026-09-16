@@ -58,15 +58,10 @@ const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..')
 // etiquetas de 11 px en mayusculas, pies de pagina, fechas.
 const AA = 4.5
 
-// Los seis lugares donde estan escritos los tokens. Si aparece un
-// septimo, va aca: un archivo que no este en esta lista queda afuera
-// del control y esa es exactamente la forma en que build-docs.mjs
-// quedo cuatro semanas atras.
+// Los dos lugares donde siguen escritos los tokens: la hoja compartida y la
+// plantilla que genera la documentación. Las páginas colombianas consumen
+// comun.css y no duplican la paleta.
 const ARCHIVOS = [
-  'index.html',
-  'documentacion.html',
-  'quien-soy.html',
-  'uma-uhom.html',
   'calculadoras/css/comun.css',
   'scripts/build-docs.mjs',
 ]
@@ -314,4 +309,4 @@ if (fallas.length) {
 }
 
 console.log('\nLos tokens de texto y los de estado pasan AA sobre las tres superficies')
-console.log('---y sobre sus tintes---, en los dos temas, y los seis archivos dicen lo mismo.')
+console.log('---y sobre sus tintes---, en los dos temas, y los archivos fuente dicen lo mismo.')

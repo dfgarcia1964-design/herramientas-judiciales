@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Pruebas de interfaz — Colombia</title>
+  <link rel="stylesheet" href="../calculadoras/css/comun.css">
+  <style>
+    body { font: 16px system-ui; max-width: 760px; margin: 2rem auto; }
+    li { margin: .5rem 0; }
+    .paso { color: #087443; }
+    .falla { color: #b42318; }
+  </style>
+</head>
+<body>
+  <h1>Pruebas de interfaz colombiana</h1>
+  <ol id="resultado"></ol>
+  <script>
+    const casos = [
+      ['tablero', '../calculadoras/tablero.html'],
+      ['tutela', '../calculadoras/tutela.html'],
+      ['procesos civiles', '../calculadoras/plazos-civiles.html'],
+      ['CPACA', '../calculadoras/plazos-administrativos.html'],
+      ['penal', '../calculadoras/plazos-penales.html'],
+      ['prescripciones', '../calculadoras/prescripciones-colombia.html'],
+      ['radicado', '../calculadoras/radicado.html']
+    ];
+    const salida = document.getElementById('resultado');
+    for (const [nombre, ruta] of casos) {
+      const fila = document.createElement('li');
+      const enlace = document.createElement('a');
+      enlace.href = ruta;
+      enlace.textContent = `${nombre}: abrir`;
+      enlace.target = '_blank';
+      fila.append(enlace);
+      salida.append(fila);
+    }
+    const nota = document.createElement('p');
+    nota.textContent = 'La verificación visual y la interacción se ejecutan con el navegador, no con file://.';
+    salida.after(nota);
+  </script>
+</body>
+</html>

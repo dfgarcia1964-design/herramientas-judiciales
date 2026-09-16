@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Scripts a nivel repositorio. honorio/ tiene su propio package.json; escribiente/ no necesita ninguno, es estatico.",
   "scripts": {
-    "docs": "node scripts/build-docs.mjs site/docs",
+    "docs": "node scripts/build-docs.mjs site/docs-colombia docs/domain-colombia",
     "verificar-docs": "node scripts/verificar-docs.mjs",
     "verificar-estado": "node scripts/verificar-estado.mjs",
     "verificar-calculos": "node scripts/verificar-calculos.mjs",
@@ -17,7 +17,9 @@
     "verificar-escribiente": "node scripts/verificar-escribiente.mjs",
     "verificar-honorio": "node scripts/verificar-honorio.mjs",
     "verificar-acordada": "node scripts/verificar-acordada.mjs",
+    "verificar-colombia": "node scripts/verificar-colombia.mjs",
     "feriados": "node scripts/actualizar-feriados.mjs",
+    "feriados-colombia": "node scripts/generar-feriados-colombia.mjs",
     "barrer-plazos": "node scripts/barrer-plazos-cpccn.mjs",
     "barrer-plazos-json": "node scripts/barrer-plazos-cpccn.mjs --json",
     "og-uma": "node scripts/armar-og-uma.mjs",

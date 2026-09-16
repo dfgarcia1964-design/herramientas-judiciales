@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plazos penales — Colombia</title>
+  <link rel="stylesheet" href="css/comun.css">
+  <script src="../assets/tema.js"></script>
+  <script src="js/calendario-colombia.js"></script>
+  <script src="js/plazos-colombia.js"></script>
+  <style>
+    body { margin: 0; padding: 2rem 1rem; background: var(--bg); color: var(--fg); font-family: var(--font-sans); }
+    main { max-width: 640px; margin: auto; }
+    .tarjeta { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    label { display: block; margin: 1rem 0 .4rem; font-weight: 600; }
+    input, select { width: 100%; box-sizing: border-box; padding: .8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--sunk); color: var(--fg); }
+    button { width: 100%; margin-top: 1rem; padding: .8rem; border: 0; border-radius: var(--radius); background: var(--accent); color: white; cursor: pointer; }
+    #resultado { margin-top: 1rem; padding: 1rem; border-left: 3px solid var(--accent); background: var(--sunk); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Plazos penales</h1>
+    <p>Supuesto documentado: indagación de delitos priorizados contra menores.</p>
+    <section class="tarjeta">
+      <label for="fecha">Fecha de recepción de la noticia criminal</label>
+      <input id="fecha" type="date">
+      <label for="prorroga">¿Se aplica la prórroga legal?</label>
+      <select id="prorroga">
+        <option value="no">No — 8 meses</option>
+        <option value="si">Sí — hasta 14 meses</option>
+      </select>
+      <label for="justificacion">Justificación razonable de la prórroga</label>
+      <input id="justificacion" type="text" placeholder="Obligatoria si se prorroga">
+      <label><input id="supuesto" type="checkbox"> Confirmo que se trata de uno de los delitos y sujetos previstos por la Ley 2205 de 2022.</label>
+      <button id="calcular" type="button">Calcular término</button>
+      <div id="resultado" hidden aria-live="polite"></div>
+    </section>
+  </main>
+  <script>
+    const fecha = document.getElementById('fecha');
+    const salida = document.getElementById('resultado');
+    document.getElementById('calcular').addEventListener('click', () => {
+      if (!fecha.value) {
+        salida.hidden = false;
+        salida.textContent = 'Ingresá una fecha.';
+        return;
+      }
+      const prorrogada = document.getElementById('prorroga').value === 'si';
+      if (!document.getElementById('supuesto').checked) {
+        salida.hidden = false;
+        salida.textContent = 'Confirmá el supuesto especial de la Ley 2205 de 2022.';
+        return;
+      }
+      if (prorrogada && !document.getElementById('justificacion').value.trim()) {
+        salida.hidden = false;
+        salida.textContent = 'La prórroga requiere una justificación razonable.';
+        return;
+      }
+      const resultado = PlazosColombia.indagacionPenalMenor(new Date(`${fecha.value}T00:00:00`), prorrogada);
+      salida.hidden = false;
+      salida.textContent = `${resultado.vencimiento.toLocaleDateString('es-CO')} — ${resultado.norma}`;
+    });
+  </script>
+</body>
+</html>

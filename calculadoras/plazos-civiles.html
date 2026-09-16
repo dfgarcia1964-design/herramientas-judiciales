@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plazos Civiles — Ley 1564/2012</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/comun.css">
+  <script src="../assets/tema.js"></script>
+  <script src="js/calendario-colombia.js"></script>
+  <script src="js/plazos-colombia.js"></script>
+  <style>
+    body {
+      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      padding: 2rem 1rem;
+    }
+
+    .contenedor {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .subtitulo {
+      color: var(--faint);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .seccion {
+      background-color: var(--card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .etiqueta {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .fila {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="time"],
+    select {
+      background-color: var(--sunk);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.75rem;
+      font-size: 1rem;
+      color: var(--fg);
+      font-family: 'Courier New', monospace;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    input[type="time"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(30, 69, 206, 0.1);
+    }
+
+    .boton {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: 100%;
+    }
+
+    .boton:hover {
+      opacity: 0.9;
+    }
+
+    .resultado {
+      background-color: var(--sunk);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+    }
+
+    .fecha-vencimiento {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+    }
+
+    .explicacion {
+      font-size: 0.9rem;
+      color: var(--faint);
+      margin-top: 0.5rem;
+    }
+
+    .info {
+      background-color: rgba(30, 69, 206, 0.1);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .tabla-info {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .tabla-info th,
+    .tabla-info td {
+      text-align: left;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabla-info th {
+      font-weight: 600;
+      color: var(--faint);
+    }
+
+    .pie {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--faint);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .solo-suelta {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .fila {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Plazos Civiles</h1>
+    <p class="subtitulo">Ley 1564 de 2012 — Código General del Proceso</p>
+
+    <div class="info">
+      <strong>Procedimiento Civil:</strong> Plazos máximos de sentencia según instancia.
+      <table class="tabla-info">
+        <tr>
+          <th>Instancia</th>
+          <td><strong>Plazo Máximo</strong></td>
+        </tr>
+        <tr>
+          <td>Primera instancia</td>
+          <td><strong>1 año</strong> desde la notificación del auto admisorio o mandamiento</td>
+        </tr>
+        <tr>
+          <td>Segunda instancia</td>
+          <td><strong>6 meses</strong> desde recepción del expediente</td>
+        </tr>
+        <tr>
+          <th>Norma</th>
+          <td>Ley 1564/2012</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <label class="etiqueta" id="etiqueta-fecha">Fecha de notificación del auto admisorio al demandado</label>
+      <div class="fila">
+        <div class="campo">
+          <input type="number" id="dia" placeholder="DD" min="1" max="31" inputmode="numeric">
+        </div>
+        <div class="campo">
+          <input type="number" id="mes" placeholder="MM" min="1" max="12" inputmode="numeric">
+        </div>
+      </div>
+      <div class="campo">
+        <input type="number" id="anio" placeholder="AAAA" min="2000" inputmode="numeric">
+      </div>
+
+      <label class="etiqueta" style="margin-top: 1rem;">Instancia</label>
+      <select id="instancia">
+        <option value="primera">Primera instancia (1 año)</option>
+        <option value="segunda">Segunda instancia (6 meses)</option>
+      </select>
+
+      <button class="boton" onclick="calcularVencimiento()" style="margin-top: 1.5rem;">Calcular vencimiento</button>
+    </div>
+
+    <div id="resultado-container" style="display: none;">
+      <div class="resultado">
+        <div class="etiqueta">Fecha de referencia del término</div>
+        <div class="fecha-vencimiento" id="fecha-resultado"></div>
+        <div class="explicacion" id="explicacion-resultado"></div>
+      </div>
+    </div>
+
+    <div class="pie solo-suelta">
+      <p>Calculadora de referencia. El plazo se cuenta en días calendario desde la notificación al demandado.</p>
+      <p>L. Javier Cúneo Libarona — adaptada para Colombia</p>
+    </div>
+  </div>
+
+  <script>
+    const NOMBRE_MES = [
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+
+    const NOMBRE_DIA = [
+      'domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'
+    ];
+
+    function calcularVencimiento() {
+      const dia = parseInt(document.getElementById('dia').value);
+      const mes = parseInt(document.getElementById('mes').value);
+      const anio = parseInt(document.getElementById('anio').value);
+      const instancia = document.getElementById('instancia').value;
+
+      if (!dia || !mes || !anio) {
+        alert('Completá todos los campos');
+        return;
+      }
+
+      if (dia < 1 || dia > 31 || mes < 1 || mes > 12) {
+        alert('Fecha inválida');
+        return;
+      }
+
+      const fecha = new Date(anio, mes - 1, dia);
+      if (fecha.getDate() !== dia) {
+        alert('Fecha inválida');
+        return;
+      }
+
+      // El término se expresa en meses para conservar el día de vencimiento
+      // cuando el mes de destino tiene menos días.
+      const meses = instancia === 'primera' ? 12 : 6;
+      const vencimiento = PlazosColombia.vencimientoMeses(
+        fecha,
+        meses,
+        'Ley 1564 de 2012, artículo 121'
+      ).vencimiento;
+
+      // Formatear resultado
+      const diaVenc = String(vencimiento.getDate()).padStart(2, '0');
+      const mesVenc = String(vencimiento.getMonth() + 1).padStart(2, '0');
+      const anioVenc = vencimiento.getFullYear();
+      const nombreDia = NOMBRE_DIA[vencimiento.getDay()];
+      const nombreMes = NOMBRE_MES[vencimiento.getMonth()];
+
+      const plazoTexto = instancia === 'primera' ? '1 año' : '6 meses';
+
+      document.getElementById('fecha-resultado').textContent = `${diaVenc} / ${mesVenc} / ${anioVenc}`;
+      document.getElementById('explicacion-resultado').innerHTML = `
+        ${nombreDia}, ${diaVenc} de ${nombreMes} de ${anioVenc}
+        <br>
+        <strong>Fecha de referencia:</strong> ${plazoTexto}
+        <br>
+        Esta fecha no incorpora suspensiones, interrupciones ni prórrogas del artículo 121.
+      `;
+      document.getElementById('resultado-container').style.display = 'block';
+    }
+
+    document.getElementById('instancia').addEventListener('change', (e) => {
+      document.getElementById('etiqueta-fecha').textContent =
+        e.target.value === 'primera'
+          ? 'Fecha de notificación del auto admisorio o mandamiento al demandado'
+          : 'Fecha de recepción del expediente en la secretaría';
+    });
+
+    document.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') calcularVencimiento();
+    });
+  </script>
+</body>
+</html>

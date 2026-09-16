@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prescripciones — Colombia</title>
+  <link rel="stylesheet" href="css/comun.css">
+  <script src="../assets/tema.js"></script>
+  <script src="js/calendario-colombia.js"></script>
+  <script src="js/plazos-colombia.js"></script>
+  <style>
+    body { margin: 0; padding: 2rem 1rem; background: var(--bg); color: var(--fg); font-family: var(--font-sans); }
+    main { max-width: 640px; margin: auto; }
+    .tarjeta { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    label { display: block; margin: 1rem 0 .4rem; font-weight: 600; }
+    input, select { width: 100%; box-sizing: border-box; padding: .8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--sunk); color: var(--fg); }
+    button { width: 100%; margin-top: 1rem; padding: .8rem; border: 0; border-radius: var(--radius); background: var(--accent); color: white; cursor: pointer; }
+    #resultado { margin-top: 1rem; padding: 1rem; border-left: 3px solid var(--accent); background: var(--sunk); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Prescripciones</h1>
+    <p>Reglas documentadas para Colombia: laboral y disciplinaria. La fecha
+    calculada es una referencia y depende de interrupciones y del supuesto legal.</p>
+    <section class="tarjeta">
+      <label for="tipo">Tipo</label>
+      <select id="tipo">
+        <option value="laboral">Acción laboral — 3 años</option>
+        <option value="disciplinaria">Acción disciplinaria — 5 años</option>
+        <option value="disciplinaria52">Falta del artículo 52 — 12 años</option>
+        <option value="disciplinariaFallo">Segunda instancia disciplinaria — 2 años</option>
+        <option value="disciplinariaFallo52">Segunda instancia art. 52 — 3 años</option>
+        <option value="sancion">Sanción disciplinaria — 5 años</option>
+      </select>
+      <label for="fecha">Fecha inicial</label>
+      <input id="fecha" type="date">
+      <label for="reclamo">Fecha de reclamo escrito (sólo laboral, opcional)</label>
+      <input id="reclamo" type="date">
+      <button id="calcular" type="button">Calcular vencimiento</button>
+      <div id="resultado" hidden aria-live="polite"></div>
+    </section>
+  </main>
+  <script>
+    const fecha = document.getElementById('fecha');
+    const salida = document.getElementById('resultado');
+    document.getElementById('calcular').addEventListener('click', () => {
+      if (!fecha.value) {
+        salida.hidden = false;
+        salida.textContent = 'Ingresá una fecha.';
+        return;
+      }
+      const valor = new Date(`${fecha.value}T00:00:00`);
+      const tipo = document.getElementById('tipo').value;
+      const reclamo = document.getElementById('reclamo').value
+        ? new Date(`${document.getElementById('reclamo').value}T00:00:00`)
+        : null;
+      const resultado = tipo === 'laboral'
+        ? PlazosColombia.prescripcionLaboral(valor, reclamo)
+        : tipo === 'disciplinaria'
+          ? PlazosColombia.prescripcionDisciplinaria(valor)
+          : tipo === 'disciplinaria52'
+            ? PlazosColombia.prescripcionDisciplinaria(valor, true)
+            : tipo === 'disciplinariaFallo'
+              ? PlazosColombia.prescripcionDisciplinariaTrasFallo(valor)
+              : tipo === 'disciplinariaFallo52'
+                ? PlazosColombia.prescripcionDisciplinariaTrasFallo(valor, true)
+                : PlazosColombia.prescripcionSancionDisciplinaria(valor);
+      salida.hidden = false;
+      salida.textContent = `${resultado.vencimiento.toLocaleDateString('es-CO')} — ${resultado.norma}`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,931 @@
+{
+  "pais": "Colombia",
+  "fuente": "Ley 51 de 1983",
+  "generado": "2026-09-16",
+  "cobertura": {
+    "desde": 2021,
+    "hasta": 2030
+  },
+  "feriados": {
+    "2021": [
+      {
+        "fecha": "2021-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-01-11",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2021-03-22",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2021-04-01",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-04-02",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-05-13",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-06-03",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-06-11",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-07-05",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2021-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-08-16",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2021-10-18",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2021-11-01",
+        "motivo": "Todos los Santos",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-11-15",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2021-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2021-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2022": [
+      {
+        "fecha": "2022-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-01-10",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2022-03-21",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2022-04-14",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-04-15",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-05-26",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-06-16",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-06-24",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-07-04",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2022-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-08-15",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-10-17",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2022-11-07",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2022-11-14",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2022-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2022-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2023": [
+      {
+        "fecha": "2023-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-01-09",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2023-03-20",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2023-04-06",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-04-07",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-05-18",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-06-08",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-06-16",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-07-03",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2023-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-08-21",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2023-10-16",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2023-11-06",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2023-11-13",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2023-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2023-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2024": [
+      {
+        "fecha": "2024-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-01-08",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2024-03-25",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2024-03-28",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-03-29",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-05-09",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-05-30",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-06-07",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-07-01",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2024-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-08-19",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2024-10-14",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2024-11-04",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2024-11-11",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2024-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2025": [
+      {
+        "fecha": "2025-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-01-06",
+        "motivo": "Reyes Magos",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-03-24",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2025-04-17",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-04-18",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-05-29",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-06-19",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-06-27",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-06-30",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2025-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-08-18",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2025-10-13",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2025-11-03",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2025-11-17",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2025-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2025-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2026": [
+      {
+        "fecha": "2026-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-01-12",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2026-03-23",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2026-04-02",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-04-03",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-05-14",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-06-04",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-06-12",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-06-29",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-08-17",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2026-10-12",
+        "motivo": "Día de la Raza",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-11-02",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2026-11-16",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2026-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2026-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2027": [
+      {
+        "fecha": "2027-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-01-11",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2027-03-22",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2027-03-25",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-03-26",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-05-06",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-05-27",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-06-04",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-07-05",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2027-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-08-16",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2027-10-18",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2027-11-01",
+        "motivo": "Todos los Santos",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-11-15",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2027-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2027-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2028": [
+      {
+        "fecha": "2028-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-01-10",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2028-03-20",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2028-04-13",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-04-14",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-05-25",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-06-15",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-06-23",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-07-03",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2028-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-08-21",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2028-10-16",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2028-11-06",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2028-11-13",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2028-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2028-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2029": [
+      {
+        "fecha": "2029-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-01-08",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2029-03-19",
+        "motivo": "San José",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-03-29",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-03-30",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-05-10",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-05-31",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-06-08",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-07-02",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2029-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-08-20",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2029-10-15",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2029-11-05",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2029-11-12",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": true
+      },
+      {
+        "fecha": "2029-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2029-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ],
+    "2030": [
+      {
+        "fecha": "2030-01-01",
+        "motivo": "Año Nuevo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-01-07",
+        "motivo": "Reyes Magos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2030-03-25",
+        "motivo": "San José",
+        "trasladado": true
+      },
+      {
+        "fecha": "2030-04-18",
+        "motivo": "Jueves Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-04-19",
+        "motivo": "Viernes Santo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-05-01",
+        "motivo": "Día del Trabajo",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-05-30",
+        "motivo": "Ascensión del Señor",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-06-20",
+        "motivo": "Corpus Christi",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-06-28",
+        "motivo": "Sagrado Corazón de Jesús",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-07-01",
+        "motivo": "San Pedro y San Pablo",
+        "trasladado": true
+      },
+      {
+        "fecha": "2030-07-20",
+        "motivo": "Independencia de Colombia",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-08-07",
+        "motivo": "Batalla de Boyacá",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-08-19",
+        "motivo": "Asunción de la Virgen",
+        "trasladado": true
+      },
+      {
+        "fecha": "2030-10-14",
+        "motivo": "Día de la Raza",
+        "trasladado": true
+      },
+      {
+        "fecha": "2030-11-04",
+        "motivo": "Todos los Santos",
+        "trasladado": true
+      },
+      {
+        "fecha": "2030-11-11",
+        "motivo": "Independencia de Cartagena",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-12-08",
+        "motivo": "Inmaculada Concepción",
+        "trasladado": false
+      },
+      {
+        "fecha": "2030-12-25",
+        "motivo": "Navidad",
+        "trasladado": false
+      }
+    ]
+  }
+}

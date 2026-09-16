@@ -9,6 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/comun.css">
   <script src="../assets/tema.js"></script>
+  <script src="js/calendario-colombia.js"></script>
+  <script src="js/plazos-colombia.js"></script>
+  <script src="js/parser-fechas-tutela.js"></script>
   <style>
     body {
       font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -198,6 +201,24 @@
       </table>
     </div>
 
+    <div class="seccion" id="seccion-documento">
+      <label class="etiqueta">Opción 1: Extraer fechas de un texto</label>
+      <div class="campo">
+        <input type="file" id="documento-tutela" accept=".txt,.md" style="padding: 0.5rem;">
+      </div>
+      <button class="boton" onclick="procesarDocumento()" style="margin-top: 0.5rem;">Analizar documento</button>
+      <div id="resultado-parser-container" style="display: none; margin-top: 1rem;">
+        <div class="resultado">
+          <div class="etiqueta">Fechas encontradas</div>
+          <div id="fechas-encontradas"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; color: var(--faint); font-size: 0.85rem; margin: 1.5rem 0; padding: 0 1rem;">
+      — O ingresa manualmente —
+    </div>
+
     <div class="seccion" id="seccion-presentacion">
       <label class="etiqueta">1. Fecha y hora de presentación de la tutela</label>
       <div class="fila">
@@ -241,12 +262,16 @@
       <div class="campo" style="margin-top: 1rem;">
         <input type="time" id="hora-fallo">
       </div>
+      <div class="campo" style="margin-top: 1rem;">
+        <label class="etiqueta" for="horas-cumplimiento">Horas fijadas en la orden (máximo 48)</label>
+        <input type="number" id="horas-cumplimiento" min="1" max="48" value="48" inputmode="numeric">
+      </div>
       <button class="boton" onclick="calcularPlazoCumplimiento()">Calcular plazo de cumplimiento</button>
     </div>
 
     <div id="resultado-cumplimiento-container" style="display: none;">
       <div class="resultado">
-        <div class="etiqueta">Vencimiento del plazo de cumplimiento (48 horas)</div>
+        <div class="etiqueta">Vencimiento del plazo fijado en la orden</div>
         <div class="fecha-vencimiento" id="fecha-resultado-cumplimiento"></div>
         <div class="explicacion" id="explicacion-resultado-cumplimiento"></div>
       </div>
@@ -314,8 +339,7 @@
 
       // Decreto 306/1992, art. 1: los términos de la tutela corren en
       // días calendario, no hábiles.
-      const vencimiento = new Date(presentacion);
-      vencimiento.setDate(vencimiento.getDate() + 10);
+      const vencimiento = PlazosColombia.vencimientoTutela(presentacion).vencimiento;
 
       const formato = formatearFecha(vencimiento);
       document.getElementById('fecha-resultado-fallo').textContent = formato.corta;
@@ -331,17 +355,81 @@
       const fallo = leerFecha('fallo');
       if (!fallo) return;
 
-      const vencimiento = new Date(fallo);
-      vencimiento.setHours(vencimiento.getHours() + 48);
+      const horas = parseInt(document.getElementById('horas-cumplimiento').value, 10);
+      const vencimiento = PlazosColombia.vencimientoCumplimientoTutela(fallo, horas).vencimiento;
 
       const formato = formatearFecha(vencimiento);
       document.getElementById('fecha-resultado-cumplimiento').textContent = formato.corta;
       document.getElementById('explicacion-resultado-cumplimiento').innerHTML = `
         ${formato.larga}
         <br>
-        <strong>Plazo de cumplimiento:</strong> 48 horas desde que se profirió el fallo
+        <strong>Plazo de cumplimiento:</strong> ${horas} horas desde que se profirió el fallo (máximo legal: 48)
       `;
       document.getElementById('resultado-cumplimiento-container').style.display = 'block';
+    }
+
+    async function procesarDocumento() {
+      const file = document.getElementById('documento-tutela').files[0];
+      if (!file) {
+        alert('Seleccioná un archivo de texto (.txt o .md)');
+        return;
+      }
+
+      try {
+        const texto = await file.text();
+        const fechas = ParserFechasTutela.extraerFechas(texto);
+        const resultado = ParserFechasTutela.formatearResultado(fechas);
+
+        if (!resultado.exito) {
+          alert(resultado.mensaje);
+          return;
+        }
+
+        // Mostrar fechas encontradas
+        let html = `<strong>${resultado.total} fecha(s) encontrada(s):</strong><br><br>`;
+
+        resultado.todas.forEach((fecha, idx) => {
+          const clase = fecha.confianza === 'alta' ? 'accent' : 'faint';
+          html += `
+            <div style="margin-bottom: 0.75rem; padding: 0.5rem; background-color: var(--sunk); border-radius: var(--radius);">
+              <strong style="color: var(--${clase});">${fecha.fecha}</strong><br>
+              <small style="color: var(--faint);">
+                Tipo: ${fecha.tipo}<br>
+                Palabra clave: ${fecha.palabraClave || 'ninguna'}<br>
+                Confianza: ${fecha.confianza}
+              </small>
+              <button style="margin-top: 0.5rem; width: 100%; padding: 0.4rem; background-color: var(--accent); color: white; border: none; border-radius: var(--radius); cursor: pointer; font-size: 0.85rem;"
+                      onclick="usarFechaDelDocumento('${fecha.fecha}', 'presentacion')">
+                Usar como presentación
+              </button>
+            </div>
+          `;
+        });
+
+        // Mostrar sugerencias si existen
+        if (resultado.sugerencias.presentacion) {
+          html += `<div style="margin-top: 1rem; padding: 0.75rem; background-color: rgba(30, 69, 206, 0.1); border-left: 3px solid var(--accent); border-radius: var(--radius);">
+            <strong>Sugerencia:</strong> Se detectó presentación en ${resultado.sugerencias.presentacion.fecha}
+          </div>`;
+        }
+
+        document.getElementById('fechas-encontradas').innerHTML = html;
+        document.getElementById('resultado-parser-container').style.display = 'block';
+      } catch (error) {
+        alert('Error al procesar el archivo: ' + error.message);
+      }
+    }
+
+    function usarFechaDelDocumento(fechaStr, tipo) {
+      const [dia, mes, anio] = fechaStr.split('/').map(Number);
+      document.getElementById(`dia-${tipo}`).value = dia;
+      document.getElementById(`mes-${tipo}`).value = mes;
+      document.getElementById(`anio-${tipo}`).value = anio;
+      document.getElementById(`hora-${tipo}`).value = '00:00';
+
+      // Scroll a la sección correspondiente
+      document.getElementById(`seccion-${tipo}`).scrollIntoView({ behavior: 'smooth' });
+      alert('Fecha cargada. Ahora ingresá la hora exacta.');
     }
 
     document.getElementById('seccion-presentacion').addEventListener('keypress', (e) => {

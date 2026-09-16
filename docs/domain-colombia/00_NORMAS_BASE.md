@@ -1,141 +1,113 @@
-# Normas Base — Colombia
+# Normas base — Colombia
 
-Referencia de las cuatro leyes que gobiernan los procedimientos judiciales en Colombia.
-Se actualiza cuando se descubra una interpretación nueva o cuando las normas cambien.
+Referencia de las normas colombianas que gobiernan los procedimientos incluidos
+en la aplicación. Cada regla calculable debe tener artículo, fuente oficial y
+caso de prueba. Una norma derogada no se presenta como vigente.
 
-**Fuentes:** Decretos y leyes de la República de Colombia, verificadas contra sus textos oficiales.
+## 1. Acción de tutela — Decreto Ley 2591 de 1991
 
----
+La tutela protege derechos fundamentales y tiene trámite preferencial y sumario.
 
-## 1. Decreto Ley 2591 de 1991 — Acción de Tutela
-
-**Qué es:** Mecanismo constitucional de protección de derechos fundamentales (Art. 86, Constitución de 1991).
-
-**Procedimiento:** Preferencial y sumario.
-
-### Plazos Clave
-
-| Concepto | Plazo | Norma |
+| Concepto | Plazo | Fuente |
 |---|---|---|
-| **Plazo para fallar (resolver) la tutela** | 10 días calendario desde la presentación | Decreto 2591/91 |
-| **Presentación** | Cualquier momento y lugar | Decreto 2591/91 |
-| **Cumplimiento de la orden del fallo** | 48 horas desde que se profiere/notifica el fallo | Decreto 2591/91 |
+| Fallo de primera instancia | 10 días calendario desde la presentación | Decreto 2591/91, art. 29; criterio confirmado para esta aplicación |
+| Cumplimiento de la orden | El plazo que fije el fallo, hasta 48 horas | Decreto 2591/91, art. 29 |
 
-Son dos plazos distintos con ancla distinta: el de 10 días corre desde la
-presentación hasta el fallo; el de 48 horas corre desde el fallo hasta que se
-cumple la orden. No confundirlos ni sumarlos.
+Son dos plazos distintos y no se suman. La calculadora conserva el criterio
+confirmado de contar el primer término en días calendario; para el cumplimiento
+permite cargar el plazo concreto fijado por el juez entre 1 y 48 horas.
 
-### Aplicación
+Fuentes: [Decreto 2591 de 1991](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=5304) y [Decreto 306 de 1992](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=6061).
 
-- Protege **solo derechos fundamentales** (no derechos legales)
-- Se interpone contra acción u omisión de autoridad pública o particular
-- No se puede usar para enforcer derechos que solo tienen rango legal
-- Define daños "irremediables" como los que solo se pueden reparar con indemnización
-- Los términos corren en **días calendario, no hábiles** (Decreto 306/1992, art. 1)
+## 2. Código General del Proceso — Ley 1564 de 2012
 
-### Regulación Complementaria
+Regula los procesos civiles, comerciales, de familia y agrarios.
 
-**Decreto 306 de 1992:** Reglamento del Decreto 2591/91. Establece procedimiento detallado.
-
-**Decreto 1382 de 2000:** Reglas de competencia y distribución de tutelas. Los jueces con jurisdicción en el lugar donde ocurrió la violación conocen en primera instancia.
-
----
-
-## 2. Ley 1564 de 2012 — Código General del Proceso
-
-**Qué es:** Código que regula procedimiento civil, comercial, familiar y agrario en Colombia.
-
-**Cobertura:** Materia civil y comercial (equivalente al CPCCN argentino).
-
-### Plazos Procesales Clave
-
-| Concepto | Plazo | Norma |
+| Concepto | Regla | Fuente |
 |---|---|---|
-| **Sentencia en primera instancia** | Máximo 1 año | Ley 1564/12 |
-| **Sentencia en segunda instancia** | Máximo 6 meses | Ley 1564/12 |
-| **Comienzo de plazos** | Día hábil siguiente a notificación | Ley 1564/12 |
-| **Caducidad de instancia** | Por inactividad (2 años sin ejercer acción nueva) | Ley 1564/12 |
+| Términos | Perentorios e improrrogables, salvo norma en contrario | Arts. 117 y 118 |
+| Cómputo | Se cuentan desde el momento procesal que corresponda; se excluyen vacancia judicial y cierre del juzgado en los casos previstos | Art. 118 |
+| Duración del proceso | Máximo un año en primera instancia y seis meses en segunda, con excepciones legales | Art. 121 |
 
-### Principios
+Fuente: [Ley 1564 de 2012](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=48425).
 
-- Plazos perentorios e improrrogables salvo disposición contraria
-- Actos procesales sin demora
-- Concentración de diligencias
+## 3. CPACA — Ley 1437 de 2011
 
----
+Regula las actuaciones administrativas y el proceso contencioso administrativo.
 
-## 3. Ley 1437 de 2011 — Código de Procedimiento Administrativo y de lo Contencioso Administrativo (CPACA)
-
-**Qué es:** Regula procedimiento administrativo y contencioso administrativo en Colombia.
-
-**Cobertura:** Peticiones a la administración, recursos administrativos, medios de control contencioso.
-
-### Plazos Administrativos Clave
-
-| Concepto | Plazo | Norma |
+| Concepto | Regla | Fuente |
 |---|---|---|
-| **Resolución de petición** | 15 días hábiles | Ley 1437/11 |
-| **Resolución de petición de documentos** | 10 días hábiles | Ley 1437/11 |
-| **Silencio administrativo** | 3 meses = negativa tácita | Ley 1437/11 |
-| **Resolución de recursos** | 15 días hábiles | Ley 1437/11 |
-| **Caducidad de acción** | 2 años | Ley 1437/11, Art. 164 |
+| Petición general | 15 días | Art. 14 |
+| Petición de documentos | 10 días | Art. 14 |
+| Recursos | El término depende del trámite aplicable | Arts. 79 y 80 |
+| Caducidad | Depende del medio de control | Art. 164 |
 
-### Extensión de Plazo
+Fuente: [Ley 1437 de 2011](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=41249).
 
-Cuando no sea posible resolver en plazo inicial, la autoridad avisa:
-- Motivo de demora
-- Plazo razonable para resolver
-- No puede exceder el **doble** del plazo inicial
+## 4. Procedimiento penal — Ley 906 de 2004
 
----
+Los términos penales sólo se calculan después de identificar el supuesto
+procesal y sus excepciones.
 
-## 4. Código de Procedimiento Penal
-
-**Qué es:** Regula procedimiento penal en Colombia.
-
-**Fuente:** Ley 906 de 2004 (Código de Procedimiento Penal vigente, sistema acusatorio).
-
-### Plazos Penales (a documentar con detalle)
-
-| Concepto | Plazo | Norma |
+| Concepto | Regla documentada | Fuente |
 |---|---|---|
-| (Pendiente de detalle por especialista) | - | - |
+| Indagación | Términos del art. 175, con reglas especiales | Ley 906/04 |
+| Delitos priorizados contra menores | 8 meses, prorrogables una vez hasta por 6 meses en los supuestos legales | Ley 2205/22 |
+| Audiencia preparatoria e inicio del juicio | 45 días en los supuestos legales | Ley 906/04 |
 
----
+La aplicación no calcula un plazo penal aislado si falta el supuesto que lo
+activa. Fuente: [Ley 906 de 2004](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=14787).
 
-## Unidades de Medida
+## 5. Procedimiento laboral
 
-### UVT — Unidad de Valor Tributario
+El régimen parte del Decreto 2158 de 1948 y sus reformas. La regla general de
+prescripción de acciones laborales es de tres años desde que la obligación es
+exigible, con las reglas de interrupción del artículo 151.
 
-La UVT es la unidad de medida en la que se expresan muchas obligaciones tributarias y administrativas en Colombia.
+La Ley 2452 de 2025 expidió un nuevo Código Procesal del Trabajo y de la
+Seguridad Social. Su vigencia y régimen transitorio deben comprobarse antes de
+usarlo como fuente exclusiva.
 
-| Año | Valor | Variación | Fuente |
-|---|---|---|---|
-| **2026** | $52.374 COP | +5,18% | Resolución DIAN 238/2025 |
-| 2025 | $49.799 COP | - | - |
+Fuentes: [Decreto 2158 de 1948](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=5259) y [Ley 2452 de 2025](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=259639).
 
-**Cálculo:** Se ajusta anualmente según IPC (Índice de Precios al Consumidor) del DANE.
+## 6. Régimen disciplinario
 
-**Uso:** Límites tributarios, sanciones, montos administrativos.
+La Ley 1952 de 2019, modificada parcialmente por la Ley 2094 de 2021, sustituyó
+el régimen anterior en lo pertinente.
 
----
-
-## Autoridades Competentes
-
-| Autoridad | Competencia | Equivalente Argentino |
+| Concepto | Regla | Fuente |
 |---|---|---|
-| **Corte Constitucional** | Constitucionalidad, derechos fundamentales | Corte Suprema |
-| **Corte Suprema de Justicia** | Casación civil y penal | Cámara de Apelaciones |
-| **Consejo de Estado** | Contencioso administrativo | Tribunales Administrativos |
-| **Juzgados** | Primera instancia civil, penal, administrativo | Juzgados de Instancia |
+| Acción disciplinaria | 5 años como regla general; 12 años para las faltas del art. 52 | Ley 1952/19, art. 33 |
+| Sanción disciplinaria | 5 años desde la ejecutoria del fallo | Ley 1952/19, art. 36 |
 
----
+Fuentes: [Ley 1952 de 2019](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=90324) y [Ley 2094 de 2021](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=165113).
 
-## Observaciones Pendientes
+## 7. Calendario y días festivos
 
-- **Código Penal:** Falta documentar plazos de prescripción, caducidad de acción penal y tiempos de proceso
-- **Feria Judicial:** Falta confirmar si existe regulación de feria judicial en Colombia (como en Argentina)
-- **Distancia:** Falta investigar si existe equivalente a art. 158 CPCCN (ampliación por distancia)
+La Ley 51 de 1983 enumera los días de descanso remunerado y traslada ciertas
+festividades al lunes siguiente. El motor debe distinguir la fecha de la
+festividad de la fecha trasladada.
 
-Estos pendientes se completan cuando se desarrolle cada calculadora.
+No se presume una feria judicial nacional equivalente a la feria argentina. Un
+cierre específico debe cargarse como dato con su acto fuente.
 
+Fuente: [Concepto 131731 de 2023 — Función Pública](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=212788), que transcribe el artículo 1 de la Ley 51 de 1983.
+
+## 8. UVT y pesos colombianos
+
+La UVT no reemplaza al peso colombiano. Para 2026, la Resolución DIAN 000238
+de 2025 fijó la UVT en **$52.374 COP**.
+
+Fuente: [Resolución DIAN 000238 de 2025](https://normograma.dian.gov.co/dian/compilacion/docs/resolucion_dian_0238_2025.htm).
+
+## 9. Radicado judicial
+
+El radicado tiene 23 dígitos con bloques `5 + 2 + 2 + 3 + 4 + 5 + 2`:
+
+`código geográfico + corporación + especialidad + despacho + año + proceso + instancia/recurso`.
+
+La validación de formato no prueba que el proceso exista. En tribunales y
+consejos, las posiciones del despacho pueden requerir `000` según la regla
+aplicable.
+
+Fuente: [Manual de composición del número de radicación — Rama Judicial](https://consultaprocesos.ramajudicial.gov.co/manual/numRadicacion.html).

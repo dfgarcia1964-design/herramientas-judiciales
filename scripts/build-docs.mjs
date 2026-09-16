@@ -19,10 +19,10 @@ import { fileURLToPath } from 'node:url'
 import { marked } from 'marked'
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..')
-const origen = join(raiz, 'docs', 'domain')
 // resolve() y no join(): asi acepta tanto una ruta relativa al repo
 // como una absoluta, que es lo que pasa el workflow.
 const destino = resolve(raiz, process.argv[2] ?? 'site/docs')
+const origen = resolve(raiz, process.argv[3] ?? 'docs/domain')
 
 // El BOM de UTF-8 al inicio del archivo se cuela como texto y rompe el
 // primer encabezado. Varios de estos documentos lo tienen.

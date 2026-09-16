@@ -1,251 +1,39 @@
-# Herramientas para la práctica judicial
+# Herramientas judiciales — Colombia
 
-**L. Javier Cúneo Libarona** — abogado. Prosecretario Administrativo en un
-juzgado civil.
+Calculadoras estáticas para consultar términos procesales, validar radicados y
+trabajar con valores expresados en pesos colombianos. Todo se ejecuta en el
+navegador; no hay backend para los datos que ingresa la persona.
 
-Software para lo que hago todos los días: computar plazos, regular honorarios,
-liquidar la tasa. Cada herramienta salió de un problema concreto de trabajo, no
-de una idea de producto.
+## Herramientas
 
-**[Ver las herramientas →](https://javiercuneo.com.ar/)**
+- [Tablero](calculadoras/tablero.html)
+- [Acción de tutela](calculadoras/tutela.html): 10 días calendario para fallar
+  y hasta 48 horas para cumplir la orden.
+- [Procesos civiles](calculadoras/plazos-civiles.html): referencia de los
+  términos documentados del Código General del Proceso.
+- [Prescripciones](calculadoras/prescripciones-colombia.html): laboral y
+  disciplinaria.
+- [Radicado judicial](calculadoras/radicado.html): valida la estructura de
+  23 dígitos.
 
----
+## Fuentes y límites
 
-## Honorio
+La base normativa está en
+[`docs/domain-colombia/00_NORMAS_BASE.md`](docs/domain-colombia/00_NORMAS_BASE.md).
+Cada resultado debe verificarse contra la norma vigente y el expediente. La
+validación de un radicado sólo comprueba su formato; no consulta la existencia
+del proceso.
 
-Asistente para la regulación de honorarios de la **Ley 27.423**. Es el proyecto
-principal, y desde agosto de 2026 **vive en su propio repositorio y dominio**:
-[honorio.ar](https://honorio.ar) · [javiercuneo/honorio](https://github.com/javiercuneo/honorio).
-
-Se fue con toda su historia. Acá quedó lo demás.
-
-Hace una entrevista corta sobre el expediente y devuelve el honorario con cada
-paso del cálculo a la vista: la base, las reducciones aplicadas, la escala del
-art. 21, el ajuste por rol y la segunda instancia.
-
-**No es una caja negra a propósito.** La ley es ambigua en varios puntos y la
-jurisprudencia está dispersa. Donde la app adopta un criterio interpretativo lo
-declara junto al número, detrás de un «por qué». Quien no quiere leerlo no lo
-lee; quien tiene que fundar una regulación lo tiene ahí.
-
-- Primera y segunda instancia, para patrocinante, apoderado, procurador y
-  auxiliares, más el honorario básico del mediador en UHOM.
-- Procesos de conocimiento, ejecución de sentencia, ejecutivo, sucesión, medida
-  cautelar, homologación, exhorto e incidente.
-- Reducciones de los arts. 22, 25, 34, 35, 37, 38, 40, 41 y 49, mostrando qué
-  transformó cada una.
-- Regulaciones provisorias del art. 12, reparto por etapas y mínimos
-  arancelarios como tabla de referencia.
-- La regulación redactada: el mismo cálculo sale también como un texto con
-  forma de resolución, con la norma citada en cada paso.
-- Cada criterio interpretativo con lo que lo sostiene —el fallo o la doctrina
-  en que se funda, y la lectura contraria cuando existe—. Donde no hay fallo,
-  la app lo declara en vez de afirmar igual.
-- El cálculo se comparte por enlace, con las respuestas adentro y con la UMA
-  del día en que se hizo: el mismo enlace da el mismo número dentro de dos
-  años.
-
-[Abrir Honorio](https://honorio.ar) ·
-[Código y documentación](https://github.com/javiercuneo/honorio) ·
-[Registro de versiones](https://github.com/javiercuneo/honorio/blob/main/CHANGELOG.md)
-
----
-
-## El tablero de herramientas
-
-**[Tablero de herramientas](https://javiercuneo.com.ar/calculadoras/tablero.html)** —
-todas en una sola ventana, y desde el 31/8/2026 la puerta de entrada. Arriba las
-seis que cuentan días; abajo los honorarios, la tasa, la ejecución contra el
-Estado y lo que no calcula —Escribiente y la serie de la UMA— como enlace.
-Arriba de todo, la fecha de hoy con si cuenta o no y el valor vigente de la UMA
-y del UHOM: son datos del día y no de la herramienta, así que se dicen una vez.
-
-Cada pestaña es la página publicada, embebida **sin una línea modificada**, y
-hay pruebas automáticas que corren los mismos casos dos veces —contra la página
-suelta y contra la embebida— y exigen que den lo mismo. Las herramientas se
-siguen abriendo por separado y las direcciones no cambian.
-
----
-
-## Calculadoras
-
-Herramientas de un solo archivo, sin instalación y sin backend. Todo se calcula
-en el navegador: nada de lo que escribís sale de tu máquina.
-
-### Plazos
-
-| Herramienta | Qué hace |
-|---|---|
-| [Calculadora de plazos judiciales](https://javiercuneo.com.ar/calculadoras/vencimientos.html) | Cuándo vence un plazo contado desde una fecha de inicio. Es la de todos los días. |
-| [Caducidad de la instancia](https://javiercuneo.com.ar/calculadoras/caducidad.html) | Cómputo de los arts. 310 y ss. del CPCCN. |
-| [Ampliación por distancia](https://javiercuneo.com.ar/calculadoras/distancia.html) | Art. 158 CPCCN, dentro del país o al exterior. |
-| [Contador de días](https://javiercuneo.com.ar/calculadoras/entre-fechas.html) | Días hábiles o corridos entre dos fechas. |
-| [Calculadora regresiva](https://javiercuneo.com.ar/calculadoras/regresiva.html) | Cuenta al revés: resta días hábiles a una fecha objetivo para saber desde cuándo hay que empezar. |
-| [Inicio de la mora](https://javiercuneo.com.ar/calculadoras/mora.html) | Los días hábiles hasta que la sentencia queda firme y los corridos para pagar, con el plazo dibujado sobre el calendario. |
-| [Ejecución de sentencias contra el Estado](https://javiercuneo.com.ar/calculadoras/ejecucion-estado.html) | Desde cuándo una sentencia contra el Estado Nacional es ejecutable y embargable (art. 170, Ley 11.672). |
-
-Las que dependen de fechas usan un calendario judicial compartido, y **todo lo
-que necesitan está en el repositorio**: los feriados nacionales en
-[`data/feriados.json`](data/feriados.json) y los asuetos por Acordada en
-[`data/dias-inhabiles.json`](data/dias-inhabiles.json). En tiempo de uso no se
-le pide nada a nadie. Los feriados se actualizan con `npm run feriados`, que los
-baja de una API, los controla y los escribe; si la API no contesta, el script
-falla y deja el archivo como estaba.
-
-### Honorarios y tributos
-
-| Herramienta | Qué hace |
-|---|---|
-| [Honorarios del mediador](https://javiercuneo.com.ar/calculadoras/honorarios-mediacion.html) | Ley 26.589. |
-| [Prorrateo (art. 730 CCyCN)](https://javiercuneo.com.ar/calculadoras/prorrateo.html) | Límite de responsabilidad del deudor por las costas. |
-| [Tasa de justicia](https://javiercuneo.com.ar/calculadoras/tasa.html) | Ley 23.898. Se elige qué juicio es y de ahí salen el monto imponible del art. 4 y la alícuota de los arts. 2 y 3. En una sucesión se cargan todos los bienes, con su nombre y su titularidad, e imprime la liquidación detallada del art. 4 <em>in fine</em>. |
-
-### Otras
-
-| Herramienta | Qué hace |
-|---|---|
-| [Escribiente](https://javiercuneo.com.ar/escribiente/) | Pasa PDF judiciales a Markdown y anonimiza los datos personales para poder trabajar el texto sin exponer a nadie. También une, separa y rota. Todo en el navegador, sin subir nada. |
-| [Asistente de honorarios clásico](https://javiercuneo.com.ar/asistente-honorarios-clasico/) | La versión original de la que salió Honorio. Se conserva funcionando como referencia. |
-
----
-
-## Bandejito
-
-Aplicación en Google Apps Script que automatizaba la distribución de los
-escritos que ingresaban al juzgado: leía el PDF del listado diario, extraía cada
-registro, clasificaba beneficios y confrontes, repartía según las reglas
-internas de la oficina por los últimos números del expediente y mandaba a cada
-responsable el correo con sus tareas y las alertas de vencimiento.
-
-Estuvo en uso hasta que lo reemplazó un desarrollo institucional.
-[Ver cómo funcionaba](https://javiercuneo.com.ar/proyectos%20finalizados/bandejito.html).
-
----
-
-## Sobre el uso de IA
-
-El código de este repositorio está escrito con asistencia de modelos de
-lenguaje. No hay razón para esconderlo y tampoco mucho mérito en negarlo: hoy
-cualquiera genera una calculadora.
-
-Lo que un modelo no genera es el criterio. Mis interpretaciones de esta ley
-estaban resueltas antes de que existiera la aplicación: el asistente clásico,
-que sigue publicado, ya distinguía por ejemplo los dos criterios alternativos
-para la caducidad de instancia —art. 22 como demanda desestimada, o art. 25
-como los demás modos anormales— y explicaba cuándo se reduce cada cosa.
-
-Durante la reescritura del código, el paso de una versión HTML pura al sitio
-actual, se produjo una regresión sobre ese punto ya decidido: el motor pasó a
-acumular las dos quitas sobre el mismo hecho, una rama que el clásico nunca
-tuvo. Ocurrió en un nivel que mi ojo de abogado no ve, el del lenguaje de
-programación, y estuvo tres días en una versión publicada hasta que se corrigió
-el 3 de agosto de 2026. Tener el criterio escrito de antemano es lo que permitió
-detectarla.
-
-Por eso el trabajo está en dos lugares que no son el código:
-
-- **Decidir qué hace la herramienta donde la ley no es clara**, y dejar escrito
-  por qué. Está en [`docs/domain/`](docs/domain/) —publicado en
-  [la documentación de dominio](https://javiercuneo.com.ar/docs/)—
-  y, para Honorio, en los «por qué» de la propia app.
-- **Verificar que el número sea el correcto.** Ver abajo.
-
----
-
-## Cómo se verifica
-
-El motor de Honorio —hoy en [su repositorio](https://github.com/javiercuneo/honorio)—
-tiene **17 suites de validación**, una por concern:
-
-- **El cálculo:** escala del art. 21, reducciones sobre la base, sobre la escala
-  y sobre el honorario ya calculado, segunda instancia y partidor, provisorios,
-  y las funciones de apoderado, procurador y auxiliares contra la aritmética
-  original de la que salieron.
-- **Los procesos:** generales, especiales, exhorto e incidente, actuaciones
-  posteriores a la ejecución, modificación de alimentos, mínimos de auxiliares y
-  honorarios del mediador.
-- **Los dos caminos de entrada:** que el cálculo directo dé exactamente lo mismo
-  que la entrevista recorrida por un caso sin ninguna reducción. Si alguna vez
-  difieren, uno de los dos está mal.
-- **El texto de la regulación en prosa**, que es la única que no compara
-  números: produce un documento con forma de resolución, y hasta que existió
-  ninguna validación miraba prosa.
-- **Un barrido exhaustivo de los 29.929 cruces** de la entrevista —cada uno de
-  los 173 recorridos posibles contra cada uno de los otros—, que prueba que
-  volver atrás y cambiar el tipo de proceso no deja pegada ninguna respuesta que
-  ya no se preguntó.
-
-Cada caso es una entrada con su resultado esperado, escrito a mano en el archivo
-de validación: **no hay autoridad externa detrás**, ni jurisprudencia ni tabla
-oficial. Lo que garantizan es consistencia, no corrección — que el número de hoy
-sea el mismo que el de ayer salvo que alguien haya decidido cambiarlo y lo haya
-escrito.
-
-Con esa limitación, no son opcionales ni decorativas: son lo que impide que un
-cambio de interfaz mueva un número. Corren solas en cada push y en cada pull
-request, y el sitio **no se publica si alguna falla**. Desde el repositorio de
-Honorio:
+## Verificación
 
 ```bash
-npm run check
+npm run verificar-colombia
 ```
 
-Sobre eso hay tres reglas que sostienen al resto:
-
-1. **Los resultados actuales se consideran correctos** y son la referencia a
-   preservar. Un refactor que mejora el código y cambia un número no es un
-   refactor: es un error.
-2. **Un cambio de resultado se documenta siempre**, con el caso concreto y el
-   artículo que lo funda, aunque el diff sea de una línea. Está en el
-   [CHANGELOG](https://github.com/javiercuneo/honorio/blob/main/CHANGELOG.md), que por eso se versiona según qué le pasó
-   al número y no según cuánto código se tocó.
-3. **Las reglas jurídicas viven en una sola capa** (`lib/legal/`). La interfaz
-   solo dibuja. Detalle en su [README](https://github.com/javiercuneo/honorio#cómo-está-armado).
-
-La continuidad del trabajo —decisiones tomadas, lo que se sabe roto, las
-trampas que ya costaron tiempo— está en [`docs/ESTADO.md`](docs/ESTADO.md), que
-se actualiza en el mismo commit que el trabajo que describe. Lo que ya se cerró
-—cómo se llegó hasta acá y por qué cada cosa quedó como quedó— está en
-[`docs/HISTORIA.md`](docs/HISTORIA.md).
-
----
-
-## Responsabilidad
-
-Estas herramientas son de carácter **referencial y orientativo**. No sustituyen
-el criterio del juez natural de la causa ni constituyen asesoramiento legal.
-Quien las usa es responsable de verificar el resultado antes de darle efecto.
-
-Honorio, en particular, **no aplica los mínimos arancelarios automáticamente**:
-si el cálculo cae por debajo de un mínimo que corresponde, hay que desestimarlo.
-Por eso la tabla de mínimos está a un clic dentro de la app.
-
----
+El control cubre el calendario de festivos, tutela, términos hábiles,
+prescripciones, radicados y formato COP. Las pruebas de navegador requieren
+servir el repositorio desde su raíz.
 
 ## Licencia
 
-| Qué | Licencia |
-|---|---|
-| Este repositorio | [MIT](LICENSE) |
-| [Honorio](https://github.com/javiercuneo/honorio) | AGPL-3.0-or-later |
-
-Las calculadoras son aritmética sobre reglas explícitas: cualquiera las
-reescribe en una tarde y no hay motivo para ponerles condiciones. Usalas,
-copialas, vendelas si querés.
-
-Lo que hay en el motor de Honorio no es eso. Son los criterios para resolver
-los puntos donde la ley es ambigua. La AGPL **no prohíbe el uso comercial**:
-exige que quien la modifique y la ofrezca a terceros publique su versión bajo la
-misma licencia. La app es y va a seguir siendo gratuita; impedir que el trabajo
-vuelva cerrado es todo lo que la licencia hace.
-
-Para integrarla en un producto propio bajo otros términos, escribime.
-Si querés aportar, leé [CONTRIBUTING.md](CONTRIBUTING.md) primero.
-
----
-
-## Contacto
-
-[GitHub](https://github.com/javiercuneo) ·
-[LinkedIn](https://ar.linkedin.com/in/javier-c%C3%BAneo-libarona-03b75934) ·
-[javier@javiercuneo.com.ar](mailto:javier@javiercuneo.com.ar)
+Este repositorio se distribuye bajo [MIT](LICENSE).

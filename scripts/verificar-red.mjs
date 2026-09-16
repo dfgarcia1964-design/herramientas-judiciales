@@ -42,33 +42,10 @@ const PERMITIDOS = new Map([
     ['fonts.googleapis.com', 'la hoja de estilos de Archivo'],
     ['fonts.gstatic.com', 'los archivos de la tipografia Archivo'],
 
-    // distancia.html es la unica que manda algo que el usuario escribio
-    // ---un nombre de localidad--- y la pagina lo dice arriba de todo.
-    ['apis.datos.gob.ar', 'distancia.html: geolocalizacion de localidades argentinas (GEOREF)'],
-    ['datosgobar.github.io', 'distancia.html: la documentacion de GEOREF, enlazada'],
-    ['geocoding-api.open-meteo.com', 'distancia.html: geolocalizacion de localidades del exterior'],
-    ['router.project-osrm.org', 'distancia.html: distancia por ruta sobre datos de OpenStreetMap'],
-    ['www.openstreetmap.org', 'distancia.html: la atribucion de OpenStreetMap, enlazada'],
-
-    // Enlaces a normas, sentencias y a los otros sitios propios. No
-    // sale nada del navegador hasta que alguien hace clic, y entonces
-    // se va a otra pagina.
-    ['servicios.infoleg.gob.ar', 'enlaces al texto de las normas citadas'],
-    // Infoleg publica el TEXTO de la Acordada 5/2010 pero no su anexo, que es
-    // la tabla: termina justo donde la tabla empieza. En argentina.gob.ar el
-    // anexo esta, como imagen, y es de ahi que se transcribio
-    // data/acordada-5-2010-distancias.json. Se enlaza el que tiene la tabla.
-    ['www.argentina.gob.ar', 'distancia.html: el texto y el anexo de la Acordada 5/2010, enlazados'],
-    ['www.csjn.gov.ar', 'enlaces a las acordadas y resoluciones de la CSJN'],
-    ['honorio.ar', 'enlace a Honorio, que es del mismo autor'],
-    ['javiercuneo.com.ar', 'el propio sitio: og:image y la direccion de correo'],
-
-    // La API de feriados NO se consulta desde el navegador: la consulta
-    // scripts/actualizar-feriados.mjs en el build, y lo que las
-    // calculadoras leen es data/feriados.json, versionado. documentacion.html
-    // la nombra para decir de donde salen los datos, que es justo lo
-    // contrario de una dependencia en vivo.
-    ['argentinadatos.com', 'documentacion.html la NOMBRA como origen de data/feriados.json; no se la consulta desde el navegador'],
+    ['www.funcionpublica.gov.co', 'fuente oficial de las leyes colombianas'],
+    ['funcionpublica.gov.co', 'fuente oficial de las leyes colombianas'],
+    ['normograma.dian.gov.co', 'fuente oficial de la UVT'],
+    ['consultaprocesos.ramajudicial.gov.co', 'fuente oficial de la estructura del radicado'],
     ['github.com', 'enlaces al repositorio y al perfil'],
     ['ar.linkedin.com', 'enlace al perfil'],
     ['www.w3.org', 'el espacio de nombres de SVG, que no se descarga'],
@@ -91,7 +68,19 @@ const PROHIBIDOS = new Map([
 // en el repositorio como historia y NO llega al sitio, asi que su
 // fetch a la planilla no cuenta. Es la unica exclusion y esta escrita
 // aca para que se vea, no adentro de una condicion.
-const NO_SE_PUBLICAN = new Set(['honorarios.html']);
+const NO_SE_PUBLICAN = new Set([
+    'caducidad.html',
+    'distancia.html',
+    'ejecucion-estado.html',
+    'entre-fechas.html',
+    'honorarios.html',
+    'honorarios-mediacion.html',
+    'mora.html',
+    'prorrateo.html',
+    'regresiva.html',
+    'tasa.html',
+    'vencimientos.html'
+]);
 
 const RAIZ = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 
@@ -102,7 +91,7 @@ function paginas() {
         if (NO_SE_PUBLICAN.has(f)) continue;
         salida.push(['calculadoras/' + f, join(RAIZ, 'calculadoras', f)]);
     }
-    for (const f of ['index.html', 'documentacion.html', 'quien-soy.html', 'uma-uhom.html', '404.html']) {
+    for (const f of ['index.html', 'documentacion.html', '404.html']) {
         salida.push([f, join(RAIZ, f)]);
     }
     return salida;
@@ -151,4 +140,4 @@ if (fallas) {
 }
 
 console.log('Todos los terceros que el sitio nombra estan declarados con su motivo.');
-console.log('La unica pagina que manda algo escrito por el usuario sigue siendo distancia.html.');
+console.log('Las páginas colombianas no envían datos escritos por el usuario a terceros.');

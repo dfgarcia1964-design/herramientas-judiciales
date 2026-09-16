@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radicado judicial colombiano</title>
+  <link rel="stylesheet" href="css/comun.css">
+  <script src="../assets/tema.js"></script>
+  <style>
+    body { margin: 0; padding: 2rem 1rem; background: var(--bg); color: var(--fg); font-family: var(--font-sans); }
+    main { max-width: 640px; margin: auto; }
+    .tarjeta { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    label { display: block; margin: 1rem 0 .4rem; font-weight: 600; }
+    input { width: 100%; box-sizing: border-box; padding: .8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--sunk); color: var(--fg); font: 1rem monospace; }
+    button { width: 100%; margin-top: 1rem; padding: .8rem; border: 0; border-radius: var(--radius); background: var(--accent); color: white; cursor: pointer; }
+    #resultado { margin-top: 1rem; padding: 1rem; border-left: 3px solid var(--accent); background: var(--sunk); }
+    .error { border-color: var(--warn, #b42318); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Radicado judicial colombiano</h1>
+    <p>Verifica la forma del número, no la existencia del proceso.</p>
+    <section class="tarjeta">
+      <label for="radicado">Número de radicación</label>
+      <input id="radicado" inputmode="numeric" placeholder="25000-23-42-000-2014-01267-00" aria-describedby="ayuda">
+      <small id="ayuda">Formato: 5-2-2-3-4-5-2 dígitos.</small>
+      <button id="validar" type="button">Validar formato</button>
+      <div id="resultado" hidden aria-live="polite"></div>
+    </section>
+  </main>
+  <script src="js/radicado-colombia.js"></script>
+  <script>
+    const entrada = document.getElementById('radicado');
+    const resultado = document.getElementById('resultado');
+    document.getElementById('validar').addEventListener('click', () => {
+      const analisis = RadicadoColombia.analizar(entrada.value);
+      resultado.hidden = false;
+      resultado.classList.toggle('error', !analisis.válido);
+      resultado.textContent = analisis.válido
+        ? `Formato válido. ${analisis.primeraInstancia ? 'Instancia 00.' : 'Instancia o recurso ' + analisis.bloques.instancia + '.'}`
+        : analisis.error;
+    });
+  </script>
+</body>
+</html>

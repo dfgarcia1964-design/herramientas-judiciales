@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plazos administrativos — CPACA</title>
+  <link rel="stylesheet" href="css/comun.css">
+  <script src="../assets/tema.js"></script>
+  <script src="js/calendario-colombia.js"></script>
+  <script src="js/plazos-colombia.js"></script>
+  <style>
+    body { margin: 0; padding: 2rem 1rem; background: var(--bg); color: var(--fg); font-family: var(--font-sans); }
+    main { max-width: 640px; margin: auto; }
+    .tarjeta { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    label { display: block; margin: 1rem 0 .4rem; font-weight: 600; }
+    input, select { width: 100%; box-sizing: border-box; padding: .8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--sunk); color: var(--fg); }
+    button { width: 100%; margin-top: 1rem; padding: .8rem; border: 0; border-radius: var(--radius); background: var(--accent); color: white; cursor: pointer; }
+    #resultado { margin-top: 1rem; padding: 1rem; border-left: 3px solid var(--accent); background: var(--sunk); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Plazos administrativos</h1>
+    <p>Petición y documentos según el artículo 14 del CPACA.</p>
+    <section class="tarjeta">
+      <label for="tipo">Solicitud</label>
+      <select id="tipo">
+        <option value="15">Petición general — 15 días hábiles</option>
+        <option value="10">Petición de documentos — 10 días hábiles</option>
+      </select>
+      <label for="fecha">Fecha de recepción</label>
+      <input id="fecha" type="date">
+      <button id="calcular" type="button">Calcular vencimiento</button>
+      <div id="resultado" hidden aria-live="polite"></div>
+    </section>
+  </main>
+  <script>
+    const fecha = document.getElementById('fecha');
+    const salida = document.getElementById('resultado');
+    document.getElementById('calcular').addEventListener('click', () => {
+      if (!fecha.value) {
+        salida.hidden = false;
+        salida.textContent = 'Ingresá una fecha.';
+        return;
+      }
+      const dias = Number(document.getElementById('tipo').value);
+      const resultado = PlazosColombia.vencimientoPeticion(new Date(`${fecha.value}T00:00:00`), dias);
+      salida.hidden = false;
+      salida.textContent = `${resultado.vencimiento.toLocaleDateString('es-CO')} — ${resultado.norma}`;
+    });
+  </script>
+</body>
+</html>
