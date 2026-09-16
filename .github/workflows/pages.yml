@@ -2,7 +2,7 @@ name: Deploy Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, migracion-colombia]
   workflow_dispatch:
 
 permissions:
@@ -168,7 +168,7 @@ jobs:
       - name: Verificar motores y datos colombianos publicados
         run: |
           set -uo pipefail
-          sitio="https://javiercuneo.com.ar"
+          sitio="https://dfgarcia1964-design.github.io/herramientas-judiciales"
           fallas=0
           for ruta in calculadoras/js/calendario-colombia.js calculadoras/js/plazos-colombia.js \
                       data/feriados-colombia.json; do
