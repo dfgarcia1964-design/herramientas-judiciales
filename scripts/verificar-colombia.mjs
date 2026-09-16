@@ -25,7 +25,8 @@ async function cargar() {
         'js/calendario-colombia.js',
         'js/plazos-colombia.js',
         'js/radicado-colombia.js',
-        'js/moneda-colombia.js'
+        'js/moneda-colombia.js',
+        'js/parser-fechas-tutela.js'
     ]) {
         const fuente = await readFile(join(RAIZ, 'calculadoras', archivo), 'utf8');
         new Function('window', 'fetch', fuente)(ventana, fetchLocal);
@@ -39,6 +40,7 @@ const calendario = ventana.CalendarioJudicialColombia;
 const plazos = ventana.PlazosColombia;
 const radicado = ventana.RadicadoColombia;
 const moneda = ventana.MonedaColombia;
+const parser = ventana.ParserFechasTutela;
 
 ok(calendario.esFeriado('2026-01-01'), '2026-01-01 es festivo');
 ok(calendario.esFeriado('2026-01-12'), 'Reyes Magos se traslada al lunes');
@@ -72,6 +74,11 @@ ok(moneda.valorUVT(2026) === 52374, 'UVT 2026 documentada');
 ok(moneda.copDesdeUVT(2, 2026) === 104748, 'conversión UVT a COP');
 ok(moneda.formatearCOP(1_234_567).includes(['1', '234', '567'].join('.')),
     'formato colombiano de COP');
+const fechasTextuales = parser.extraerFechas(
+    'Veintinueve (29) de julio de dos mil veintiséis (2026).'
+);
+ok(fechasTextuales.some((fecha) => fecha.fecha === '29/07/2026'),
+    'el parser reconoce fechas escritas en español');
 ok(calendario.ymd(plazos.prescripcionDisciplinariaTrasFallo(new Date(2026, 0, 1)).vencimiento) === '2028-01-01',
     'la interrupción disciplinaria general suma dos años');
 ok(calendario.ymd(plazos.prescripcionLaboral(new Date(2026, 0, 1), new Date(2026, 5, 1)).vencimiento) === '2029-06-01',

@@ -14,11 +14,50 @@ const PALABRAS_CLAVE = {
 };
 
 const PATRON_FECHA = /(\d{1,2})[\s/\-](\d{1,2})[\s/\-](\d{4})/g;
+const PATRON_FECHA_TEXTO = new RegExp(
+  `\\b(${[
+    'treinta y uno', 'veintinueve', 'veintiocho', 'veintisiete', 'veintiseis', 'veintiséis',
+    'veinticinco', 'veinticuatro', 'veintitrés', 'veintitres', 'veintidós', 'veintidos',
+    'veintiuno', 'veintiún', 'veinte', 'diecinueve', 'dieciocho', 'diecisiete',
+    'dieciséis', 'dieciseis', 'quince', 'catorce', 'trece', 'doce', 'once', 'diez',
+    'nueve', 'ocho', 'siete', 'seis', 'cinco', 'cuatro', 'tres', 'dos', 'uno', 'una'
+  ].join('|')})(?:\\s*\\(\\d{1,2}\\))?\\s+de\\s+(${[
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
+    'septiembre', 'setiembre', 'octubre', 'noviembre', 'diciembre'
+  ].join('|')})\\s+de\\s+(dos\\s+mil\\s+(?:veintiséis|veintiseis|veinticinco|veinticuatro|veintitrés|veintitres|veintidós|veintidos|veintiuno|veinte|diecinueve|dieciocho|diecisiete|dieciséis|dieciseis|dieciocho|diecisiete|dieciséis|dieciseis|quince|catorce|trece|doce|once|diez|nueve|ocho|siete|seis|cinco|cuatro|tres|dos|uno))(?:\\s*\\(\\d{4}\\))?`,
+  'giu'
+);
 
 const NOMBRES_MESES = {
   enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6,
   julio: 7, agosto: 8, septiembre: 9, octubre: 10, noviembre: 11, diciembre: 12
 };
+
+const NUMEROS_DIA = {
+  uno: 1, una: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6,
+  siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11, doce: 12, trece: 13,
+  catorce: 14, quince: 15, dieciseis: 16, 'dieciséis': 16, diecisiete: 17,
+  dieciocho: 18, diecinueve: 19, veinte: 20, veintiuno: 21, 'veintiún': 21,
+  veintidos: 22, 'veintidós': 22, veintitres: 23, 'veintitrés': 23,
+  veinticuatro: 24, veinticinco: 25, veintiseis: 26, 'veintiséis': 26,
+  veintisiete: 27, veintiocho: 28, veintinueve: 29, treinta: 30,
+  'treinta y uno': 31
+};
+
+const NUMEROS_ANIO = {
+  ...NUMEROS_DIA,
+  treinta: 30
+};
+
+function numeroTexto(texto, tabla = NUMEROS_DIA) {
+  return tabla[texto.toLowerCase().replace(/\s+/g, ' ').trim()];
+}
+
+function anioTexto(texto) {
+  const match = /^dos\s+mil\s+(.+)$/i.exec(texto);
+  const resto = match && numeroTexto(match[1], NUMEROS_ANIO);
+  return resto === undefined ? undefined : 2000 + resto;
+}
 
 /**
  * Extrae fechas de texto con contexto
@@ -27,7 +66,6 @@ const NOMBRES_MESES = {
  */
 function extraerFechas(texto) {
   const fechas = [];
-  const palabras = texto.toLowerCase().split(/\s+/);
 
   let match;
   while ((match = PATRON_FECHA.exec(texto)) !== null) {
@@ -43,6 +81,27 @@ function extraerFechas(texto) {
     const contextoAntes = obtenerContextoAntes(texto, posicion);
     const contexto = identificarContexto(contextoAntes);
 
+    fechas.push({
+      fecha: `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${anio}`,
+      dia, mes, anio,
+      tipo: contexto.tipo,
+      palabraClave: contexto.palabra,
+      confianza: contexto.confianza,
+      contextoAntes,
+      posicion
+    });
+  }
+
+  while ((match = PATRON_FECHA_TEXTO.exec(texto)) !== null) {
+    const dia = numeroTexto(match[1]);
+    const mes = NOMBRES_MESES[match[2].toLowerCase()];
+    const anio = anioTexto(match[3]);
+    if (dia === undefined || mes === undefined || anio === undefined) continue;
+    if (!esFechaValida(dia, mes, anio)) continue;
+
+    const posicion = match.index;
+    const contextoAntes = obtenerContextoAntes(texto, posicion);
+    const contexto = identificarContexto(contextoAntes);
     fechas.push({
       fecha: `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${anio}`,
       dia, mes, anio,
